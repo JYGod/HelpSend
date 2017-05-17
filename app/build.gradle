@@ -1,0 +1,106 @@
+apply plugin: 'com.android.application'
+
+android {
+    signingConfigs {
+        config {
+            keyAlias 'jygod'
+            keyPassword '14753258'
+            storeFile file('/Users/jy/Desktop/腾讯创新创业/keystore.jks')
+            storePassword '14753258'
+        }
+    }
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId "com.edu.hrbeu.helpsend"
+        minSdkVersion 22
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+        useJack = true
+        jackOptions {
+            enabled true
+        }
+        dexOptions {
+            incremental true //如果开启multi-dex, 此句无效
+            preDexLibraries true
+            javaMaxHeapSize "4g" //最主要是这句, 不过改成8g没有更显著的提升
+//  jumboMode true
+//  threadCount 8 //gradle输就输在了并行上, 都是串行, 增加线程数没鸟用
+//  maxProcessCount 8 //com.android.tools.build:gradle:2.0.0
+        }
+        manifestPlaceholders = [
+                JPUSH_PKGNAME: applicationId,
+                JPUSH_APPKEY : "a647261cf16e022c7c69dde8", //JPush上注册的包名对应的appkey.
+                JPUSH_CHANNEL: "帮帮带", //用户渠道统计的渠道名称
+        ]
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    // dataBinding 加入
+    dataBinding {
+        enabled = true
+    }
+
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.3.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:design:25.3.0'
+    compile 'com.android.support:gridlayout-v7:25.3.0'
+    compile 'com.android.support:cardview-v7:25.3.0'
+    compile project(':rx')
+    compile 'com.squareup.picasso:picasso:2.5.1'
+    compile 'com.github.bumptech.glide:glide:3.5.2'
+    compile 'com.google.zxing:core:3.2.1'
+    compile 'io.reactivex:rxandroid:1.2.0'
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'jp.wasabeef:glide-transformations:2.0.1'
+    compile 'com.youth.banner:banner:1.4.2'
+    compile 'com.daimajia.slider:library:1.1.5@aar'
+    compile 'com.cocosw:bottomsheet:1.3.0@aar'
+    compile 'net.soulwolf.widget:speedySelector:1.0.0'
+    compile project(':lib')
+    compile files('libs/TencentLocationSDK_v5.0.1.jar')
+    compile files('libs/TencentMapSDK_Raster_v_1.2.6_160cf1b.jar')
+    compile files('libs/TencentSearch1.1.3.jar')
+    compile 'com.github.mancj:MaterialSearchBar:0.7'
+    compile 'com.miomin:shswiperefreshlayout:1.3.0'
+    compile 'br.com.simplepass:loading-button-android:1.7.0'
+    compile 'com.roughike:swipe-selector:1.0.6'
+    compile 'com.orhanobut:dialogplus:1.11@aar'
+    compile 'com.jzxiang.pickerview:TimePickerDialog:1.0.1'
+    compile files('libs/jcore-android_v1.1.3.jar')
+    compile files('libs/jpush-android_v3.0.6.jar')
+    compile files('libs/jmessage-android_v2.1.2.jar')
+    compile files('libs/open_sdk_r5788.jar')
+    compile files('libs/jg_filter_sdk_1.1.jar')
+    compile files('libs/mid-core-sdk-3.7.2.jar')
+    compile files('libs/wup-1.0.0.E-SNAPSHOT.jar')
+    compile files('libs/Xg_sdk_v3.1_20170417_0946.jar')
+    compile files('libs/soload.jar')
+    compile files('libs/bugly_2.4.0_imsdk_release.jar')
+    compile files('libs/imsdk_group_ext.jar')
+    compile files('libs/qalsdk.jar')
+    compile files('libs/imsdk_msg_ext.jar')
+    compile files('libs/tls_sdk.jar')
+    compile files('libs/imsdk_sns_ext.jar')
+    compile files('libs/mobilepb.jar')
+    compile files('libs/imsdk.jar')
+}

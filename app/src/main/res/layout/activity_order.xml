@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.design.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="45dp"
+            android:layout_marginTop="60dp">
+
+                <com.scu.miomin.shswiperefresh.core.SHSwipeRefreshLayout
+                    android:id="@+id/swipeRefreshLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:progress_bar_color="@color/themeColor"
+                    app:guidance_text_color="@color/themeColor">
+
+                    <com.scu.miomin.shswiperefresh.view.ShareScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+
+
+                        <include
+                            android:id="@+id/include"
+                            layout="@layout/item_order" />
+                        <TextView
+                            android:id="@+id/tv_personality"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:gravity="center"
+                            android:text="个性化定制"
+                            android:textColor="@color/themeColor"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <net.cachapa.expandablelayout.ExpandableLayout
+                            android:id="@+id/expandable_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                           android:visibility="gone"
+                            app:el_duration="1000"
+                            app:el_expanded="true"
+                            app:el_parallax="0.5">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_marginTop="20dp"
+                                    android:id="@+id/textView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="想多了吧，幻想有个性化定制？做梦！"
+                                    android:textStyle="bold"
+                                    android:textSize="20dp"/>
+                            </LinearLayout>
+
+                        </net.cachapa.expandablelayout.ExpandableLayout>
+
+                    </LinearLayout>
+
+                    </com.scu.miomin.shswiperefresh.view.ShareScrollView>
+                </com.scu.miomin.shswiperefresh.core.SHSwipeRefreshLayout>
+        </android.support.design.widget.CoordinatorLayout>
+
+
+        <LinearLayout
+            style="@style/pay_layout"
+            android:layout_gravity="bottom">
+
+            <LinearLayout
+                style="@style/top_layout"
+                android:layout_height="40dp"
+                android:clickable="false"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"
+                    android:gravity="left|center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="总价格¥" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="18"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.4"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <net.soulwolf.widget.speedyselector.widget.SelectorTextView xmlns:soulwolf="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="55dp"
+                        android:layout_height="25dp"
+                        android:background="@color/bottomTextColoer"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:text="价格明细"
+                        android:textColor="@color/bottomTextColoer"
+                        android:textSize="10sp"
+                        soulwolf:spBorderWidth="0.3dp"
+                        soulwolf:spJustBorder="true"
+                        soulwolf:spRadius="5dp"
+                        soulwolf:spStatePressedBackground="@color/pureWhite"
+                        soulwolf:spStatePressedTextColor="@color/pureWhite" />
+                </LinearLayout>
+                <View style="@style/bg_line_hori"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.4"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+                    <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
+                        android:id="@+id/btn_buy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/themeColor"
+                        android:text="下 单"
+                        android:layout_marginLeft="5dp"
+                        app:spinning_bar_color="@color/pureWhite"
+                        android:textColor="@color/pureWhite"/>
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </FrameLayout>
+
+</layout>

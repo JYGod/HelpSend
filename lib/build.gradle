@@ -1,0 +1,28 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 25
+        versionCode 13
+        versionName "2.8"
+    }
+}
+
+publish {
+    userOrg = 'cachapa'
+    repoName = 'maven'
+    groupId = 'net.cachapa.expandablelayout'
+    artifactId = 'expandablelayout'
+    publishVersion = android.defaultConfig.versionName
+    autoPublish = true
+    dryRun = false
+    publications = ['maven']
+}
+
+// BINTRAY_KEY: https://bintray.com/profile/edit
+// ./gradlew bintrayUpload -PbintrayUser=[USERNAME] -PbintrayKey=[BINTRAY_KEY]

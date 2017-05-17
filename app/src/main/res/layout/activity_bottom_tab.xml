@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:id="@+id/drawer_layout"
+    android:layout_height="match_parent">
+    <include android:id="@+id/include" layout="@layout/app_bar_main"/>
+    <TabHost android:id="@android:id/tabhost" android:layout_width="fill_parent" android:layout_height="fill_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+        <LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent">
+            <FrameLayout android:id="@android:id/tabcontent" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="1.0" />
+            <TabWidget android:id="@android:id/tabs" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="0.0" />
+
+            <View style="@style/bg_line"/>
+
+            <android.support.design.widget.CoordinatorLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <RadioGroup
+                    android:id="@+id/main_radio"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:background="@color/pureWhite"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/radio_order"
+                        style="@style/main_tab_bottom"
+                        android:layout_marginTop="2.0dip"
+                        android:background="@null"
+                        android:checked="false"
+                        android:drawableTop="@drawable/bottom_icon_order"
+                        android:text="下单"
+                        android:textColor="@drawable/bottom_textcoler" />
+
+                    <RadioButton
+                        android:id="@+id/radio_grab"
+                        style="@style/main_tab_bottom"
+                        android:layout_marginTop="2.0dip"
+                        android:background="@null"
+                        android:checked="false"
+                        android:drawableTop="@drawable/bottom_icon_grab"
+                        android:text="抢单"
+                        android:textColor="@drawable/bottom_textcoler" />
+
+                    <RadioButton
+                        android:id="@+id/radio_message"
+                        style="@style/main_tab_bottom"
+                        android:layout_marginTop="2.0dip"
+                        android:background="@null"
+                        android:checked="false"
+                        android:drawableTop="@drawable/bottom_icon_message"
+                        android:text="消息"
+                        android:textColor="@drawable/bottom_textcoler" />
+
+                </RadioGroup>
+
+            </android.support.design.widget.CoordinatorLayout>
+
+        </LinearLayout>
+    </TabHost>
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:clickable="true"
+        android:fitsSystemWindows="true"/>
+
+</android.support.v4.widget.DrawerLayout>
+</layout>
