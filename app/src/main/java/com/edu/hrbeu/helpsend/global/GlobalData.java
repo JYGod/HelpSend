@@ -16,4 +16,6 @@ public class GlobalData {
     public static File USER_AVATAR;
     public static final String QQ_APP_ID="1106089061";
 
+    public static final int TIM_SDK_APP_ID=1400031229;
+
 }

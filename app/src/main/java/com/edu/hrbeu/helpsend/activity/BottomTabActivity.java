@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -25,16 +26,31 @@ import android.widget.TabHost;
 import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.databinding.ActivityBottomTabBinding;
 import com.edu.hrbeu.helpsend.databinding.NavHeaderMainBinding;
+import com.edu.hrbeu.helpsend.global.GlobalData;
 import com.edu.hrbeu.helpsend.receiver.OrderReceiver;
 import com.edu.hrbeu.helpsend.utils.ImgLoadUtil;
 import com.edu.hrbeu.helpsend.utils.StatusBarUtil;
 import com.tencent.android.tpush.XGIOperateCallback;
 import com.tencent.android.tpush.XGPushConfig;
 import com.tencent.android.tpush.XGPushManager;
+import com.tencent.imsdk.TIMConnListener;
+import com.tencent.imsdk.TIMConversation;
+import com.tencent.imsdk.TIMGroupEventListener;
+import com.tencent.imsdk.TIMGroupTipsElem;
+import com.tencent.imsdk.TIMLogLevel;
+import com.tencent.imsdk.TIMManager;
+import com.tencent.imsdk.TIMMessage;
+import com.tencent.imsdk.TIMMessageListener;
+import com.tencent.imsdk.TIMRefreshListener;
+import com.tencent.imsdk.TIMSdkConfig;
+import com.tencent.imsdk.TIMUser;
+import com.tencent.imsdk.TIMUserConfig;
+import com.tencent.imsdk.TIMUserStatusListener;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.im.android.api.JMessageClient;
@@ -43,7 +59,7 @@ import cn.jpush.im.api.BasicCallback;
 
 public class BottomTabActivity extends TabActivity implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
 
-
+    private static final String TAG=BottomTabActivity.class.getSimpleName();
     private String tabTag;
     private TabHost mTabHost;
     private Intent orderIntent;
@@ -69,7 +85,92 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
         setupIntent();
         this.mTabHost.setCurrentTabByTag(tabTag);
         initDrawerLayout();
+
+        initTIM();
         clickListener();
+    }
+
+    private void initTIM() {
+        TIMSdkConfig config=new TIMSdkConfig(GlobalData.TIM_SDK_APP_ID)
+                .enableCrashReport(false)
+                .enableLogPrint(true)
+                .setLogLevel(TIMLogLevel.DEBUG)
+                .setLogPath(Environment.getExternalStorageDirectory().getPath()+"/justfortest/");
+        TIMManager.getInstance().init(getApplicationContext(),config);
+
+
+        TIMUserConfig userConfig=new TIMUserConfig()
+                //设置群组资料拉取字段
+               // .setGroupSettings(initGroupSettings())
+                //设置资料关系链拉取字段
+                //.setFriendshipSettings(initFriendshipSettings())
+                //设置用户状态变更事件监听器
+                .setUserStatusListener(new TIMUserStatusListener() {
+                    @Override
+                    public void onForceOffline() {
+                        //被其他终端踢下线
+                        Log.e(TAG, "onForceOffline");
+                    }
+
+                    @Override
+                    public void onUserSigExpired() {
+                        //用户签名过期了，需要刷新userSig重新登录SDK
+                        Log.e(TAG, "onUserSigExpired");
+                    }
+                })
+                //设置连接状态事件监听器
+                .setConnectionListener(new TIMConnListener() {
+                    @Override
+                    public void onConnected() {
+                        Log.e(TAG, "onConnected");
+                    }
+
+                    @Override
+                    public void onDisconnected(int i, String s) {
+                        Log.e(TAG, "onConnected");
+                    }
+
+                    @Override
+                    public void onWifiNeedAuth(String s) {
+                        Log.e(TAG, "onConnected");
+                    }
+                })
+                //设置群组事件监听器
+                .setGroupEventListener(new TIMGroupEventListener() {
+                    @Override
+                    public void onGroupTipsEvent(TIMGroupTipsElem timGroupTipsElem) {
+                        Log.e(TAG, "onGroupTipsEvent, type: " + timGroupTipsElem.getTipsType());
+                    }
+                })
+                //设置会话刷新监听器
+                .setRefreshListener(new TIMRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        Log.e(TAG, "onRefresh");
+                    }
+
+                    @Override
+                    public void onRefreshConversation(List<TIMConversation> list) {
+                        Log.e(TAG, "onRefreshConversation, conversation size:"+list.size());
+                    }
+                });
+
+        //将用户配置与通讯管理器进行绑定
+        TIMManager.getInstance().setUserConfig(userConfig);
+
+        //设置消息监听器，收到新消息时，通过此监听器回调
+        TIMManager.getInstance().addMessageListener(new TIMMessageListener() {
+            @Override
+            public boolean onNewMessages(List<TIMMessage> list) {
+
+                //消息的内容解析请参考消息收发文档中的消息解析说明
+
+                return true;//返回true将终止回调链，不再调用下一个新消息监听器
+            }
+        });
+
+       // TIMManager.getInstance().login();
+
     }
 
     private void initXGPush() {
