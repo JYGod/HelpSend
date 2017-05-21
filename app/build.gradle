@@ -9,6 +9,27 @@ android {
             storePassword '14753258'
         }
     }
+    /**
+     * dexOptions {
+     //   incremental true //如果开启multi-dex, 此句无效
+     preDexLibraries true
+     javaMaxHeapSize "4g" //最主要是这句, 不过改成8g没有更显著的提升
+     //  jumboMode true
+     //  threadCount 8 //gradle输就输在了并行上, 都是串行, 增加线程数没鸟用
+     //  maxProcessCount 8 //com.android.tools.build:gradle:2.0.0
+     }
+     */
+    dexOptions {
+        incremental true //如果开启multi-dex, 此句无效
+        preDexLibraries true
+        javaMaxHeapSize "4g" //最主要是这句, 不过改成8g没有更显著的提升
+        //  jumboMode true
+        //  threadCount 8 //gradle输就输在了并行上, 都是串行, 增加线程数没鸟用
+        //  maxProcessCount 8 //com.android.tools.build:gradle:2.0.0
+    }
+    lintOptions{
+        abortOnError false
+    }
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
@@ -22,14 +43,6 @@ android {
         useJack = true
         jackOptions {
             enabled true
-        }
-        dexOptions {
-            incremental true //如果开启multi-dex, 此句无效
-            preDexLibraries true
-            javaMaxHeapSize "4g" //最主要是这句, 不过改成8g没有更显著的提升
-//  jumboMode true
-//  threadCount 8 //gradle输就输在了并行上, 都是串行, 增加线程数没鸟用
-//  maxProcessCount 8 //com.android.tools.build:gradle:2.0.0
         }
         manifestPlaceholders = [
                 JPUSH_PKGNAME: applicationId,
@@ -59,12 +72,12 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.0'
+    compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:design:25.3.0'
-    compile 'com.android.support:gridlayout-v7:25.3.0'
-    compile 'com.android.support:cardview-v7:25.3.0'
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.android.support:gridlayout-v7:25.3.1'
+    compile 'com.android.support:cardview-v7:25.3.1'
     compile project(':rx')
     compile 'com.squareup.picasso:picasso:2.5.1'
     compile 'com.github.bumptech.glide:glide:3.5.2'
@@ -103,4 +116,5 @@ dependencies {
     compile files('libs/imsdk_sns_ext.jar')
     compile files('libs/mobilepb.jar')
     compile files('libs/imsdk.jar')
+    compile 'com.github.ceryle:RadioRealButton:v2.0.9'
 }

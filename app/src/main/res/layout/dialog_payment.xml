@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="false"
+        android:background="@color/colorNavLine"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@color/pureWhite"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="false"
+                    android:layout_alignParentLeft="false"
+                    android:layout_alignParentRight="false"
+                    android:layout_alignParentStart="false"
+                    android:layout_alignParentTop="false"
+                    android:layout_alignWithParentIfMissing="false"
+                    android:text="请选择支付方式" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="right|center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iv_payment_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentRight="false"
+                    android:layout_alignParentStart="false"
+                    android:layout_alignParentTop="false"
+                    android:layout_marginRight="10dp"
+                    app:srcCompat="@drawable/menu_clear" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <co.ceryle.radiorealbutton.RadioRealButtonGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:rrbg_animateDrawables_enter="overshoot"
+                app:rrbg_animateTexts_enter="overshoot"
+                app:rrbg_dividerColor="@color/bottomTextColoer"
+                app:rrbg_dividerSize="0.2dp"
+                app:rrbg_selectorColor="@color/themeColor"
+                app:rrbg_selectorDividerSize="0.2dp"
+                app:rrbg_selectorSize="2dp"
+                app:rrbg_selectorTop="true">
+
+                <co.ceryle.radiorealbutton.RadioRealButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:rrb_drawable="@drawable/zhifubao_logo"
+                    app:rrb_drawableGravity="top"
+                    app:rrb_drawableHeight="36dp"
+                    app:rrb_drawablePadding="8dp"
+                    app:rrb_drawableWidth="36dp"
+                    app:rrb_ripple="true"
+                    app:rrb_rippleColor="@color/bottomTextColoer"
+                    app:rrb_text="支付宝支付"
+                    app:rrb_textColor="@color/bottomTextColoer" />
+
+                <co.ceryle.radiorealbutton.RadioRealButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:rrb_drawable="@drawable/weixin_logo"
+                    app:rrb_drawableGravity="top"
+                    app:rrb_drawableHeight="36dp"
+                    app:rrb_drawablePadding="8dp"
+                    app:rrb_drawableWidth="36dp"
+                    app:rrb_ripple="true"
+                    app:rrb_rippleColor="@color/bottomTextColoer"
+                    app:rrb_text="微信支付"
+                    app:rrb_textColor="@color/bottomTextColoer" />
+
+                <co.ceryle.radiorealbutton.RadioRealButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:rrb_drawable="@drawable/pocket_money_logo"
+                    app:rrb_drawableGravity="top"
+                    app:rrb_drawableHeight="36dp"
+                    app:rrb_drawablePadding="8dp"
+                    app:rrb_drawableWidth="36dp"
+                    app:rrb_ripple="true"
+                    app:rrb_rippleColor="@color/bottomTextColoer"
+                    app:rrb_text="账户余额支付"
+                    app:rrb_textColor="@color/bottomTextColoer" />
+            </co.ceryle.radiorealbutton.RadioRealButtonGroup>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/pureWhite"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.4"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ticket_logo" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:gravity="left|center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="抵用券" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.4"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/pay_select" />
+            </LinearLayout>
+        </LinearLayout>
+        <View style="@style/bg_line"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/pureWhite"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="left|center"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="订单总价" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="right|center"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:text="10.0元" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+
+            <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/themeColor"
+                android:text="确认支付"
+                android:textColor="@color/pureWhite"
+                app:spinning_bar_color="@color/pureWhite" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

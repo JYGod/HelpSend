@@ -10,7 +10,11 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/lib" />
+            <option value="$PROJECT_DIR$/presentation" />
             <option value="$PROJECT_DIR$/rx" />
+            <option value="$PROJECT_DIR$/sdk" />
+            <option value="$PROJECT_DIR$/tlslibrary" />
+            <option value="$PROJECT_DIR$/ui" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

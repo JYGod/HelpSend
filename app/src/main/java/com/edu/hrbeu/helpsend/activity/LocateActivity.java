@@ -72,6 +72,7 @@ public class LocateActivity extends MapActivity implements TencentLocationListen
     private Context mContext;
     private LatLng mapCenter;
     private LatLng latLngLocation;
+    private LocatePoiAdapter adapter;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -161,7 +162,15 @@ public class LocateActivity extends MapActivity implements TencentLocationListen
                         newPoi.setAddress(poi.address);
                         pois.add(newPoi);
                     }
-                    LocatePoiAdapter adapter=new LocatePoiAdapter(mContext,pois);
+                    if (pois.size()<4){
+                        adapter=new LocatePoiAdapter(mContext,pois);
+                    }else {
+                        ArrayList<LocatePoi> poisTemp=new ArrayList<LocatePoi>();
+                        for (int i=0;i<3;i++){
+                            poisTemp.add(pois.get(i));
+                        }
+                        adapter=new LocatePoiAdapter(mContext,poisTemp);
+                    }
                     mBinding.lvNearby.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
                     mBinding.lvNearby.setVisibility(View.VISIBLE);

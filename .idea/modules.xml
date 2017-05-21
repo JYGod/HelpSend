@@ -3,13 +3,13 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/HelpSend.iml" filepath="$PROJECT_DIR$/HelpSend.iml" />
-      <module fileurl="file://$PROJECT_DIR$/HelpSend.iml" filepath="$PROJECT_DIR$/HelpSend.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/lib/lib.iml" filepath="$PROJECT_DIR$/lib/lib.iml" />
-      <module fileurl="file://$PROJECT_DIR$/lib/lib.iml" filepath="$PROJECT_DIR$/lib/lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/presentation/presentation.iml" filepath="$PROJECT_DIR$/presentation/presentation.iml" />
       <module fileurl="file://$PROJECT_DIR$/rx/rx.iml" filepath="$PROJECT_DIR$/rx/rx.iml" />
-      <module fileurl="file://$PROJECT_DIR$/rx/rx.iml" filepath="$PROJECT_DIR$/rx/rx.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sdk/sdk.iml" filepath="$PROJECT_DIR$/sdk/sdk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tlslibrary/tlslibrary.iml" filepath="$PROJECT_DIR$/tlslibrary/tlslibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ui/ui.iml" filepath="$PROJECT_DIR$/ui/ui.iml" />
     </modules>
   </component>
 </project>

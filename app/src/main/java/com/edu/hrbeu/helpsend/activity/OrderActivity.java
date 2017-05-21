@@ -37,12 +37,15 @@ import com.scu.miomin.shswiperefresh.core.SHSwipeRefreshLayout;
 
 import net.soulwolf.widget.speedyselector.widget.SelectorTextView;
 
+import java.io.File;
+
 import cn.jpush.android.api.JPushInterface;
 
 import static com.roughike.swipeselector.R.styleable.SwipeSelector;
 
 public class OrderActivity extends AppCompatActivity implements View.OnClickListener, SHSwipeRefreshLayout.SHSOnRefreshListener, OnDateSetListener {
 
+    private static final int SHOW_PAYMENT_DIALOG = 5;
     public final int REQUEST_CONTACTS_SEND=10;
     public final int REQUEST_CONTACTS_RECEIVE=11;
     public final int REQUEST_SELECT_IMG=20;
@@ -91,6 +94,10 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         mBinding.include.tvReceiverPhone.setText(GlobalData.RECEIVER_PHONE==null?"":GlobalData.RECEIVER_PHONE);
         mBinding.include.tvGoods.setText(GlobalData.GOODS_DESCRIPION==null?"":GlobalData.GOODS_DESCRIPION);
         mBinding.include.tvTime.setText(GlobalData.SEND_TIME==null?"":GlobalData.SEND_TIME);
+        Glide.with(mContext).load(GlobalData.ACCESSORY)
+                .error(R.drawable.pic_null)
+                .crossFade(1000)
+                .into(mBinding.include.ivAccessory);
     }
 
     private void clickListener() {
@@ -134,12 +141,12 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.btn_buy:
                 mBinding.btnBuy.startAnimation();
-               new Handler().postDelayed(new Runnable() {
+                new Handler().postDelayed(new Runnable() {
                    @Override
                    public void run() {
-                       mHandler.sendEmptyMessage(BUY_SUCCESS);
+                       mHandler.sendEmptyMessage(SHOW_PAYMENT_DIALOG);
                    }
-               },3000);
+               },1000);
                 break;
             case R.id.btn_select_sender:
                 intent=new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
@@ -197,13 +204,15 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         });
         SwipeSelector swipeKinds = (com.roughike.swipeselector.SwipeSelector) dialog.getHolderView().findViewById(R.id.swip_kinds);
         SwipeSelector swipeWeight = (com.roughike.swipeselector.SwipeSelector) dialog.getHolderView().findViewById(R.id.swip_weight);
-        swipeKinds.setItems(new SwipeItem(0, "生活用品", "没有我们不敢送的东西 ^_^"),
+        swipeKinds.setItems(
+                new SwipeItem(0, "生活用品", "没有我们不敢送的东西 ^_^"),
                 new SwipeItem(1, "食 品", "不怕我们下毒就选吧"),
                 new SwipeItem(2, "文 件", "保密资料别来！我们会偷走的~"),
                 new SwipeItem(3, "鲜 花", "放心让我们送~ 给你头上一片绿"),
                 new SwipeItem(4, "蛋 糕", "这种东西在配送的路上消失在二次元可别怪我们~"),
                 new SwipeItem(5, "其 他", "亲，您要送的到底是什么鬼？"));
-        swipeWeight.setItems(new SwipeItem(0, "500g", "轻如牛毛，送这个东西真是一点都不费力气"),
+        swipeWeight.setItems(
+                new SwipeItem(0, "500g", "轻如牛毛，送这个东西真是一点都不费力气"),
                 new SwipeItem(1, "1kg", "放心，不会被风吹跑的 @_@"),
                 new SwipeItem(2, "2kg", "重量刚好，放心一定安全送达~"),
                 new SwipeItem(3, "5kg", "并没有超重，还在我们的配送范围内"),
@@ -226,18 +235,35 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what==BUY_SUCCESS){
-                //mBinding.btnBuy.doneLoadingAnimation();
+
+
+            }else if (msg.what==SHOW_PAYMENT_DIALOG){
                 mBinding.btnBuy.revertAnimation();
+                initPaymentDialog();
             }
         }
     };
+
+    private void initPaymentDialog() {
+        final DialogPlus dialog = DialogPlus.newDialog(this)
+                .setContentHolder(new ViewHolder(R.layout.dialog_payment))
+                .setCancelable(false)
+                .setExpanded(true)
+                .create();
+        dialog.show();
+        ImageView ivCancel=(ImageView)dialog.getHolderView().findViewById(R.id.iv_payment_cancel);
+        ivCancel.setOnClickListener((View v)->{
+            dialog.dismiss();
+        });
+
+    }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
-            case REQUEST_CONTACTS_SEND:
+            case REQUEST_CONTACTS_SEND://发送方电话
                 if (resultCode==RESULT_OK){
                     Uri contactData = data.getData();
                     Cursor cursor = managedQuery(contactData, null, null, null, null);
@@ -246,7 +272,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                     mBinding.include.tvSenderPhone.setText(userPhone);
                 }
                 break;
-            case REQUEST_CONTACTS_RECEIVE:
+            case REQUEST_CONTACTS_RECEIVE://接收方电话
                 if (resultCode==RESULT_OK){
                     Uri contactData = data.getData();
                     Cursor cursor = managedQuery(contactData, null, null, null, null);
@@ -255,7 +281,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                     mBinding.include.tvReceiverPhone.setText(userPhone);
                 }
                 break;
-            case REQUEST_SELECT_IMG:
+            case REQUEST_SELECT_IMG://物品附件
                 if (resultCode==RESULT_OK&&data!=null){
                     Uri selectedImage = data.getData();
                     String[] filePathColumn = { MediaStore.Images.Media.DATA };
@@ -264,10 +290,12 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                     cursor.moveToFirst();
                     int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                     String picturePath = cursor.getString(columnIndex);
-                    Glide.with(mContext).load(picturePath)
+                    File file=new File(picturePath);
+                    Glide.with(mContext).load(file)
                             .error(R.drawable.pic_null)
                             .crossFade(1000)
                             .into(mBinding.include.ivAccessory);
+                    GlobalData.ACCESSORY=file;
                 }
                 break;
         }
