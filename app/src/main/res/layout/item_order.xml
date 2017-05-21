@@ -318,24 +318,11 @@
                     android:gravity="center"
                     android:orientation="horizontal">
 
-                    <net.soulwolf.widget.speedyselector.widget.SelectorRelativeLayout xmlns:soulwolf="http://schemas.android.com/apk/res-auto"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:clickable="true"
-                        android:gravity="center"
-                        android:padding="2dp"
-                        soulwolf:spBorderWidth="1dp"
-                        soulwolf:spJustBorder="true"
-                        soulwolf:spRadius="8dp"
-                        soulwolf:spStateDefaultBackground="@color/itemBackground"
-                        soulwolf:spStatePressedBackground="@color/pureWhite">
-
-                        <ImageView
-                            android:id="@+id/iv_accessory"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            app:srcCompat="@drawable/pic_null" />
-                    </net.soulwolf.widget.speedyselector.widget.SelectorRelativeLayout>
+                    <ImageView
+                        android:id="@+id/iv_accessory"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        app:srcCompat="@drawable/pic_null" />
 
 
                 </LinearLayout>
@@ -367,10 +354,61 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="何时取" />
+                        android:text="何时来取" />
 
                     <TextView
                         android:id="@+id/tv_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.9"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/arrow_right" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                style="@style/bg_line"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp" />
+
+            <LinearLayout
+                android:id="@+id/select_receive_time"
+                style="@style/mid_layout"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.1"
+                    android:gravity="left|center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/order_time" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="期望送达" />
+
+                    <TextView
+                        android:id="@+id/tv_receive_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"

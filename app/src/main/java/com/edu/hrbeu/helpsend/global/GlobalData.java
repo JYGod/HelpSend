@@ -1,10 +1,13 @@
 package com.edu.hrbeu.helpsend.global;
 
 
+import com.edu.hrbeu.helpsend.bean.Order;
+
 import java.io.File;
 
 public class GlobalData {
 
+    public static Order MY_ORDER=new Order();
     public static String MY_LOCATE;
     public static String END_LOCATE;
     public static String LOCATE_DIRECTION;

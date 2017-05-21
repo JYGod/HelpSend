@@ -20,12 +20,15 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.edu.hrbeu.helpsend.R;
+import com.edu.hrbeu.helpsend.bean.Order;
 import com.edu.hrbeu.helpsend.databinding.ActivityOrderBinding;
 import com.edu.hrbeu.helpsend.global.GlobalData;
 import com.edu.hrbeu.helpsend.http.PhoneUtil;
 import com.edu.hrbeu.helpsend.receiver.LocalBroadcastManager;
 import com.edu.hrbeu.helpsend.receiver.MyReceiver;
+import com.edu.hrbeu.helpsend.seivice.OrderService;
 import com.edu.hrbeu.helpsend.utils.TimeUtil;
+import com.google.gson.Gson;
 import com.jzxiang.pickerview.TimePickerDialog;
 import com.jzxiang.pickerview.data.Type;
 import com.jzxiang.pickerview.listener.OnDateSetListener;
@@ -39,8 +42,16 @@ import net.soulwolf.widget.speedyselector.widget.SelectorTextView;
 
 import java.io.File;
 
+import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
 import cn.jpush.android.api.JPushInterface;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
+import static com.edu.hrbeu.helpsend.seivice.OrderService.retrofit;
 import static com.roughike.swipeselector.R.styleable.SwipeSelector;
 
 public class OrderActivity extends AppCompatActivity implements View.OnClickListener, SHSwipeRefreshLayout.SHSOnRefreshListener, OnDateSetListener {
@@ -55,6 +66,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     private Activity mActivity;
     private TimePickerDialog mTimeDialog;
     private MyReceiver receiver;
+    private String timeStyle="";
 
 
     @Override
@@ -73,8 +85,10 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        mBinding.include.tvMyLocation.setText(GlobalData.MY_LOCATE==null?"":GlobalData.MY_LOCATE);
-        mBinding.include.tvEndLocation.setText(GlobalData.END_LOCATE==null?"":GlobalData.END_LOCATE);
+        mBinding.include.tvMyLocation.setText(GlobalData.MY_ORDER.getStartLocation()==null?
+                "":GlobalData.MY_ORDER.getStartLocation().getDescription());
+        mBinding.include.tvEndLocation.setText(GlobalData.MY_ORDER.getEndLocation()==null?
+                "":GlobalData.MY_ORDER.getEndLocation().getDescription());
     }
 
     @Override
@@ -88,12 +102,15 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         View view2=View.inflate(getApplicationContext(),R.layout.lay_logo,null);
         mBinding.swipeRefreshLayout.setHeaderView(view);
         mBinding.swipeRefreshLayout.setFooterView(view2);
-        mBinding.include.tvMyLocation.setText(GlobalData.MY_LOCATE==null?"":GlobalData.MY_LOCATE);
-        mBinding.include.tvEndLocation.setText(GlobalData.END_LOCATE==null?"":GlobalData.END_LOCATE);
-        mBinding.include.tvSenderPhone.setText(GlobalData.SENDER_PHONE==null?"":GlobalData.SENDER_PHONE);
-        mBinding.include.tvReceiverPhone.setText(GlobalData.RECEIVER_PHONE==null?"":GlobalData.RECEIVER_PHONE);
-        mBinding.include.tvGoods.setText(GlobalData.GOODS_DESCRIPION==null?"":GlobalData.GOODS_DESCRIPION);
-        mBinding.include.tvTime.setText(GlobalData.SEND_TIME==null?"":GlobalData.SEND_TIME);
+        mBinding.include.tvMyLocation.setText(GlobalData.MY_ORDER.getStartLocation()==null?
+                "":GlobalData.MY_ORDER.getStartLocation().getDescription());
+        mBinding.include.tvEndLocation.setText(GlobalData.MY_ORDER.getEndLocation()==null?
+                "":GlobalData.MY_ORDER.getEndLocation().getDescription());
+        mBinding.include.tvSenderPhone.setText(GlobalData.MY_ORDER.getSenderTel()==null?"":GlobalData.MY_ORDER.getSenderTel());
+        mBinding.include.tvReceiverPhone.setText(GlobalData.MY_ORDER.getReceiverTel()==null?"":GlobalData.MY_ORDER.getReceiverTel());
+        mBinding.include.tvGoods.setText(GlobalData.MY_ORDER.getGoodsName()==null?"":GlobalData.MY_ORDER.getGoodsName());
+        mBinding.include.tvTime.setText(GlobalData.MY_ORDER.getSendTime()==null?"":GlobalData.MY_ORDER.getSendTime());
+        mBinding.include.tvReceiveTime.setText(GlobalData.MY_ORDER.getReceiveTime()==null?"":GlobalData.MY_ORDER.getReceiveTime());
         Glide.with(mContext).load(GlobalData.ACCESSORY)
                 .error(R.drawable.pic_null)
                 .crossFade(1000)
@@ -111,6 +128,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         mBinding.include.selectImg.setOnClickListener(this);
         mBinding.include.selecltGoods.setOnClickListener(this);
         mBinding.include.selectTime.setOnClickListener(this);
+        mBinding.include.selectReceiveTime.setOnClickListener(this);
     }
 
     @Override
@@ -164,6 +182,11 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 initDialog();
                 break;
             case R.id.select_time:
+                timeStyle="send";
+                initTime();
+                break;
+            case R.id.select_receive_time:
+                timeStyle="receive";
                 initTime();
                 break;
             default:
@@ -188,7 +211,6 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 .setThemeColor(getResources().getColor(R.color.themeColor))
                 .build();
         mTimeDialog.show(getSupportFragmentManager(), "all");
-
     }
 
     private void initDialog() {
@@ -221,7 +243,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         SelectorTextView btnDialogCheck= (SelectorTextView) dialog.getHolderView().findViewById(R.id.goods_dialog_check);
         btnDialogCheck.setOnClickListener((View v)->{
             String description=swipeKinds.getSelectedItem().title+" - "+swipeWeight.getSelectedItem().title;
-            GlobalData.GOODS_DESCRIPION=description;
+            GlobalData.MY_ORDER.setGoodsName(description);
             mBinding.include.tvGoods.setText(description);
             dialog.dismiss();
         });
@@ -255,6 +277,30 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         ivCancel.setOnClickListener((View v)->{
             dialog.dismiss();
         });
+        CircularProgressButton btnPay=(CircularProgressButton)dialog.getHolderView().findViewById(R.id.btn_pay);
+        btnPay.setOnClickListener((View v)->{
+            Gson gson=new Gson();
+            String orderinfo=gson.toJson(GlobalData.MY_ORDER, Order.class);
+          //  RequestBody photoRequestBody = RequestBody.create(MediaType.parse("image/png"), GlobalData.ACCESSORY);
+           // MultipartBody.Part photo = MultipartBody.Part.createFormData("photos", "icon.png", photoRequestBody);
+            OrderService service=retrofit.create(OrderService.class);
+            Call<String> call=service.submitOrder(orderinfo);
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    String res=response.body();
+                    Log.e("返回结果：", res);
+                    dialog.dismiss();
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+                    Log.e("请求失败===>", t.getCause().toString());
+                    dialog.dismiss();
+                }
+            });
+        });
+
 
     }
 
@@ -268,7 +314,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                     Uri contactData = data.getData();
                     Cursor cursor = managedQuery(contactData, null, null, null, null);
                     String userPhone= PhoneUtil.getPhoneNumber(cursor,mContext);
-                    GlobalData.SENDER_PHONE=userPhone;
+                    GlobalData.MY_ORDER.setSenderTel(userPhone);
                     mBinding.include.tvSenderPhone.setText(userPhone);
                 }
                 break;
@@ -277,7 +323,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                     Uri contactData = data.getData();
                     Cursor cursor = managedQuery(contactData, null, null, null, null);
                     String userPhone= PhoneUtil.getPhoneNumber(cursor,mContext);
-                    GlobalData.RECEIVER_PHONE=userPhone;
+                    GlobalData.MY_ORDER.setReceiverTel(userPhone);
                     mBinding.include.tvReceiverPhone.setText(userPhone);
                 }
                 break;
@@ -324,8 +370,11 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onDateSet(TimePickerDialog timePickerView, long millseconds) {
         String time= TimeUtil.getDateToString(millseconds);
-        GlobalData.SEND_TIME=time;
-        mBinding.include.tvTime.setText(time);
+        if (timeStyle.equals("send")){
+            mBinding.include.tvTime.setText(time);
+        }else {
+            mBinding.include.tvReceiveTime.setText(time);
+        }
     }
 
 

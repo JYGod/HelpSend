@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.adapter.LocatePoiAdapter;
 import com.edu.hrbeu.helpsend.bean.LocatePoi;
+import com.edu.hrbeu.helpsend.bean.Order;
 import com.edu.hrbeu.helpsend.databinding.ActivityLocateBinding;
 import com.edu.hrbeu.helpsend.global.GlobalData;
 import com.edu.hrbeu.helpsend.utils.LocationOverlay;
@@ -178,10 +179,14 @@ public class LocateActivity extends MapActivity implements TencentLocationListen
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                             TextView tvTitle= (TextView) mBinding.lvNearby.getChildAt(i).findViewById(R.id.tv_title);
+                            Order.Location locationTemp=new Order.Location();
+                            locationTemp.setDescription(tvTitle.getText().toString());
+                            locationTemp.setLatitude(String.valueOf(mapCenter.getLatitude()));
+                            locationTemp.setLongitude(String.valueOf(mapCenter.getLongitude()));
                             if (GlobalData.LOCATE_DIRECTION.equals("start")){
-                                GlobalData.MY_LOCATE=tvTitle.getText().toString();
+                                GlobalData.MY_ORDER.setStartLocation(locationTemp);
                             }else {
-                                GlobalData.END_LOCATE=tvTitle.getText().toString();
+                                GlobalData.MY_ORDER.setEndLocation(locationTemp);
                             }
                             finish();
                         }

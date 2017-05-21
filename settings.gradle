@@ -1,1 +1,1 @@
-include ':app', ':rx', ':lib', ':sdk', ':tlslibrary', ':presentation', ':ui'
+include ':app', ':rx', ':lib'
