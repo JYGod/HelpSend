@@ -9,6 +9,7 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.Preference;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,8 @@ import com.edu.hrbeu.helpsend.http.PhoneUtil;
 import com.edu.hrbeu.helpsend.receiver.LocalBroadcastManager;
 import com.edu.hrbeu.helpsend.receiver.MyReceiver;
 import com.edu.hrbeu.helpsend.seivice.OrderService;
+import com.edu.hrbeu.helpsend.utils.CommonUtil;
+import com.edu.hrbeu.helpsend.utils.PerfectClickListener;
 import com.edu.hrbeu.helpsend.utils.TimeUtil;
 import com.google.gson.Gson;
 import com.jzxiang.pickerview.TimePickerDialog;
@@ -44,6 +47,7 @@ import java.io.File;
 
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
 import cn.jpush.android.api.JPushInterface;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -82,6 +86,9 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
+    /**
+     * 界面重载
+     */
     @Override
     protected void onPostResume() {
         super.onPostResume();
@@ -194,6 +201,9 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    /**
+     * 时间选择对话框
+     */
     private void initTime() {
         mTimeDialog = new TimePickerDialog.Builder()
                 .setCallBack(this)
@@ -213,6 +223,9 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         mTimeDialog.show(getSupportFragmentManager(), "all");
     }
 
+    /**
+     * 物品选择对话框
+     */
     private void initDialog() {
         final DialogPlus dialog = DialogPlus.newDialog(this)
                 .setContentHolder(new ViewHolder(R.layout.dialog_select_goods))
@@ -266,6 +279,9 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         }
     };
 
+    /**
+     * 支付对话框
+     */
     private void initPaymentDialog() {
         final DialogPlus dialog = DialogPlus.newDialog(this)
                 .setContentHolder(new ViewHolder(R.layout.dialog_payment))
@@ -278,30 +294,73 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             dialog.dismiss();
         });
         CircularProgressButton btnPay=(CircularProgressButton)dialog.getHolderView().findViewById(R.id.btn_pay);
-        btnPay.setOnClickListener((View v)->{
-            Gson gson=new Gson();
-            String orderinfo=gson.toJson(GlobalData.MY_ORDER, Order.class);
-          //  RequestBody photoRequestBody = RequestBody.create(MediaType.parse("image/png"), GlobalData.ACCESSORY);
-           // MultipartBody.Part photo = MultipartBody.Part.createFormData("photos", "icon.png", photoRequestBody);
-            OrderService service=retrofit.create(OrderService.class);
-            Call<String> call=service.submitOrder(orderinfo);
-            call.enqueue(new Callback<String>() {
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
-                    String res=response.body();
-                    Log.e("返回结果：", res);
-                    dialog.dismiss();
-                }
+        btnPay.setOnClickListener(new PerfectClickListener() {
+            @Override
+            protected void onNoDoubleClick(View v) {
+                dialog.dismiss();
+                Gson gson = new Gson();
+                String orderinfo = gson.toJson(GlobalData.MY_ORDER, Order.class);
+                RequestBody photoRequestBody = RequestBody.create(MediaType.parse("image/png"), GlobalData.ACCESSORY);
+                MultipartBody.Part photo = MultipartBody.Part.createFormData("photos", "icon.png", photoRequestBody);
+                OrderService service = retrofit.create(OrderService.class);
+                Call<String> call = service.submitOrder(photo,RequestBody.create(null,orderinfo));
+                call.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        String res = response.body();
+                        Log.e("返回结果：", res);
+                        mBinding.waitingDialog.waitDialog.setVisibility(View.VISIBLE);
+                        mBinding.waitingDialog.content.startRippleAnimation();
+                        mBinding.waitingDialog.centerImage.setOnClickListener((View v) -> {
+                            cancelOrderDialog(v);
+                        });
 
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
-                    Log.e("请求失败===>", t.getCause().toString());
-                    dialog.dismiss();
-                }
-            });
+                    }
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        Log.e("请求失败===>", t.getCause().toString());
+                        CommonUtil.showToast(mContext,"支付失败:"+ t.getCause().toString());
+                        dialog.dismiss();
+                    }
+                });
+            }
         });
+    }
 
+    /**
+     * 取消订单  对话框
+     * @param v
+     */
+    private void cancelOrderDialog(View v) {
+        new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("取消订单？")
+                .setContentText("取消订单后帮带员将搜索不到您的订单信息")
+                .setConfirmText("确认")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.setTitleText("订单已取消")
+                                .setContentText("下次想好了再发布您的需求~")
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        mBinding.waitingDialog.content.stopRippleAnimation();
+                                        mBinding.waitingDialog.waitDialog.setVisibility(View.GONE);
+                                        sweetAlertDialog.dismiss();
+                                    }
+                                })
+                                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
 
+                                    }
+                                })
+                                .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                    }
+                })
+                .setCancelText("取消")
+                .setCancelClickListener(null)
+                .show();
     }
 
 
@@ -372,8 +431,10 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         String time= TimeUtil.getDateToString(millseconds);
         if (timeStyle.equals("send")){
             mBinding.include.tvTime.setText(time);
+            GlobalData.MY_ORDER.setSendTime(time);
         }else {
             mBinding.include.tvReceiveTime.setText(time);
+            GlobalData.MY_ORDER.setReceiveTime(time);
         }
     }
 

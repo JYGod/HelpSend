@@ -154,7 +154,7 @@
 
             </LinearLayout>
         </LinearLayout>
-
+        <include android:id="@+id/waiting_dialog" layout="@layout/dialog_waiting"/>
     </FrameLayout>
 
 </layout>

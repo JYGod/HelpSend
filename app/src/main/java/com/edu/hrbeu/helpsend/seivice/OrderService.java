@@ -19,12 +19,12 @@ import retrofit2.http.Part;
 
 public interface OrderService {
 
-  //  @Multipart
    // @Headers({"Content-type:application/json", "Content-Length:59"})
-    @FormUrlEncoded
+   // @FormUrlEncoded
+    @Multipart
     @POST("createorder")
-    //Call<String> submitOrder(@Part MultipartBody.Part photo, @Part("orderinfo")RequestBody orderinfo);
-    Call<String> submitOrder(@Field("orderinfo") String orderinfo);
+    Call<String> submitOrder(@Part MultipartBody.Part photo, @Part("orderinfo")RequestBody orderinfo);
+   // Call<String> submitOrder(@Field("orderinfo") String orderinfo);
 
     /**获取实例*/
     Retrofit retrofit = new Retrofit.Builder()

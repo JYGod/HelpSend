@@ -79,14 +79,14 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_bottom_tab);
         mBinding=DataBindingUtil.setContentView(this,R.layout.activity_bottom_tab);
-        initXGPush();
+      //  initXGPush();
         initStatusView();
         init();
         setupIntent();
         this.mTabHost.setCurrentTabByTag(tabTag);
         initDrawerLayout();
 
-        initTIM();
+      //  initTIM();
         clickListener();
     }
 

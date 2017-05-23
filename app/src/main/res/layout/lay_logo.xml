@@ -8,6 +8,6 @@
         android:id="@+id/imageView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/map_locate" />
+        android:src="@drawable/map_locate" />
 
 </RelativeLayout>
