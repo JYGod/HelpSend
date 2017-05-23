@@ -6,7 +6,7 @@ public class Order {
 
     private String orderId;
     private String orderOwnerId;
-    private String orderReceiverID;
+    private String orderReceiverId;
     private Location startLocation;
     private Location endLocation;
     private String sender;
@@ -20,8 +20,8 @@ public class Order {
     private String receiveOrderTime;
     private String deliveryTime;
     private String remark;
-    private String enclosurePath;
-    private String status;
+    private String imagePath;
+    private String orderStatus;
 
     public String getOrderId() {
         return orderId;
@@ -39,13 +39,6 @@ public class Order {
         this.orderOwnerId = orderOwnerId;
     }
 
-    public String getOrderReceiverID() {
-        return orderReceiverID;
-    }
-
-    public void setOrderReceiverID(String orderReceiverID) {
-        this.orderReceiverID = orderReceiverID;
-    }
 
     public Location getStartLocation() {
         return startLocation;
@@ -151,21 +144,30 @@ public class Order {
         this.remark = remark;
     }
 
-    public String getEnclosurePath() {
-        return enclosurePath;
+    public String getOrderReceiverId() {
+        return orderReceiverId;
     }
 
-    public void setEnclosurePath(String enclosurePath) {
-        this.enclosurePath = enclosurePath;
+    public void setOrderReceiverId(String orderReceiverId) {
+        this.orderReceiverId = orderReceiverId;
     }
 
-    public String getStatus() {
-        return status;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
+
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
 
     public static class  Location{
         private String description;

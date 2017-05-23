@@ -26,6 +26,8 @@ public interface OrderService {
     Call<String> submitOrder(@Part MultipartBody.Part file, @Part("orderinfo")RequestBody orderinfo);
    // Call<String> submitOrder(@Field("orderinfo") String orderinfo);
 
+
+
     /**获取实例*/
     Retrofit retrofit = new Retrofit.Builder()
             //设置OKHttpClient,如果不设置会提供一个默认的

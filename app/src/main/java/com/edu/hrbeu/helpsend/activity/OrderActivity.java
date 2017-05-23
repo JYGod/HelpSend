@@ -314,6 +314,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             protected void onNoDoubleClick(View v) {
                 dialog.dismiss();
                 Gson gson = new Gson();
+                GlobalData.MY_ORDER.setOrderOwnerId(GlobalData.USER_ID);
                 String orderinfo = gson.toJson(GlobalData.MY_ORDER, Order.class);
                 RequestBody photoRequestBody = RequestBody.create(MediaType.parse("image/png"), GlobalData.ACCESSORY);
                 MultipartBody.Part photo = MultipartBody.Part.createFormData("photos", "accessory.png", photoRequestBody);

@@ -7,6 +7,7 @@ import java.io.File;
 
 public class GlobalData {
 
+    public static final String USER_ID="123";
     public static Order MY_ORDER=new Order();
     public static String MY_LOCATE;
     public static String END_LOCATE;
