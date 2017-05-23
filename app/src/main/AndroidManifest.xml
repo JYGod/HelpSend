@@ -234,14 +234,16 @@
         <meta-data
             android:name="TencentMapSDK"
             android:value="7KRBZ-SRJR3-FCZ33-337CQ-SEOET-F2BOY"/>
-        <activity android:name="com.edu.hrbeu.helpsend.activity.BottomTabActivity">
+        <activity android:name="com.edu.hrbeu.helpsend.activity.BottomTabActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name="com.edu.hrbeu.helpsend.activity.LoginActivity" />
-        <activity android:name="com.edu.hrbeu.helpsend.activity.OrderActivity" />
+        <activity android:name="com.edu.hrbeu.helpsend.activity.OrderActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
         <activity android:name="com.edu.hrbeu.helpsend.activity.GrabActivity" />
         <activity android:name="com.edu.hrbeu.helpsend.activity.LocateActivity" />
         <activity android:name="com.edu.hrbeu.helpsend.activity.MessageActivity" />

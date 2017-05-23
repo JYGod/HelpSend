@@ -155,6 +155,7 @@
             </LinearLayout>
         </LinearLayout>
         <include android:id="@+id/waiting_dialog" layout="@layout/dialog_waiting"/>
+        <include android:id="@+id/paying" layout="@layout/dialog_paying"/>
     </FrameLayout>
 
 </layout>

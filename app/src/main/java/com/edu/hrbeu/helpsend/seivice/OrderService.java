@@ -23,7 +23,7 @@ public interface OrderService {
    // @FormUrlEncoded
     @Multipart
     @POST("createorder")
-    Call<String> submitOrder(@Part MultipartBody.Part photo, @Part("orderinfo")RequestBody orderinfo);
+    Call<String> submitOrder(@Part MultipartBody.Part file, @Part("orderinfo")RequestBody orderinfo);
    // Call<String> submitOrder(@Field("orderinfo") String orderinfo);
 
     /**获取实例*/

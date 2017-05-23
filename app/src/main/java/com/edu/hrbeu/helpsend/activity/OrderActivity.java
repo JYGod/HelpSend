@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
@@ -44,10 +46,13 @@ import com.scu.miomin.shswiperefresh.core.SHSwipeRefreshLayout;
 import net.soulwolf.widget.speedyselector.widget.SelectorTextView;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
 import cn.jpush.android.api.JPushInterface;
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import co.ceryle.radiorealbutton.RadioRealButton;
+import co.ceryle.radiorealbutton.RadioRealButtonGroup;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -71,6 +76,8 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     private TimePickerDialog mTimeDialog;
     private MyReceiver receiver;
     private String timeStyle="";
+    private int currentIndex=0;//选择的支付方式
+    private final int[] payment_pic=new int[]{R.drawable.zhifu_small,R.drawable.weixin_small,R.drawable.pocket_small};
 
 
     @Override
@@ -293,6 +300,14 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         ivCancel.setOnClickListener((View v)->{
             dialog.dismiss();
         });
+        RadioRealButtonGroup group= (RadioRealButtonGroup) dialog.getHolderView().findViewById(R.id.radio_group);
+        group.setOnPositionChangedListener(new RadioRealButtonGroup.OnPositionChangedListener() {
+            @Override
+            public void onPositionChanged(RadioRealButton button, int currentPosition, int lastPosition) {
+                currentIndex=currentPosition;
+            }
+        });
+        group.setPosition(currentIndex);
         CircularProgressButton btnPay=(CircularProgressButton)dialog.getHolderView().findViewById(R.id.btn_pay);
         btnPay.setOnClickListener(new PerfectClickListener() {
             @Override
@@ -301,12 +316,22 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 Gson gson = new Gson();
                 String orderinfo = gson.toJson(GlobalData.MY_ORDER, Order.class);
                 RequestBody photoRequestBody = RequestBody.create(MediaType.parse("image/png"), GlobalData.ACCESSORY);
-                MultipartBody.Part photo = MultipartBody.Part.createFormData("photos", "icon.png", photoRequestBody);
+                MultipartBody.Part photo = MultipartBody.Part.createFormData("photos", "accessory.png", photoRequestBody);
                 OrderService service = retrofit.create(OrderService.class);
+                mBinding.paying.payingLoading.addBitmap(payment_pic[0]);
+                mBinding.paying.payingLoading.addBitmap(payment_pic[1]);
+                mBinding.paying.payingLoading.addBitmap(payment_pic[2]);
+                mBinding.paying.payingLoading.setShadowColor(R.color.bottomTextColoer);
+                mBinding.paying.payingLoading.start();
+                mBinding.paying.payingLoading.setVisibility(View.VISIBLE);
                 Call<String> call = service.submitOrder(photo,RequestBody.create(null,orderinfo));
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
+                        GlobalData.MY_ORDER=new Order();
+                        GlobalData.ACCESSORY=null;
+                        mBinding.paying.payingLoading.stop();
+                        mBinding.paying.payingLoading.setVisibility(View.GONE);
                         String res = response.body();
                         Log.e("返回结果：", res);
                         mBinding.waitingDialog.waitDialog.setVisibility(View.VISIBLE);
@@ -318,8 +343,10 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                     }
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
-                        Log.e("请求失败===>", t.getCause().toString());
-                        CommonUtil.showToast(mContext,"支付失败:"+ t.getCause().toString());
+                        mBinding.paying.payingLoading.stop();
+                        mBinding.paying.payingLoading.setVisibility(View.GONE);
+                        Log.e("请求失败===>","请求失败");
+                        CommonUtil.showToast(mContext,"支付失败!");
                         dialog.dismiss();
                     }
                 });

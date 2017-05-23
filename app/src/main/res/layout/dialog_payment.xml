@@ -62,6 +62,7 @@
             android:orientation="vertical">
 
             <co.ceryle.radiorealbutton.RadioRealButtonGroup
+                android:id="@+id/radio_group"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:rrbg_animateDrawables_enter="overshoot"
