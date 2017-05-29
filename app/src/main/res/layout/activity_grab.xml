@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout  xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPageBg"
+        android:orientation="vertical">
+
+        <android.support.design.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="60dp">
+
+            <com.scu.miomin.shswiperefresh.core.SHSwipeRefreshLayout
+                android:id="@+id/swipeRefreshLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/grab_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </com.scu.miomin.shswiperefresh.core.SHSwipeRefreshLayout>
+
+        </android.support.design.widget.CoordinatorLayout>
+
+
+    </FrameLayout>
+</layout>

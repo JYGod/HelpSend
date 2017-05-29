@@ -436,6 +436,7 @@
                 android:layout_marginRight="20dp" />
 
             <LinearLayout
+                android:id="@+id/select_remark"
                 style="@style/bottom_layout"
                 android:orientation="horizontal">
 
@@ -455,6 +456,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="备 注" />
+
+                    <TextView
+                        android:id="@+id/tv_remark"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1" />
                 </LinearLayout>
 
 

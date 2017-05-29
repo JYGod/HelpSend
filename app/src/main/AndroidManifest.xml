@@ -242,11 +242,12 @@
             </intent-filter>
         </activity>
         <activity android:name="com.edu.hrbeu.helpsend.activity.LoginActivity" />
-        <activity android:name="com.edu.hrbeu.helpsend.activity.OrderActivity"
+        <activity android:name="com.edu.hrbeu.helpsend.activity.order.OrderActivity"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
-        <activity android:name="com.edu.hrbeu.helpsend.activity.GrabActivity" />
-        <activity android:name="com.edu.hrbeu.helpsend.activity.LocateActivity" />
+        <activity android:name="com.edu.hrbeu.helpsend.activity.grab.GrabActivity" />
+        <activity android:name="com.edu.hrbeu.helpsend.activity.order.LocateActivity" />
         <activity android:name="com.edu.hrbeu.helpsend.activity.MessageActivity" />
+        <activity android:name=".activity.order.RemarkActivity" />
     </application>
 
 </manifest>

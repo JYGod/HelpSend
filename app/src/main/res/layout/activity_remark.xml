@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include layout="@layout/top_bar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPageBg"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:background="@color/pureWhite"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="填写服务的详细信息" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="30dp"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/et_remark"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="top|left"
+                android:autoText="false"
+                android:background="@drawable/shape_remark_bg"
+                android:gravity="top|left"
+                android:padding="5dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <net.soulwolf.widget.speedyselector.widget.SelectorTextView xmlns:soulwolf="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/btn_remark_sure"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:background="@color/themeColor"
+                android:clickable="true"
+                android:gravity="center"
+                android:padding="4dp"
+                android:text="确  定"
+                android:textColor="@color/themeColor"
+                android:textSize="12sp"
+                soulwolf:spBorderWidth="1dp"
+                soulwolf:spJustBorder="true"
+                soulwolf:spRadius="5dp"
+                soulwolf:spStatePressedBackground="@color/pureWhite"
+                soulwolf:spStatePressedTextColor="@color/pureWhite" />
+        </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</layout>

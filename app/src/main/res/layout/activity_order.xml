@@ -31,11 +31,9 @@
                         android:orientation="vertical">
 
 
+<!--
 
-                        <include
-                            android:id="@+id/include"
-                            layout="@layout/item_order" />
-                        <TextView
+ <TextView
                             android:id="@+id/tv_personality"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -46,7 +44,7 @@
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
-                        <net.cachapa.expandablelayout.ExpandableLayout
+<net.cachapa.expandablelayout.ExpandableLayout
                             android:id="@+id/expandable_layout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -72,6 +70,13 @@
                             </LinearLayout>
 
                         </net.cachapa.expandablelayout.ExpandableLayout>
+
+
+-->
+                        <include
+                            android:id="@+id/include"
+                            layout="@layout/item_order" />
+
 
                     </LinearLayout>
 

@@ -22,6 +22,7 @@ public class Order {
     private String remark;
     private String imagePath;
     private String orderStatus;
+    private String orderPrice;
 
     public String getOrderId() {
         return orderId;
@@ -166,6 +167,14 @@ public class Order {
 
     public void setOrderStatus(String orderStatus) {
         this.orderStatus = orderStatus;
+    }
+
+    public String getOrderPrice() {
+        return orderPrice;
+    }
+
+    public void setOrderPrice(String orderPrice) {
+        this.orderPrice = orderPrice;
     }
 
 
