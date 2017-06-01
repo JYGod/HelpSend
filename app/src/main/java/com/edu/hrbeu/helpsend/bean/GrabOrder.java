@@ -10,6 +10,7 @@ public class GrabOrder {
     private String goodsCategory;
     private String sendTime;
     private String receiveTime;
+    private String distance;
 
     public String getOrderId() {
         return orderId;
@@ -65,6 +66,14 @@ public class GrabOrder {
 
     public void setReceiveTime(String receiveTime) {
         this.receiveTime = receiveTime;
+    }
+
+    public String getDistance() {
+        return distance;
+    }
+
+    public void setDistance(String distance) {
+        this.distance = distance;
     }
 
 

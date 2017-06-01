@@ -1,10 +1,14 @@
 package com.edu.hrbeu.helpsend.seivice;
 
 
+import com.edu.hrbeu.helpsend.bean.GrabDetailResponse;
+import com.edu.hrbeu.helpsend.bean.GrabOrderDetail;
 import com.edu.hrbeu.helpsend.bean.GrabResponse;
 import com.edu.hrbeu.helpsend.bean.Order;
 import com.edu.hrbeu.helpsend.bean.OrderResponse;
 import com.edu.hrbeu.helpsend.bean.UpdateInfo;
+
+import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -21,6 +25,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 
 public interface OrderService {
 
@@ -36,7 +41,10 @@ public interface OrderService {
 
 
     @GET("graborder")
-    Call<GrabResponse>getGrabOrders();//查询所有可抢的订单
+    Call<GrabResponse>getGrabOrders(@QueryMap Map<String,String> map);//查询所有可抢的订单
+
+    @GET("graborderdetails")
+    Call<GrabDetailResponse>getGrabOrderDetail(@Query("orderId") String orderId);//查询抢单详细信息
 
     /**获取实例*/
     Retrofit retrofit = new Retrofit.Builder()

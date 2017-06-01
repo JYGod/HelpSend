@@ -1,16 +1,21 @@
 package com.edu.hrbeu.helpsend.activity;
 
 
+import android.Manifest;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -21,6 +26,7 @@ import android.view.Window;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.TabHost;
+import android.widget.Toast;
 
 import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.activity.grab.GrabActivity;
@@ -44,6 +50,7 @@ import com.tencent.imsdk.TIMRefreshListener;
 import com.tencent.imsdk.TIMSdkConfig;
 import com.tencent.imsdk.TIMUserConfig;
 import com.tencent.imsdk.TIMUserStatusListener;
+import com.tencent.mapsdk.raster.model.LatLng;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -56,35 +63,70 @@ import cn.jpush.im.api.BasicCallback;
 
 public class BottomTabActivity extends TabActivity implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
 
-    private static final String TAG=BottomTabActivity.class.getSimpleName();
+    private static final String TAG = BottomTabActivity.class.getSimpleName();
     private String tabTag;
     private TabHost mTabHost;
     private Intent orderIntent;
     private Intent grabIntent;
     private Intent messageIntent;
-    private ArrayList<String> tags=new ArrayList<>(Arrays.asList("ORDER_TAB","GRAB_TAB","MESSAGE_TAB"));
+    private ArrayList<String> tags = new ArrayList<>(Arrays.asList("ORDER_TAB", "GRAB_TAB", "MESSAGE_TAB"));
     private ActivityBottomTabBinding mBinding;
     private DrawerLayout drawerLayout;
     private NavigationView navView;
     private NavHeaderMainBinding bind;
-    private final int REQUEST_SELECT_IMG=11;
+    private final int REQUEST_SELECT_IMG = 11;
     private UserInfo myInfo;
+    private double latitude,longitude;
+    private String provider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_bottom_tab);
-        mBinding=DataBindingUtil.setContentView(this,R.layout.activity_bottom_tab);
-      //  initXGPush();
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_bottom_tab);
+        //  initXGPush();
         initStatusView();
         init();
         setupIntent();
         this.mTabHost.setCurrentTabByTag(tabTag);
         initDrawerLayout();
 
-      //  initTIM();
+        initMyLocation();
+        //  initTIM();
         clickListener();
+    }
+
+    private void initMyLocation() {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        // 获取所有可用的位置提供器
+        List<String> providerList = locationManager.getProviders(true);
+        if (providerList.contains(LocationManager.GPS_PROVIDER)) {
+            //优先使用gps
+            provider = LocationManager.GPS_PROVIDER;
+        } else if (providerList.contains(LocationManager.NETWORK_PROVIDER)) {
+            provider = LocationManager.NETWORK_PROVIDER;
+        }else {
+            Toast.makeText(getApplicationContext(), "没有位置提供器可供使用", Toast.LENGTH_LONG).show();
+        }
+        Location location = locationManager.getLastKnownLocation(provider);
+        if (location==null){
+
+        }else {
+            GlobalData.mLocation.setLongitude(String.valueOf(location.getLongitude()));
+            GlobalData.mLocation.setLatitude(String.valueOf(location.getLatitude()));
+        }
+
     }
 
     private void initTIM() {

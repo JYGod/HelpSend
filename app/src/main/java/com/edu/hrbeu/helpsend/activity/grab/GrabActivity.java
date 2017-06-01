@@ -24,6 +24,8 @@ import com.google.gson.Gson;
 import com.scu.miomin.shswiperefresh.core.SHSwipeRefreshLayout;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,29 +56,20 @@ public class GrabActivity extends Activity implements SHSwipeRefreshLayout.SHSOn
        // mBinding.swipeRefreshLayout.setHeaderView(view);
         mBinding.grabRecyclerview.setItemAnimator(new DefaultItemAnimator());
         mBinding.grabRecyclerview.setLayoutManager(new LinearLayoutManager(mContext));
-        OrderService service=retrofit.create(OrderService.class);
-        Call<GrabResponse> call=service.getGrabOrders();
-        call.enqueue(new Callback<GrabResponse>() {
-            @Override
-            public void onResponse(Call<GrabResponse> call, Response<GrabResponse> response) {
-                GrabResponse grabResponse=response.body();
-                ArrayList<GrabOrder>grabOrders=grabResponse.getMessage();
-                adapter=new GrabOrderAdapter(mContext,grabOrders);
-                mBinding.grabRecyclerview.setAdapter(adapter);
-
-            }
-
-            @Override
-            public void onFailure(Call<GrabResponse> call, Throwable t) {
-                Log.e("获取数据失败------->","获取数据失败!");
-            }
-        });
+        requestForListData();
     }
 
     @Override
     public void onRefresh() {
+        requestForListData();
+    }
+
+    private void requestForListData() {
         OrderService service=retrofit.create(OrderService.class);
-        Call<GrabResponse> call=service.getGrabOrders();
+        Map<String,String>map=new HashMap<>();
+        map.put("longitude",GlobalData.mLocation.getLongitude());
+        map.put("latitude",GlobalData.mLocation.getLatitude());
+        Call<GrabResponse> call=service.getGrabOrders(map);
         call.enqueue(new Callback<GrabResponse>() {
             @Override
             public void onResponse(Call<GrabResponse> call, Response<GrabResponse> response) {
