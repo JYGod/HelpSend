@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="login_titles">
+        <item>直接登录</item>
+        <item>密码登录</item>
+    </string-array>
+
+</resources>

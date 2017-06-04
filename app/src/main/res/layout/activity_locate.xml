@@ -63,12 +63,13 @@
             android:layout_centerInParent="true"/>
 
         <ImageView
+            android:id="@+id/iv_center_marker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@id/v_center"
-            android:src="@drawable/locate_icon"
             android:layout_centerHorizontal="true"
-            android:scaleType="center"/>
+            android:scaleType="center"
+            android:src="@drawable/center_marker" />
 
 
     </RelativeLayout>

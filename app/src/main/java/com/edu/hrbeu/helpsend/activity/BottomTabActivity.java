@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.activity.grab.GrabActivity;
 import com.edu.hrbeu.helpsend.activity.order.OrderActivity;
+import com.edu.hrbeu.helpsend.cache.ACache;
 import com.edu.hrbeu.helpsend.databinding.ActivityBottomTabBinding;
 import com.edu.hrbeu.helpsend.databinding.NavHeaderMainBinding;
 import com.edu.hrbeu.helpsend.global.GlobalData;
@@ -51,8 +52,10 @@ import com.tencent.imsdk.TIMSdkConfig;
 import com.tencent.imsdk.TIMUserConfig;
 import com.tencent.imsdk.TIMUserStatusListener;
 import com.tencent.mapsdk.raster.model.LatLng;
+import com.youth.banner.loader.ImageLoader;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -78,10 +81,12 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
     private UserInfo myInfo;
     private double latitude,longitude;
     private String provider;
+    private ACache mCache;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mCache= ACache.get(this);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_bottom_tab);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_bottom_tab);
@@ -242,9 +247,10 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
         navView.inflateHeaderView(R.layout.nav_header_main);
         View headerView=navView.getHeaderView(0);
         bind=DataBindingUtil.bind(headerView);
-        ImgLoadUtil.displayCircle(bind.ivHead,"http://img3.duitang.com/" +
-                "uploads/item/201409/22/20140922122621_fxvj8.thumb.224_0.jpeg");
-
+//        ImgLoadUtil.displayCircle(bind.ivHead,"http://img3.duitang.com/" +
+//                "uploads/item/201409/22/20140922122621_fxvj8.thumb.224_0.jpeg");
+        bind.tvUsername.setText(String.valueOf(mCache.getAsString("mNickName")));
+        ImgLoadUtil.displayCircle(bind.ivHead, String.valueOf(mCache.getAsString("mAvatar")));
     }
 
     private void initStatusView() {
@@ -317,12 +323,7 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (mBinding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                mBinding.drawerLayout.closeDrawer(GravityCompat.START);
-            } else {
-                // 不退出程序，进入后台
-                moveTaskToBack(true);
-            }
+            moveTaskToBack(true);
             return true;
         }
         return super.onKeyDown(keyCode, event);

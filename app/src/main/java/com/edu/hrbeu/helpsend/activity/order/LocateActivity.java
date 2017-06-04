@@ -26,6 +26,7 @@ import com.edu.hrbeu.helpsend.bean.LocatePoi;
 import com.edu.hrbeu.helpsend.bean.Order;
 import com.edu.hrbeu.helpsend.databinding.ActivityLocateBinding;
 import com.edu.hrbeu.helpsend.global.GlobalData;
+import com.edu.hrbeu.helpsend.utils.DrawableUtil;
 import com.edu.hrbeu.helpsend.utils.LocationOverlay;
 import com.edu.hrbeu.helpsend.utils.LocationUtil;
 import com.mancj.materialsearchbar.MaterialSearchBar;
@@ -38,6 +39,7 @@ import com.tencent.map.geolocation.TencentLocation;
 import com.tencent.map.geolocation.TencentLocationListener;
 import com.tencent.map.geolocation.TencentLocationManager;
 import com.tencent.map.geolocation.TencentLocationRequest;
+import com.tencent.mapsdk.raster.model.BitmapDescriptor;
 import com.tencent.mapsdk.raster.model.BitmapDescriptorFactory;
 import com.tencent.mapsdk.raster.model.Circle;
 import com.tencent.mapsdk.raster.model.CircleOptions;
@@ -83,12 +85,12 @@ public class LocateActivity extends MapActivity implements TencentLocationListen
         initMap();
         Log.e("initMap", "======initMap======");
         uiSetting();
+        Log.e("uisetting", "======uisetting======");
         mLocationManager = TencentLocationManager.getInstance(this);
         // 设置坐标系为 gcj-02, 缺省坐标为 gcj-02, 所以通常不必进行如下调用
         mLocationManager.setCoordinateType(TencentLocationManager.COORDINATE_TYPE_GCJ02);
 
         mBinding.searchBar.setOnSearchActionListener(this);
-        mBinding.ivLoc.setOnClickListener(this);
     }
 
     private void uiSetting() {
@@ -102,6 +104,7 @@ public class LocateActivity extends MapActivity implements TencentLocationListen
     }
 
     private void initMap() {
+        mBinding.ivCenterMarker.setImageBitmap(DrawableUtil.zoomDrawable(getResources().getDrawable(R.drawable.center_marker),60,90));
         tencentMap = mBinding.mapview.getMap();
         //设置卫星底图
         //tencentMap.setSatelliteEnabled(true);
@@ -109,7 +112,7 @@ public class LocateActivity extends MapActivity implements TencentLocationListen
         //tencentMap.setTrafficEnabled(true);
         //设置缩放级别
         tencentMap.setZoom(20);
-        bmpMarker = BitmapFactory.decodeResource(getResources(), R.drawable.map_locate);
+        bmpMarker = BitmapFactory.decodeResource(getResources(), R.drawable.my_position);
         mLocationOverlay = new LocationOverlay(bmpMarker);
       //  mBinding.mapview.addOverlay(mLocationOverlay);
 
@@ -250,20 +253,27 @@ public class LocateActivity extends MapActivity implements TencentLocationListen
         }
         Location location = locationManager.getLastKnownLocation(provider);
         if (location==null){
-
+            BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(DrawableUtil.zoomDrawable(getResources().getDrawable(R.drawable.my_position),60,60));
+            marker = tencentMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(39.922376,116.394653))
+                    .title("搜索中...")
+                    .icon(icon)
+                    .draggable(true));
+            marker.showInfoWindow();
         }else {
             final LatLng latLngLocation = new LatLng(location.getLatitude(), location.getLongitude());
             //设置地图中心点
             tencentMap.setCenter(latLngLocation);
+            BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(DrawableUtil.zoomDrawable(getResources().getDrawable(R.drawable.my_position),60,60));
             marker = tencentMap.addMarker(new MarkerOptions()
                     .position(latLngLocation)
                     .title("搜索中...")
-                    .icon(BitmapDescriptorFactory.defaultMarker())
+                    .icon(icon)
                     .draggable(true));
             marker.showInfoWindow();
         }
 
-
+        mBinding.ivLoc.setOnClickListener(this);
     }
 
     private void stopLocation() {

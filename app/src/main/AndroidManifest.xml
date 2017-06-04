@@ -61,9 +61,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
         android:largeHeap="true"
         tools:replace="android:icon, android:theme"
@@ -234,20 +234,23 @@
         <meta-data
             android:name="TencentMapSDK"
             android:value="7KRBZ-SRJR3-FCZ33-337CQ-SEOET-F2BOY"/>
-        <activity android:name="com.edu.hrbeu.helpsend.activity.BottomTabActivity"
+        <activity android:name="com.edu.hrbeu.helpsend.activity.LoginActivity"
             android:windowSoftInputMode="adjustPan|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.edu.hrbeu.helpsend.activity.LoginActivity" />
+        <activity android:name="com.edu.hrbeu.helpsend.activity.BottomTabActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
         <activity android:name="com.edu.hrbeu.helpsend.activity.order.OrderActivity"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
         <activity android:name="com.edu.hrbeu.helpsend.activity.grab.GrabActivity" />
         <activity android:name="com.edu.hrbeu.helpsend.activity.order.LocateActivity" />
         <activity android:name="com.edu.hrbeu.helpsend.activity.MessageActivity" />
         <activity android:name=".activity.order.RemarkActivity" />
+        <activity android:name=".activity.grab.PositionActivity" />
+        <activity android:name=".activity.SplashActivity" />
     </application>
 
 </manifest>

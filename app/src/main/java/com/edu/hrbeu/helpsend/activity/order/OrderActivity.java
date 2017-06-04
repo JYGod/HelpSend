@@ -13,6 +13,7 @@ import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -20,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.bean.Order;
 import com.edu.hrbeu.helpsend.bean.UpdateInfo;
+import com.edu.hrbeu.helpsend.cache.ACache;
 import com.edu.hrbeu.helpsend.databinding.ActivityOrderBinding;
 import com.edu.hrbeu.helpsend.global.GlobalData;
 import com.edu.hrbeu.helpsend.http.PhoneUtil;
@@ -71,17 +73,20 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     private String timeStyle="";
     private int currentIndex=0;//选择的支付方式
     private final int[] payment_pic=new int[]{R.drawable.zhifu_small,R.drawable.weixin_small,R.drawable.pocket_small};
+    private ACache mCache;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mCache= ACache.get(this);
         mBinding= DataBindingUtil.setContentView(this,R.layout.activity_order);
        // mBinding.expandableLayout.collapse();
         mContext=this;
         mActivity=this;
         initView();
         clickListener();
+        Log.e("orderOwnerId:",mCache.getAsString("mId"));
         registerMessageReceiver();
     }
 
@@ -316,7 +321,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             protected void onNoDoubleClick(View v) {
                 dialog.dismiss();
                 Gson gson = new Gson();
-                GlobalData.MY_ORDER.setOrderOwnerId(GlobalData.USER_ID);
+                GlobalData.MY_ORDER.setOrderOwnerId(mCache.getAsString("mId"));
                 String orderinfo = gson.toJson(GlobalData.MY_ORDER, Order.class);
                 RequestBody photoRequestBody = RequestBody.create(MediaType.parse("image/png"), GlobalData.ACCESSORY);
                 MultipartBody.Part photo = MultipartBody.Part.createFormData("photos", "accessory.png", photoRequestBody);

@@ -1,11 +1,9 @@
 package com.edu.hrbeu.helpsend.seivice;
 
 
-import com.edu.hrbeu.helpsend.bean.GrabDetailResponse;
-import com.edu.hrbeu.helpsend.bean.GrabOrderDetail;
-import com.edu.hrbeu.helpsend.bean.GrabResponse;
-import com.edu.hrbeu.helpsend.bean.Order;
-import com.edu.hrbeu.helpsend.bean.OrderResponse;
+import com.edu.hrbeu.helpsend.pojo.GrabDetailResponse;
+import com.edu.hrbeu.helpsend.pojo.GrabResponse;
+import com.edu.hrbeu.helpsend.pojo.OrderResponse;
 import com.edu.hrbeu.helpsend.bean.UpdateInfo;
 
 import java.util.Map;
@@ -16,11 +14,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Body;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;

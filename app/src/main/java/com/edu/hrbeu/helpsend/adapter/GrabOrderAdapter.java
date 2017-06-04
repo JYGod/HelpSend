@@ -2,32 +2,27 @@ package com.edu.hrbeu.helpsend.adapter;
 
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.edu.hrbeu.helpsend.R;
-import com.edu.hrbeu.helpsend.bean.GrabDetailResponse;
+import com.edu.hrbeu.helpsend.activity.grab.PositionActivity;
+import com.edu.hrbeu.helpsend.cache.ACache;
+import com.edu.hrbeu.helpsend.pojo.GrabDetailResponse;
 import com.edu.hrbeu.helpsend.bean.GrabOrder;
 import com.edu.hrbeu.helpsend.bean.GrabOrderDetail;
-import com.edu.hrbeu.helpsend.bean.GrabResponse;
-import com.edu.hrbeu.helpsend.bean.Order;
 import com.edu.hrbeu.helpsend.seivice.OrderService;
-import com.edu.hrbeu.helpsend.utils.GlideCircleTransform;
+import com.edu.hrbeu.helpsend.utils.CommonUtil;
 import com.edu.hrbeu.helpsend.utils.ImgLoadUtil;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.ViewHolder;
-import com.youth.banner.loader.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,6 +40,7 @@ public class GrabOrderAdapter extends RecyclerView.Adapter<GrabOrderAdapter.mVie
     private ArrayList<GrabOrder>data;
     private final ArrayList<String> sexSelector=new ArrayList<>(Arrays.asList("0","1"));
     private final int[] drawables=new int[]{R.drawable.woman,R.drawable.man};
+    private ACache mCache;
 
     public GrabOrderAdapter(Context mContext, ArrayList<GrabOrder> data) {
         this.mContext = mContext;
@@ -66,8 +62,7 @@ public class GrabOrderAdapter extends RecyclerView.Adapter<GrabOrderAdapter.mVie
         holder.tvEnd.setText("终点: "+order.getEndLocationPojo().getDescription());
         holder.tvStarTime.setText(order.getSendTime());
         holder.tvEndTime.setText(order.getReceiveTime());
-        holder.tvDistance.setText(order.getDistance()+" 公里");
-
+        holder.tvDistance.setText(order.getDistance());
         holder.itemView.setOnClickListener((View v)->{
             OrderService service=retrofit.create(OrderService.class);
             Call<GrabDetailResponse>call=service.getGrabOrderDetail(order.getOrderId());
@@ -108,6 +103,8 @@ public class GrabOrderAdapter extends RecyclerView.Adapter<GrabOrderAdapter.mVie
         TextView tvSend = (TextView) holder.findViewById(R.id.detail_send);
         TextView tvReceice = (TextView) holder.findViewById(R.id.detail_receive);
         ImageView ivImg = (ImageView) holder.findViewById(R.id.detail_img);
+        LinearLayout selectStart=(LinearLayout)holder.findViewById(R.id.select_start);
+        LinearLayout selectEnd=(LinearLayout)holder.findViewById(R.id.select_end);
         tvNickName.setText(detail.getOrderOwnerNickName());
         ivSex.setImageDrawable(mContext.getResources().getDrawable(
                 drawables[sexSelector.indexOf(detail.getOrderOwnerGender())]));
@@ -125,6 +122,18 @@ public class GrabOrderAdapter extends RecyclerView.Adapter<GrabOrderAdapter.mVie
                 .into(ivImg);
         dialog.show();
 
+        selectStart.setOnClickListener((View v)->{
+            mCache= ACache.get(mContext);
+            mCache.put("targetLng",detail.getStartLocationPojo().getLongitude());
+            mCache.put("targetLat",detail.getStartLocationPojo().getLatitude());
+            CommonUtil.startActivity(mContext, PositionActivity.class);
+        });
+        selectEnd.setOnClickListener((View v)->{
+            mCache= ACache.get(mContext);
+            mCache.put("targetLng",detail.getEndLocationPojo().getLongitude());
+            mCache.put("targetLat",detail.getEndLocationPojo().getLatitude());
+            CommonUtil.startActivity(mContext, PositionActivity.class);
+        });
         ivCancel.setOnClickListener((View v)->{
             dialog.dismiss();
         });

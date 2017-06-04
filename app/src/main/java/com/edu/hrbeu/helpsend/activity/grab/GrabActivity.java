@@ -9,18 +9,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
 import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.adapter.GrabOrderAdapter;
 import com.edu.hrbeu.helpsend.bean.GrabOrder;
-import com.edu.hrbeu.helpsend.bean.GrabResponse;
-import com.edu.hrbeu.helpsend.bean.OrderResponse;
+import com.edu.hrbeu.helpsend.pojo.GrabResponse;
 import com.edu.hrbeu.helpsend.databinding.ActivityGrabBinding;
 import com.edu.hrbeu.helpsend.global.GlobalData;
 import com.edu.hrbeu.helpsend.seivice.OrderService;
-import com.google.gson.Gson;
 import com.scu.miomin.shswiperefresh.core.SHSwipeRefreshLayout;
 
 import java.util.ArrayList;

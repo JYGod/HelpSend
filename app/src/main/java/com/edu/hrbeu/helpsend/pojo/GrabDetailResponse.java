@@ -1,5 +1,7 @@
-package com.edu.hrbeu.helpsend.bean;
+package com.edu.hrbeu.helpsend.pojo;
 
+
+import com.edu.hrbeu.helpsend.bean.GrabOrderDetail;
 
 import java.util.ArrayList;
 

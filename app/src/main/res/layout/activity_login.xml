@@ -8,8 +8,34 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_weight="0.2"></LinearLayout>
+        android:layout_weight="0.2"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <com.gigamole.navigationtabstrip.NavigationTabStrip
+            android:id="@+id/nav_tab"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="20dp"
+            app:nts_active_color="#000"
+            app:nts_animation_duration="300"
+            app:nts_color="#000"
+            app:nts_corners_radius="1.5dp"
+            app:nts_factor="2.5"
+            app:nts_gravity="top"
+            app:nts_inactive_color="#c4c4c4"
+            app:nts_size="15sp"
+            app:nts_titles="@array/login_titles"
+            app:nts_type="point"
+            app:nts_weight="3dp" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"></android.support.v4.view.ViewPager>
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -77,7 +103,7 @@
                     android:id="@+id/iv_weixin"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
-                    android:layout_marginRight="30dp"/>
+                    android:layout_marginRight="30dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -91,7 +117,7 @@
                     android:id="@+id/iv_qq"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
-                    android:layout_marginLeft="30dp"/>
+                    android:layout_marginLeft="30dp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
