@@ -24,4 +24,5 @@ public class GlobalData {
 
     public static final int TIM_SDK_APP_ID=1400031229;
 
+    public static String ORDER_SELECT="put";
 }

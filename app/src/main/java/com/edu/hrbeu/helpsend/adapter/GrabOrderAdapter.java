@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,6 +19,9 @@ import com.edu.hrbeu.helpsend.cache.ACache;
 import com.edu.hrbeu.helpsend.pojo.GrabDetailResponse;
 import com.edu.hrbeu.helpsend.bean.GrabOrder;
 import com.edu.hrbeu.helpsend.bean.GrabOrderDetail;
+import com.edu.hrbeu.helpsend.pojo.GrabResponse;
+import com.edu.hrbeu.helpsend.pojo.OrderResponse;
+import com.edu.hrbeu.helpsend.pojo.ResponsePojo;
 import com.edu.hrbeu.helpsend.seivice.OrderService;
 import com.edu.hrbeu.helpsend.utils.CommonUtil;
 import com.edu.hrbeu.helpsend.utils.ImgLoadUtil;
@@ -76,7 +80,7 @@ public class GrabOrderAdapter extends RecyclerView.Adapter<GrabOrderAdapter.mVie
 
                 @Override
                 public void onFailure(Call<GrabDetailResponse> call, Throwable t) {
-
+                    CommonUtil.showToast(mContext,"获取信息失败！");
                 }
             });
         });
@@ -106,6 +110,7 @@ public class GrabOrderAdapter extends RecyclerView.Adapter<GrabOrderAdapter.mVie
         LinearLayout selectStart=(LinearLayout)holder.findViewById(R.id.select_start);
         LinearLayout selectEnd=(LinearLayout)holder.findViewById(R.id.select_end);
         tvNickName.setText(detail.getOrderOwnerNickName());
+        Button btnGrab=(Button)holder.findViewById(R.id.btn_grab);
         ivSex.setImageDrawable(mContext.getResources().getDrawable(
                 drawables[sexSelector.indexOf(detail.getOrderOwnerGender())]));
         tvStart.setText(detail.getStartLocationPojo().getDescription());
@@ -136,6 +141,25 @@ public class GrabOrderAdapter extends RecyclerView.Adapter<GrabOrderAdapter.mVie
         });
         ivCancel.setOnClickListener((View v)->{
             dialog.dismiss();
+        });
+        btnGrab.setOnClickListener((View v)->{
+            OrderService service=retrofit.create(OrderService.class);
+            Call<ResponsePojo> call = service.grabOrder(detail.getOrderId(),mCache.getAsString("mId"));
+            call.enqueue(new Callback<ResponsePojo>() {
+                @Override
+                public void onResponse(Call<ResponsePojo> call, Response<ResponsePojo> response) {
+                    ResponsePojo grabResponse=response.body();
+                    CommonUtil.showToast(mContext,grabResponse.getMessage());
+                    dialog.dismiss();
+                    //跳转到导航
+                }
+
+                @Override
+                public void onFailure(Call<ResponsePojo> call, Throwable t) {
+                    CommonUtil.showToast(mContext,"抢单失败！");
+                    dialog.dismiss();
+                }
+            });
         });
 
     }

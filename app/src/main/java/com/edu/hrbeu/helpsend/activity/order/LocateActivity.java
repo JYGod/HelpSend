@@ -24,6 +24,7 @@ import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.adapter.LocatePoiAdapter;
 import com.edu.hrbeu.helpsend.bean.LocatePoi;
 import com.edu.hrbeu.helpsend.bean.Order;
+import com.edu.hrbeu.helpsend.cache.ACache;
 import com.edu.hrbeu.helpsend.databinding.ActivityLocateBinding;
 import com.edu.hrbeu.helpsend.global.GlobalData;
 import com.edu.hrbeu.helpsend.utils.DrawableUtil;
@@ -76,12 +77,14 @@ public class LocateActivity extends MapActivity implements TencentLocationListen
     private LatLng mapCenter;
     private LatLng latLngLocation;
     private LocatePoiAdapter adapter;
+    private ACache mCache;
 
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_locate);
         mContext=this;
+        mCache= ACache.get(this);
         initMap();
         Log.e("initMap", "======initMap======");
         uiSetting();
@@ -322,6 +325,8 @@ public class LocateActivity extends MapActivity implements TencentLocationListen
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.iv_loc:
+                mCache.put("mLat",String.valueOf(latLngLocation.getLatitude()));
+                mCache.put("mLng",String.valueOf(latLngLocation.getLongitude()));
                 tencentMap.setCenter(latLngLocation);
                 break;
         }

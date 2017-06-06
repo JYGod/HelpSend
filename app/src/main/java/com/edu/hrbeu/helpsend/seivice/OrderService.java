@@ -3,9 +3,12 @@ package com.edu.hrbeu.helpsend.seivice;
 
 import com.edu.hrbeu.helpsend.pojo.GrabDetailResponse;
 import com.edu.hrbeu.helpsend.pojo.GrabResponse;
+import com.edu.hrbeu.helpsend.pojo.MyOrderPojo;
 import com.edu.hrbeu.helpsend.pojo.OrderResponse;
 import com.edu.hrbeu.helpsend.bean.UpdateInfo;
+import com.edu.hrbeu.helpsend.pojo.ResponsePojo;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import okhttp3.MultipartBody;
@@ -39,6 +42,19 @@ public interface OrderService {
 
     @GET("graborderdetails")
     Call<GrabDetailResponse>getGrabOrderDetail(@Query("orderId") String orderId);//查询抢单详细信息
+
+    @GET("querymyputorder")
+    Call<ArrayList<MyOrderPojo>>getMyPutOrders(@Query("orderOwnerId") String orderOwnerId,@Query("orderStatus") String orderStatus);//查询抢单详细信息
+
+
+    @GET("querymyreceiveorder")
+    Call<ArrayList<MyOrderPojo>>getMyReceiveOrders(@Query("orderReceiverId") String orderOwnerId,@Query("orderStatus") String orderStatus);
+
+    @GET("queryorderprogress")
+    Call<ArrayList<String>>getOrderProgress(@Query("orderId") String orderId);//查询订单流程情况
+
+    @GET("receiveorder")
+    Call<ResponsePojo>grabOrder(@Query("orderId") String orderId, @Query("orderReceiverId") String orderReceiverId);//抢单
 
     /**获取实例*/
     Retrofit retrofit = new Retrofit.Builder()

@@ -101,6 +101,15 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 "":GlobalData.MY_ORDER.getStartLocation().getDescription());
         mBinding.include.tvEndLocation.setText(GlobalData.MY_ORDER.getEndLocation()==null?
                 "":GlobalData.MY_ORDER.getEndLocation().getDescription());
+        mBinding.include.tvSenderPhone.setText(GlobalData.MY_ORDER.getSenderTel()==null?"":GlobalData.MY_ORDER.getSenderTel());
+        mBinding.include.tvReceiverPhone.setText(GlobalData.MY_ORDER.getReceiverTel()==null?"":GlobalData.MY_ORDER.getReceiverTel());
+        mBinding.include.tvGoods.setText(GlobalData.MY_ORDER.getGoodsName()==null?"":GlobalData.MY_ORDER.getGoodsName());
+        mBinding.include.tvTime.setText(GlobalData.MY_ORDER.getSendTime()==null?"":GlobalData.MY_ORDER.getSendTime());
+        mBinding.include.tvReceiveTime.setText(GlobalData.MY_ORDER.getReceiveTime()==null?"":GlobalData.MY_ORDER.getReceiveTime());
+        Glide.with(mContext).load(GlobalData.ACCESSORY)
+                .error(R.drawable.pic_null)
+                .crossFade(1000)
+                .into(mBinding.include.ivAccessory);
         CommonUtil.setLimitText( mBinding.include.tvRemark,GlobalData.MY_ORDER.getRemark());
     }
 
@@ -129,6 +138,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 .error(R.drawable.pic_null)
                 .crossFade(1000)
                 .into(mBinding.include.ivAccessory);
+
     }
 
     private void clickListener() {
@@ -323,6 +333,10 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 Gson gson = new Gson();
                 GlobalData.MY_ORDER.setOrderOwnerId(mCache.getAsString("mId"));
                 String orderinfo = gson.toJson(GlobalData.MY_ORDER, Order.class);
+                if (GlobalData.ACCESSORY==null){
+                    File file=new File("http://mengqipoet.cn:8080/userimage/defaultavatar51.jpg");
+                    GlobalData.ACCESSORY=file;
+                }
                 RequestBody photoRequestBody = RequestBody.create(MediaType.parse("image/png"), GlobalData.ACCESSORY);
                 MultipartBody.Part photo = MultipartBody.Part.createFormData("photos", "accessory.png", photoRequestBody);
                 OrderService service = retrofit.create(OrderService.class);
@@ -370,11 +384,13 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                         mBinding.paying.payingLoading.setVisibility(View.GONE);
                         UpdateInfo updateInfo=response.body();
                         CommonUtil.showToast(mContext,updateInfo.getMessage());
-                        mBinding.waitingDialog.waitDialog.setVisibility(View.VISIBLE);
-                        mBinding.waitingDialog.content.startRippleAnimation();
-                        mBinding.waitingDialog.content.setOnClickListener((View v)->{
-                            cancelOrderDialog(v);
-                        });
+                        GlobalData.MY_ORDER=new Order();
+                        CommonUtil.startActivity(mContext,MyorderActivity.class);
+//                        mBinding.waitingDialog.waitDialog.setVisibility(View.VISIBLE);
+//                        mBinding.waitingDialog.content.startRippleAnimation();
+//                        mBinding.waitingDialog.content.setOnClickListener((View v)->{
+//                            cancelOrderDialog(v);
+//                        });
                     }
 
                     @Override

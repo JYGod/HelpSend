@@ -123,6 +123,8 @@ dependencies {
     compile 'com.white.countdownbutton:countdownbtn:1.0.1'
     compile 'com.github.MAXDeliveryNG:slideview:1.0.0'
     compile 'com.github.ksoichiro:richbuttons:0.1.1@aar'
+    compile 'com.hlab.fabrevealmenu:fab-reveal-menu:1.0.2'
+    compile 'com.github.vipulasri:timelineview:1.0.5'
     compile project(':lib')
     compile project(':rx')
 }

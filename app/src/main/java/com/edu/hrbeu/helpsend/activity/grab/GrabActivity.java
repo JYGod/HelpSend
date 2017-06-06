@@ -13,6 +13,7 @@ import android.util.Log;
 import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.adapter.GrabOrderAdapter;
 import com.edu.hrbeu.helpsend.bean.GrabOrder;
+import com.edu.hrbeu.helpsend.cache.ACache;
 import com.edu.hrbeu.helpsend.pojo.GrabResponse;
 import com.edu.hrbeu.helpsend.databinding.ActivityGrabBinding;
 import com.edu.hrbeu.helpsend.global.GlobalData;
@@ -33,11 +34,13 @@ public class GrabActivity extends Activity implements SHSwipeRefreshLayout.SHSOn
     private ActivityGrabBinding mBinding;
     private Context mContext;
     private GrabOrderAdapter adapter;
+    private ACache mCache;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext=this;
+        mCache= ACache.get(this);
         mBinding= DataBindingUtil.setContentView(this,R.layout.activity_grab);
         initView();
         clickListener();
@@ -63,8 +66,8 @@ public class GrabActivity extends Activity implements SHSwipeRefreshLayout.SHSOn
     private void requestForListData() {
         OrderService service=retrofit.create(OrderService.class);
         Map<String,String>map=new HashMap<>();
-        map.put("longitude",GlobalData.mLocation.getLongitude());
-        map.put("latitude",GlobalData.mLocation.getLatitude());
+        map.put("longitude",mCache.getAsString("mLng"));
+        map.put("latitude",mCache.getAsString("mLat"));
         Call<GrabResponse> call=service.getGrabOrders(map);
         call.enqueue(new Callback<GrabResponse>() {
             @Override

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<android.support.design.widget.CoordinatorLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPageBg"
+        android:orientation="vertical">
+
+        <include layout="@layout/top_bar" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <co.ceryle.radiorealbutton.RadioRealButtonGroup
+                android:id="@+id/radio_selector"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:rrbg_animateDrawables_enter="overshoot"
+                app:rrbg_animateTexts_enter="overshoot"
+                app:rrbg_dividerColor="@color/black"
+                app:rrbg_dividerSize="1dp"
+                app:rrbg_radius="15dp"
+                app:rrbg_selectorColor="@color/themeColor"
+                app:rrbg_selectorSize="2dp">
+
+                <co.ceryle.radiorealbutton.RadioRealButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    app:rrb_drawable="@drawable/my_order"
+                    app:rrb_drawableHeight="36dp"
+                    app:rrb_drawablePadding="8dp"
+                    app:rrb_drawableWidth="36dp"
+                    app:rrb_ripple="true"
+                    app:rrb_rippleColor="@color/black"
+                    app:rrb_text="已发订单"
+                    app:rrb_textColor="@color/black" />
+
+                <co.ceryle.radiorealbutton.RadioRealButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    app:rrb_drawable="@drawable/my_graber"
+                    app:rrb_drawableGravity="right"
+                    app:rrb_drawableHeight="36dp"
+                    app:rrb_drawablePadding="8dp"
+                    app:rrb_drawableWidth="36dp"
+                    app:rrb_ripple="true"
+                    app:rrb_rippleColor="@color/black"
+                    app:rrb_text="已接订单"
+                    app:rrb_textColor="@color/black" />
+
+            </co.ceryle.radiorealbutton.RadioRealButtonGroup>
+        </LinearLayout>
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <android.support.v4.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_order"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+
+                </LinearLayout>
+            </android.support.v4.widget.NestedScrollView>
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+
+
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        android:src="@drawable/order_class"
+        app:backgroundTint="@color/themeColor"
+        app:fabSize="normal" />
+    <com.hlab.fabrevealmenu.view.FABRevealMenu
+        android:id="@+id/fabMenu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        app:animateItems="true"
+        app:menuBackgroundColor="@color/themeColor"
+        app:menuDirection="up"
+        app:menuRes="@menu/menu_order"
+        app:menuTitleTextColor="@color/pureWhite"
+        app:overlayBackground="@null"
+        app:showOverlay="true"
+        app:showTitle="true" />
+
+</android.support.design.widget.CoordinatorLayout>
+
+</layout>

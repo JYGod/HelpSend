@@ -30,11 +30,13 @@ import android.widget.Toast;
 
 import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.activity.grab.GrabActivity;
+import com.edu.hrbeu.helpsend.activity.order.MyorderActivity;
 import com.edu.hrbeu.helpsend.activity.order.OrderActivity;
 import com.edu.hrbeu.helpsend.cache.ACache;
 import com.edu.hrbeu.helpsend.databinding.ActivityBottomTabBinding;
 import com.edu.hrbeu.helpsend.databinding.NavHeaderMainBinding;
 import com.edu.hrbeu.helpsend.global.GlobalData;
+import com.edu.hrbeu.helpsend.utils.CommonUtil;
 import com.edu.hrbeu.helpsend.utils.ImgLoadUtil;
 import com.edu.hrbeu.helpsend.utils.StatusBarUtil;
 import com.tencent.android.tpush.XGPushConfig;
@@ -82,13 +84,15 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
     private double latitude,longitude;
     private String provider;
     private ACache mCache;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mCache= ACache.get(this);
+        mContext=this;
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_bottom_tab);
+      //  setContentView(R.layout.activity_bottom_tab);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_bottom_tab);
         //  initXGPush();
         initStatusView();
@@ -128,6 +132,8 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
         if (location==null){
 
         }else {
+            mCache.put("mLat",String.valueOf(location.getLatitude()));
+            mCache.put("mLng",String.valueOf(location.getLongitude()));
             GlobalData.mLocation.setLongitude(String.valueOf(location.getLongitude()));
             GlobalData.mLocation.setLatitude(String.valueOf(location.getLatitude()));
         }
@@ -291,6 +297,7 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
         mBinding.radioMessage.setOnCheckedChangeListener(this);
         mBinding.include.ivTitleMenu.setOnClickListener(this);
         bind.ivHead.setOnClickListener(this);
+        bind.navOrderManage.setOnClickListener(this);
     }
 
 
@@ -370,6 +377,9 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
             case R.id.iv_head:
                 intent=new Intent(Intent.ACTION_PICK,  android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent,REQUEST_SELECT_IMG);
+                break;
+            case R.id.nav_order_manage:
+                CommonUtil.startActivity(mContext, MyorderActivity.class);
                 break;
             default:
                 break;

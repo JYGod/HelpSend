@@ -29,61 +29,6 @@
                     android:layout_margin="5dp"
                     android:src="@drawable/detail_cancel" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#4000"
-                    android:gravity="bottom|center"
-                    android:orientation="vertical"
-                    android:paddingBottom="@dimen/activity_vertical_margin"
-                    android:paddingLeft="@dimen/activity_horizontal_margin"
-                    android:paddingRight="@dimen/activity_horizontal_margin"
-                    android:paddingTop="@dimen/activity_vertical_margin">
-
-                    <ImageView
-                        android:id="@+id/detail_avatar"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:scaleType="centerCrop" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/detail_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="JYGoddd丶"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                            android:textColor="@color/pureWhite"
-                            android:textSize="17sp" />
-
-                        <TextView
-                            android:id="@+id/tv_level"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="6dp"
-                            android:background="@drawable/shape_bg_level"
-                            android:text="Lv.10"
-                            android:textColor="@color/pureWhite"
-                            android:textSize="10sp"
-                            android:textStyle="italic|bold" />
-
-                        <ImageView
-                            android:id="@+id/detail_sex"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_weight="1"
-                            android:src="@drawable/man" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
             </RelativeLayout>
 
             <LinearLayout
@@ -112,10 +57,6 @@
                         android:layout_marginLeft="10dp"
                         android:text="起点的位置信息" />
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="24dp"
-                        android:src="@drawable/arrow_right" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -139,10 +80,6 @@
                         android:layout_marginLeft="10dp"
                         android:text="终点的位置信息" />
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="24dp"
-                        android:src="@drawable/arrow_right" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -266,20 +203,20 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:background="@null"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="@null">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@null"
                     android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:background="@null">
 
                     <Button
                         android:id="@+id/btn_grab"
                         style="@style/RbButton.Inverse.Red"
-                        android:text="抢  单"
+                        android:text="查看订单状态"
                         android:textSize="16sp" />
                 </LinearLayout>
 

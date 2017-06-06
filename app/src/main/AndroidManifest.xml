@@ -251,6 +251,9 @@
         <activity android:name=".activity.order.RemarkActivity" />
         <activity android:name=".activity.grab.PositionActivity" />
         <activity android:name=".activity.SplashActivity" />
+        <activity android:name=".activity.order.MyorderActivity" />
+        <activity android:name=".activity.order.TimelineActivty" />
+        <activity android:name=".activity.navigate.NavigateActivity" />
     </application>
 
 </manifest>
