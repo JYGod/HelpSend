@@ -2,7 +2,9 @@ package com.edu.hrbeu.helpsend.adapter;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.activity.grab.PositionActivity;
+import com.edu.hrbeu.helpsend.activity.navigate.NavigateActivity;
 import com.edu.hrbeu.helpsend.cache.ACache;
 import com.edu.hrbeu.helpsend.pojo.GrabDetailResponse;
 import com.edu.hrbeu.helpsend.bean.GrabOrder;
@@ -87,6 +90,7 @@ public class GrabOrderAdapter extends RecyclerView.Adapter<GrabOrderAdapter.mVie
     }
 
     private void showOrderDetail(GrabOrderDetail detail) {
+        mCache= ACache.get(mContext);
         final DialogPlus dialog = DialogPlus.newDialog(mContext)
                 .setContentHolder(new ViewHolder(R.layout.grab_order_detail))
                 .setCancelable(false)
@@ -128,13 +132,11 @@ public class GrabOrderAdapter extends RecyclerView.Adapter<GrabOrderAdapter.mVie
         dialog.show();
 
         selectStart.setOnClickListener((View v)->{
-            mCache= ACache.get(mContext);
             mCache.put("targetLng",detail.getStartLocationPojo().getLongitude());
             mCache.put("targetLat",detail.getStartLocationPojo().getLatitude());
             CommonUtil.startActivity(mContext, PositionActivity.class);
         });
         selectEnd.setOnClickListener((View v)->{
-            mCache= ACache.get(mContext);
             mCache.put("targetLng",detail.getEndLocationPojo().getLongitude());
             mCache.put("targetLat",detail.getEndLocationPojo().getLatitude());
             CommonUtil.startActivity(mContext, PositionActivity.class);
@@ -152,6 +154,12 @@ public class GrabOrderAdapter extends RecyclerView.Adapter<GrabOrderAdapter.mVie
                     CommonUtil.showToast(mContext,grabResponse.getMessage());
                     dialog.dismiss();
                     //跳转到导航
+                    Intent intent=new Intent(mContext, NavigateActivity.class);
+                    intent.putExtra("startLat",detail.getStartLocationPojo().getLatitude());
+                    intent.putExtra("startLng",detail.getStartLocationPojo().getLongitude());
+                    intent.putExtra("endLat",detail.getEndLocationPojo().getLatitude());
+                    intent.putExtra("endLng",detail.getEndLocationPojo().getLongitude());
+                    mContext.startActivity(intent);
                 }
 
                 @Override

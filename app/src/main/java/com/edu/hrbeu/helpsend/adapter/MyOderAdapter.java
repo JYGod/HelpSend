@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.edu.hrbeu.helpsend.R;
+import com.edu.hrbeu.helpsend.activity.navigate.NavigateActivity;
 import com.edu.hrbeu.helpsend.activity.order.TimelineActivty;
 import com.edu.hrbeu.helpsend.bean.GrabOrderDetail;
 import com.edu.hrbeu.helpsend.global.GlobalData;
@@ -63,6 +64,10 @@ public class MyOderAdapter extends RecyclerView.Adapter<MyOderAdapter.mViewHolde
         });
 
         switch (Integer.parseInt(order.getOrderStatus())){
+            case 1:
+                holder.label.setBgColor(R.color.green);
+                holder.label.setText("进行中");
+                break;
             case -1:
                 holder.label.setBgColor(R.color.bottomTextColoer);
                 holder.label.setText("已撤单");
@@ -135,6 +140,12 @@ public class MyOderAdapter extends RecyclerView.Adapter<MyOderAdapter.mViewHolde
         btnGrab.setOnClickListener((View v)->{
             if (GlobalData.ORDER_SELECT.equals("receive")){
 
+                Intent intent=new Intent(mContext, NavigateActivity.class);
+                intent.putExtra("startLat",detail.getStartLocationPojo().getLatitude());
+                intent.putExtra("startLng",detail.getStartLocationPojo().getLongitude());
+                intent.putExtra("endLat",detail.getEndLocationPojo().getLatitude());
+                intent.putExtra("endLng",detail.getEndLocationPojo().getLongitude());
+                mContext.startActivity(intent);
             }else {
                 Intent intent=new Intent(mContext, TimelineActivty.class);
                 intent.putExtra("orderId",detail.getOrderId());
