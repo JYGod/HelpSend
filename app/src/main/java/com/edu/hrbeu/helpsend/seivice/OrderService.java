@@ -56,6 +56,9 @@ public interface OrderService {
     @GET("receiveorder")
     Call<ResponsePojo>grabOrder(@Query("orderId") String orderId, @Query("orderReceiverId") String orderReceiverId);//抢单
 
+    @GET("getprice")
+    Call<ResponsePojo>getPrice(@Query("location") String positionInfo);//抢单
+
     /**获取实例*/
     Retrofit retrofit = new Retrofit.Builder()
             //设置OKHttpClient,如果不设置会提供一个默认的

@@ -11,6 +11,7 @@ public class GrabOrder {
     private String sendTime;
     private String receiveTime;
     private String distance;
+    private String orderPrice;
 
     public String getOrderId() {
         return orderId;
@@ -74,6 +75,14 @@ public class GrabOrder {
 
     public void setDistance(String distance) {
         this.distance = distance;
+    }
+
+    public String getOrderPrice() {
+        return orderPrice;
+    }
+
+    public void setOrderPrice(String orderPrice) {
+        this.orderPrice = orderPrice;
     }
 
 

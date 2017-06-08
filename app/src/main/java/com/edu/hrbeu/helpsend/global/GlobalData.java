@@ -2,6 +2,7 @@ package com.edu.hrbeu.helpsend.global;
 
 
 import com.edu.hrbeu.helpsend.bean.Order;
+import com.edu.hrbeu.helpsend.pojo.PositionPojo;
 
 import java.io.File;
 
@@ -25,4 +26,12 @@ public class GlobalData {
     public static final int TIM_SDK_APP_ID=1400031229;
 
     public static String ORDER_SELECT="put";
+
+    public static String MY_REAL_NAME;
+    public static String MY_IDENTITY_CARD;
+    public static File MY_CARD_FRONT;
+    public static File MY_CARD_BACK;
+    public static File MY_SELFIE;
+
+    public static PositionPojo POSITION_POINTS=new PositionPojo(new Order.Location(),new Order.Location());
 }

@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.adapter.LocatePoiAdapter;
+import com.edu.hrbeu.helpsend.bean.GrabOrder;
 import com.edu.hrbeu.helpsend.bean.LocatePoi;
 import com.edu.hrbeu.helpsend.bean.Order;
 import com.edu.hrbeu.helpsend.cache.ACache;
@@ -191,8 +192,10 @@ public class LocateActivity extends MapActivity implements TencentLocationListen
                             locationTemp.setLongitude(String.valueOf(mapCenter.getLongitude()));
                             if (GlobalData.LOCATE_DIRECTION.equals("start")){
                                 GlobalData.MY_ORDER.setStartLocation(locationTemp);
+                                GlobalData.POSITION_POINTS.setStart(locationTemp);
                             }else {
                                 GlobalData.MY_ORDER.setEndLocation(locationTemp);
+                                GlobalData.POSITION_POINTS.setEnd(locationTemp);
                             }
                             finish();
                         }

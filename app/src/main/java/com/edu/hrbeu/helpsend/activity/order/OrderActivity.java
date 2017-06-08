@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.edu.hrbeu.helpsend.R;
@@ -25,6 +26,7 @@ import com.edu.hrbeu.helpsend.cache.ACache;
 import com.edu.hrbeu.helpsend.databinding.ActivityOrderBinding;
 import com.edu.hrbeu.helpsend.global.GlobalData;
 import com.edu.hrbeu.helpsend.http.PhoneUtil;
+import com.edu.hrbeu.helpsend.pojo.ResponsePojo;
 import com.edu.hrbeu.helpsend.receiver.LocalBroadcastManager;
 import com.edu.hrbeu.helpsend.receiver.MyReceiver;
 import com.edu.hrbeu.helpsend.seivice.OrderService;
@@ -111,6 +113,32 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 .crossFade(1000)
                 .into(mBinding.include.ivAccessory);
         CommonUtil.setLimitText( mBinding.include.tvRemark,GlobalData.MY_ORDER.getRemark());
+
+       calculatePrice();
+
+
+    }
+
+    private void calculatePrice() {
+        mBinding.tvPrice.setText("计算中...");
+        Gson gson=new Gson();
+        String reqStr= gson.toJson(GlobalData.POSITION_POINTS);
+        Log.e("reqStr",reqStr);
+        OrderService service=retrofit.create(OrderService.class);
+        Call<ResponsePojo> call = service.getPrice(reqStr);
+        call.enqueue(new Callback<ResponsePojo>() {
+            @Override
+            public void onResponse(Call<ResponsePojo> call, Response<ResponsePojo> response) {
+                ResponsePojo responsePojo=response.body();
+                mBinding.tvPrice.setText(responsePojo.getStatus());
+                GlobalData.MY_ORDER.setOrderPrice(responsePojo.getStatus());
+            }
+
+            @Override
+            public void onFailure(Call<ResponsePojo> call, Throwable t) {
+                CommonUtil.showToast(mContext,"价格获取失败！");
+            }
+        });
     }
 
     @Override
@@ -312,6 +340,8 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 .setCancelable(false)
                 .setExpanded(true)
                 .create();
+        TextView tvPrice=(TextView)dialog.findViewById(R.id.tv_price);
+        tvPrice.setText(GlobalData.MY_ORDER.getOrderPrice());
         dialog.show();
         ImageView ivCancel=(ImageView)dialog.getHolderView().findViewById(R.id.iv_payment_cancel);
         ivCancel.setOnClickListener((View v)->{

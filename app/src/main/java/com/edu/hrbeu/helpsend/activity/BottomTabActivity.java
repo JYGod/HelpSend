@@ -32,6 +32,7 @@ import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.activity.grab.GrabActivity;
 import com.edu.hrbeu.helpsend.activity.order.MyorderActivity;
 import com.edu.hrbeu.helpsend.activity.order.OrderActivity;
+import com.edu.hrbeu.helpsend.activity.step.Step1Activity;
 import com.edu.hrbeu.helpsend.cache.ACache;
 import com.edu.hrbeu.helpsend.databinding.ActivityBottomTabBinding;
 import com.edu.hrbeu.helpsend.databinding.NavHeaderMainBinding;
@@ -298,6 +299,7 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
         mBinding.include.ivTitleMenu.setOnClickListener(this);
         bind.ivHead.setOnClickListener(this);
         bind.navOrderManage.setOnClickListener(this);
+        bind.navApply.setOnClickListener(this);
     }
 
 
@@ -380,6 +382,9 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
                 break;
             case R.id.nav_order_manage:
                 CommonUtil.startActivity(mContext, MyorderActivity.class);
+                break;
+            case R.id.nav_apply:
+                CommonUtil.startActivity(mContext, Step1Activity.class);
                 break;
             default:
                 break;

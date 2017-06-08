@@ -70,6 +70,7 @@ public class GrabOrderAdapter extends RecyclerView.Adapter<GrabOrderAdapter.mVie
         holder.tvStarTime.setText(order.getSendTime());
         holder.tvEndTime.setText(order.getReceiveTime());
         holder.tvDistance.setText(order.getDistance());
+        holder.tvPrice.setText(order.getOrderPrice());
         holder.itemView.setOnClickListener((View v)->{
             OrderService service=retrofit.create(OrderService.class);
             Call<GrabDetailResponse>call=service.getGrabOrderDetail(order.getOrderId());
@@ -179,7 +180,7 @@ public class GrabOrderAdapter extends RecyclerView.Adapter<GrabOrderAdapter.mVie
 
     class mViewHolder extends RecyclerView.ViewHolder{
 
-        TextView tvName,tvStart,tvEnd,tvStarTime,tvEndTime,tvDistance;
+        TextView tvName,tvStart,tvEnd,tvStarTime,tvEndTime,tvDistance,tvPrice;
 
         public mViewHolder(View itemView) {
             super(itemView);
@@ -189,6 +190,7 @@ public class GrabOrderAdapter extends RecyclerView.Adapter<GrabOrderAdapter.mVie
             tvStarTime=(TextView)itemView.findViewById(R.id.tv_start_time);
             tvEndTime=(TextView)itemView.findViewById(R.id.tv_end_time);
             tvDistance=(TextView)itemView.findViewById(R.id.tv_distance);
+            tvPrice=(TextView)itemView.findViewById(R.id.tv_price);
         }
     }
 }
