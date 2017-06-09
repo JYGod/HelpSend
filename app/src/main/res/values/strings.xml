@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HelpSend</string>
+    <string name="app_name">帮帮带</string>
     <string name="order">下单</string>
     <string name="grab">抢单</string>
     <string name="message">消息</string>

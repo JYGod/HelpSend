@@ -15,6 +15,8 @@ public class GrabOrderDetail {
     private String orderOwnerId;
     private String imagePath;
     private String orderOwnerNickName;
+    private String senderTel;
+    private String receiverTel;
 
     public String getRemark() {
         return remark;
@@ -118,5 +120,21 @@ public class GrabOrderDetail {
 
     public void setOrderOwnerNickName(String orderOwnerNickName) {
         this.orderOwnerNickName = orderOwnerNickName;
+    }
+
+    public String getSenderTel() {
+        return senderTel;
+    }
+
+    public void setSenderTel(String senderTel) {
+        this.senderTel = senderTel;
+    }
+
+    public String getReceiverTel() {
+        return receiverTel;
+    }
+
+    public void setReceiverTel(String receiverTel) {
+        this.receiverTel = receiverTel;
     }
 }

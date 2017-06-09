@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.edu.hrbeu.helpsend.R;
@@ -33,6 +34,7 @@ import com.edu.hrbeu.helpsend.cache.ACache;
 import com.edu.hrbeu.helpsend.databinding.ActivityNavigateBinding;
 import com.edu.hrbeu.helpsend.utils.CommonUtil;
 import com.edu.hrbeu.helpsend.utils.DrawableUtil;
+import com.edu.hrbeu.helpsend.utils.ImgLoadUtil;
 import com.edu.hrbeu.helpsend.utils.LocationOverlay;
 import com.edu.hrbeu.helpsend.utils.LocationUtil;
 import com.edu.hrbeu.helpsend.utils.TopMenuHeader;
@@ -81,6 +83,7 @@ public class NavigateActivity extends MapActivity implements View.OnClickListene
     private TopMenuHeader top;
     private ImageView ivWheel;
     private DialogPlus dialog;
+    private String startPhone,endPhone,avatar,nick;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,6 +96,10 @@ public class NavigateActivity extends MapActivity implements View.OnClickListene
         startLng=intent.getStringExtra("startLng");
         endLat=intent.getStringExtra("endLat");
         endLng=intent.getStringExtra("endLng");
+        startPhone=intent.getStringExtra("startPhone");
+        endPhone=intent.getStringExtra("endPhone");
+        avatar=intent.getStringExtra("avatar");
+        nick=intent.getStringExtra("nick");
         initView();
         uiSetting();
         clickListener();
@@ -113,6 +120,12 @@ public class NavigateActivity extends MapActivity implements View.OnClickListene
 
     private void clickListener() {
         top.topMenuLeft.setOnClickListener(this);
+        mBinding.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                routeDialog.show();
+            }
+        });
     }
 
     private void initView() {
@@ -138,6 +151,19 @@ public class NavigateActivity extends MapActivity implements View.OnClickListene
                 .draggable(true));
 
         tencentMap.setOnMarkerClickListener(this);
+        routeDialog = DialogPlus.newDialog(mContext)
+                .setContentHolder(new ViewHolder(R.layout.recycler_routes))
+                .setCancelable(true)
+                .setExpanded(true,ViewGroup.LayoutParams.WRAP_CONTENT)
+                .setContentHeight(ViewGroup.LayoutParams.MATCH_PARENT)
+                .setContentWidth(ViewGroup.LayoutParams.WRAP_CONTENT)
+                .setGravity(Gravity.BOTTOM)
+                .create();
+        View holder=routeDialog.getHolderView();
+        ImageView imgAvatar = (ImageView) holder.findViewById(R.id.iv_avatar);
+        TextView tvNick = (TextView) holder.findViewById(R.id.tv_name);
+        ImgLoadUtil.displayCircle(imgAvatar,avatar);
+        tvNick.setText(nick);
 
     }
 
@@ -309,6 +335,7 @@ public class NavigateActivity extends MapActivity implements View.OnClickListene
     }
 
     private Polyline polyline;
+    private DialogPlus routeDialog;
     HttpResponseListener directionResponseListener=new HttpResponseListener() {
         public List<com.tencent.lbssearch.object.Location> PolylineArr;
 
@@ -334,14 +361,6 @@ public class NavigateActivity extends MapActivity implements View.OnClickListene
                         color(0xff0066cc).
                         width(10f));
 
-                final DialogPlus routeDialog = DialogPlus.newDialog(mContext)
-                        .setContentHolder(new ViewHolder(R.layout.recycler_routes))
-                        .setCancelable(true)
-                        .setExpanded(true,ViewGroup.LayoutParams.WRAP_CONTENT)
-                        .setContentHeight(ViewGroup.LayoutParams.MATCH_PARENT)
-                        .setContentWidth(ViewGroup.LayoutParams.WRAP_CONTENT)
-                        .setGravity(Gravity.BOTTOM)
-                        .create();
                 View holder = routeDialog.getHolderView();
                 RecyclerView recycle = (RecyclerView) holder.findViewById(R.id.route_list);
                 recycle.setItemAnimator(new DefaultItemAnimator());
@@ -358,12 +377,6 @@ public class NavigateActivity extends MapActivity implements View.OnClickListene
                 dialog.dismiss();
 
 
-                mBinding.fab.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        routeDialog.show();
-                    }
-                });
 
             }
 

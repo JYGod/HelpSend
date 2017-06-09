@@ -1,6 +1,7 @@
 package com.edu.hrbeu.helpsend.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -16,9 +17,11 @@ import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.activity.navigate.NavigateActivity;
 import com.edu.hrbeu.helpsend.activity.order.TimelineActivty;
 import com.edu.hrbeu.helpsend.bean.GrabOrderDetail;
+import com.edu.hrbeu.helpsend.global.CustomDialog;
 import com.edu.hrbeu.helpsend.global.GlobalData;
 import com.edu.hrbeu.helpsend.pojo.GrabDetailResponse;
 import com.edu.hrbeu.helpsend.pojo.MyOrderPojo;
+import com.edu.hrbeu.helpsend.pojo.ResponsePojo;
 import com.edu.hrbeu.helpsend.seivice.OrderService;
 import com.edu.hrbeu.helpsend.utils.CommonUtil;
 import com.edu.hrbeu.helpsend.utils.LabelView;
@@ -60,6 +63,38 @@ public class MyOderAdapter extends RecyclerView.Adapter<MyOderAdapter.mViewHolde
         }
         holder.tvCancel.setOnClickListener((View v)->{
             //撤单
+            CustomDialog.Builder builder = new CustomDialog.Builder(mContext);
+            builder.setMessage("确定要撤单吗?");
+            builder.setPositiveButton("确定",new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    OrderService service=retrofit.create(OrderService.class);
+                    Call<ResponsePojo> call = service.cancelOrder(order.getOrderId());
+                    call.enqueue(new Callback<ResponsePojo>() {
+                        @Override
+                        public void onResponse(Call<ResponsePojo> call, Response<ResponsePojo> response) {
+                            ResponsePojo responsePojo=response.body();
+                            String msg=responsePojo.getMessage();
+                            CommonUtil.showToast(mContext,msg);
+                            dialog.dismiss();
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResponsePojo> call, Throwable t) {
+                            CommonUtil.showToast(mContext,"撤单失败！");
+                            dialog.dismiss();
+                        }
+                    });
+
+
+                }
+            });
+            builder.setNegativeButton("取消",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            builder.create().show();
 
         });
 
@@ -145,6 +180,10 @@ public class MyOderAdapter extends RecyclerView.Adapter<MyOderAdapter.mViewHolde
                 intent.putExtra("startLng",detail.getStartLocationPojo().getLongitude());
                 intent.putExtra("endLat",detail.getEndLocationPojo().getLatitude());
                 intent.putExtra("endLng",detail.getEndLocationPojo().getLongitude());
+                intent.putExtra("avatar",detail.getOrderOwnerAvatarPath());
+                intent.putExtra("nick",detail.getOrderOwnerNickName());
+                intent.putExtra("startPhone",detail.getSenderTel());
+                intent.putExtra("endPhone",detail.getReceiverTel());
                 mContext.startActivity(intent);
             }else {
                 Intent intent=new Intent(mContext, TimelineActivty.class);

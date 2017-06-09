@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="300dp"
+        android:layout_height="180dp"
+        android:layout_alignParentStart="true"
+        android:weightSum="1"
+        >
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.38"
+            style="@style/top_layout"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.50"
+                android:gravity="center"
+                android:id="@+id/content">
+
+                <TextView
+                    android:text="TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/message"
+                    android:gravity="center"
+                    android:textSize="18sp"
+                    android:textColor="#4a4a4b" />
+            </LinearLayout>
+        </LinearLayout>
+        <View style="@style/bg_line"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="53dp"
+            android:weightSum="1"
+            android:background="@drawable/bottom_unselect">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.43"
+                android:gravity="center"
+                android:showDividers="end"
+                android:id="@+id/dialog_left"
+                android:weightSum="1"
+                style="@style/single_layout"
+                android:paddingBottom="0dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:paddingTop="0dp">
+
+                <Button
+                    android:text="Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/positiveBotton"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:textColorLink="#5e5e5e"
+                    android:textColor="#3498DB"
+                    android:layout_weight="0.67"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+
+<View style="@style/bg_line_hori"/>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:id="@+id/dialog_right"
+                style="@style/single_layout"
+                android:paddingBottom="0dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:paddingTop="0dp">
+
+                <Button
+                    android:text="Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/negativeButton"
+                    style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                    android:textColor="#3498DB"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

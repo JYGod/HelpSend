@@ -14,7 +14,9 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -132,6 +134,21 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 ResponsePojo responsePojo=response.body();
                 mBinding.tvPrice.setText(responsePojo.getStatus());
                 GlobalData.MY_ORDER.setOrderPrice(responsePojo.getStatus());
+                mBinding.btnPriceDetail.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final DialogPlus dialog = DialogPlus.newDialog(mContext)
+                                .setContentHolder(new ViewHolder(R.layout.dialog_price_detail))
+                                .setExpanded(true, ViewGroup.LayoutParams.WRAP_CONTENT)
+                                .setContentHeight(ViewGroup.LayoutParams.MATCH_PARENT)
+                                .setContentWidth(ViewGroup.LayoutParams.WRAP_CONTENT)
+                                .setGravity(Gravity.BOTTOM)
+                                .create();
+                        TextView detail=(TextView)dialog.getHolderView().findViewById(R.id.tv_price_detail);
+                        detail.setText(responsePojo.getMessage());
+                        dialog.show();
+                    }
+                });
             }
 
             @Override

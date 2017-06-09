@@ -125,6 +125,7 @@
                     android:orientation="horizontal">
 
                     <net.soulwolf.widget.speedyselector.widget.SelectorTextView xmlns:soulwolf="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/btn_price_detail"
                         android:layout_width="55dp"
                         android:layout_height="25dp"
                         android:background="@color/bottomTextColoer"
