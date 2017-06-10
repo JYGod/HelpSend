@@ -6,7 +6,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.Toast;
 
 import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.databinding.ActivityRemarkBinding;

@@ -3,7 +3,6 @@ package com.edu.hrbeu.helpsend.pojo;
 
 import com.edu.hrbeu.helpsend.bean.GrabOrderDetail;
 
-import java.util.ArrayList;
 
 public class GrabDetailResponse {
     private String status;

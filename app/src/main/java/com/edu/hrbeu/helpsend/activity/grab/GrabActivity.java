@@ -16,7 +16,6 @@ import com.edu.hrbeu.helpsend.bean.GrabOrder;
 import com.edu.hrbeu.helpsend.cache.ACache;
 import com.edu.hrbeu.helpsend.pojo.GrabResponse;
 import com.edu.hrbeu.helpsend.databinding.ActivityGrabBinding;
-import com.edu.hrbeu.helpsend.global.GlobalData;
 import com.edu.hrbeu.helpsend.seivice.OrderService;
 import com.scu.miomin.shswiperefresh.core.SHSwipeRefreshLayout;
 

@@ -29,12 +29,11 @@ import com.xw.repo.XEditText;
 
 import java.io.File;
 
-import static android.R.attr.bitmap;
 
 public class Step1Activity extends Activity{
 
     private static final int USE_FRONT_CAMERA = 2;
-    private static String SAVE_PATH=Environment.getExternalStorageDirectory().getPath();
+ //   private static String SAVE_PATH=Environment.getExternalStorageDirectory().getPath();
     private static final int REQUEST_CODE_CAPTURE_CAMEIA = 1;
     private final String[] steps={"填写信息","上传身份证","身份认证","完成认证"};
     private ActivityStep1Binding mBinding;

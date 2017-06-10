@@ -62,6 +62,9 @@ public interface OrderService {
     @GET("cancelorder")
     Call<ResponsePojo>cancelOrder(@Query("orderId") String orderId);//撤单
 
+    @GET("deliveryorder")
+    Call<ResponsePojo>deliveryOrder(@Query("orderId") String orderId);//撤单
+
     /**获取实例*/
     Retrofit retrofit = new Retrofit.Builder()
             //设置OKHttpClient,如果不设置会提供一个默认的

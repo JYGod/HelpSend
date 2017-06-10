@@ -51,7 +51,6 @@ public class PositionActivity extends MapActivity implements TencentLocationList
     private LatLng latLngLocation;
     private LocationOverlay mLocationOverlay;
     private Bitmap bmpMarker;
-    private LatLng mapCenter;
     private ACache mCache;
     private String mLng,mLat;
     private LatLng target;

@@ -4,7 +4,6 @@ package com.edu.hrbeu.helpsend.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,8 +21,6 @@ import com.edu.hrbeu.helpsend.cache.ACache;
 import com.edu.hrbeu.helpsend.pojo.GrabDetailResponse;
 import com.edu.hrbeu.helpsend.bean.GrabOrder;
 import com.edu.hrbeu.helpsend.bean.GrabOrderDetail;
-import com.edu.hrbeu.helpsend.pojo.GrabResponse;
-import com.edu.hrbeu.helpsend.pojo.OrderResponse;
 import com.edu.hrbeu.helpsend.pojo.ResponsePojo;
 import com.edu.hrbeu.helpsend.seivice.OrderService;
 import com.edu.hrbeu.helpsend.utils.CommonUtil;
@@ -31,8 +28,11 @@ import com.edu.hrbeu.helpsend.utils.ImgLoadUtil;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.ViewHolder;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -160,6 +160,13 @@ public class GrabOrderAdapter extends RecyclerView.Adapter<GrabOrderAdapter.mVie
                     intent.putExtra("startLng",detail.getStartLocationPojo().getLongitude());
                     intent.putExtra("endLat",detail.getEndLocationPojo().getLatitude());
                     intent.putExtra("endLng",detail.getEndLocationPojo().getLongitude());
+                    String detTime=calculateDelTime(detail.getReceiveTime());
+                    intent.putExtra("orderId",detail.getOrderId());
+                    intent.putExtra("detTime",detTime);
+                    intent.putExtra("startPhone",detail.getSenderTel());
+                    intent.putExtra("endPhone",detail.getReceiverTel());
+                    intent.putExtra("nick",detail.getOrderOwnerNickName());
+                    intent.putExtra("avatar",detail.getOrderOwnerAvatarPath());
                     mContext.startActivity(intent);
                 }
 
@@ -171,6 +178,21 @@ public class GrabOrderAdapter extends RecyclerView.Adapter<GrabOrderAdapter.mVie
             });
         });
 
+    }
+
+    private String calculateDelTime(String receiveTime)  {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date=null;
+        String res=null;
+        try {
+            date=formatter.parse(receiveTime);
+            long currTime=System.currentTimeMillis();
+            long receveTime=date.getTime();
+            res= String.valueOf(receveTime-currTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return res;
     }
 
     @Override

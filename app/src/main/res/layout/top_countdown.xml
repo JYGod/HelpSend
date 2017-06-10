@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="45dp"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/pureWhite"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.2"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="剩余时间:"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_time_left"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    android:textColor="@color/order_ing"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.2"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <net.soulwolf.widget.speedyselector.widget.SelectorTextView xmlns:soulwolf="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/btn_delivery"
+                    android:layout_width="80dp"
+                    android:layout_height="30dp"
+                    android:background="@color/themeColor"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="我已送达"
+                    android:textColor="@color/themeColor"
+                    android:textSize="12sp"
+                    soulwolf:spBorderWidth="1dp"
+                    soulwolf:spJustBorder="true"
+                    soulwolf:spRadius="5dp"
+                    soulwolf:spStatePressedBackground="@color/pureWhite"
+                    soulwolf:spStatePressedTextColor="@color/pureWhite" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View style="@style/bg_line" />
+    </LinearLayout>
+
+</RelativeLayout>
+</layout>

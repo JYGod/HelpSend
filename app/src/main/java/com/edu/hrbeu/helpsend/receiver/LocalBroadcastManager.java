@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 import com.edu.hrbeu.helpsend.utils.Logger;
 
@@ -17,8 +16,8 @@ import java.util.Set;
 
 
 public final class LocalBroadcastManager {
-    private static final String TAG = "LocalBroadcastManager";
-    private static final boolean DEBUG = false;
+   // private static final String TAG = "LocalBroadcastManager";
+    //private static final boolean DEBUG = false;
     private final Context mAppContext;
     private final HashMap<BroadcastReceiver, ArrayList<IntentFilter>> mReceivers = new HashMap<BroadcastReceiver, ArrayList<IntentFilter>>();
     private final HashMap<String, ArrayList<LocalBroadcastManager.ReceiverRecord>> mActions = new HashMap<String, ArrayList<LocalBroadcastManager.ReceiverRecord>> ();
@@ -56,7 +55,7 @@ public final class LocalBroadcastManager {
     }
 
     public void registerReceiver(BroadcastReceiver receiver, IntentFilter filter) {
-        HashMap var3 = this.mReceivers;
+      //  HashMap var3 = this.mReceivers;
         synchronized (this.mReceivers) {
             LocalBroadcastManager.ReceiverRecord entry = new LocalBroadcastManager.ReceiverRecord(filter, receiver);
             ArrayList filters = (ArrayList) this.mReceivers.get(receiver);

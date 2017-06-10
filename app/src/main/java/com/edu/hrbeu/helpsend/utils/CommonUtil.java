@@ -9,6 +9,9 @@ import android.widget.Toast;
 
 import com.edu.hrbeu.helpsend.activity.LoginActivity;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class CommonUtil {
 
     /**
@@ -53,6 +56,30 @@ public class CommonUtil {
         Intent intent=new Intent(mContext,toClass);
         mContext.startActivity(intent);
 
+    }
+
+
+    public static String calculateTime(long del) {
+        if (del>0){
+            long day=del/1000/3600/24;
+            long hour =del/1000/3600-day*24;
+            long minute = del/1000/60-hour*60-day*24*60;
+            long second= del/1000- hour*3600-minute*60-day*24*3600;
+            String res="";
+            if (day==0&&minute==0&&hour==0){
+                res=second+"秒";
+            }else if (day==0&&hour==0){
+                res=minute+"分钟"+second+"秒";
+            }else if (day==0){
+                res=hour+"小时"+minute+"分钟"+second+"秒";
+            }else {
+                res=day+"天"+hour+"小时"+minute+"分钟"+second+"秒";
+            }
+            return res;
+
+        }else {
+            return "配送超时！";
+        }
     }
 
 

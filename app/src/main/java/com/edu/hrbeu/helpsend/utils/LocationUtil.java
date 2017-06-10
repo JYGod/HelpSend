@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.tencent.lbssearch.object.Location;
 import com.tencent.map.geolocation.TencentLocationManager;

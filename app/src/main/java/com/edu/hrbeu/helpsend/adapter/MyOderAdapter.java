@@ -17,6 +17,7 @@ import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.activity.navigate.NavigateActivity;
 import com.edu.hrbeu.helpsend.activity.order.TimelineActivty;
 import com.edu.hrbeu.helpsend.bean.GrabOrderDetail;
+import com.edu.hrbeu.helpsend.bean.Order;
 import com.edu.hrbeu.helpsend.global.CustomDialog;
 import com.edu.hrbeu.helpsend.global.GlobalData;
 import com.edu.hrbeu.helpsend.pojo.GrabDetailResponse;
@@ -28,7 +29,11 @@ import com.edu.hrbeu.helpsend.utils.LabelView;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.ViewHolder;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -123,7 +128,7 @@ public class MyOderAdapter extends RecyclerView.Adapter<MyOderAdapter.mViewHolde
                 public void onResponse(Call<GrabDetailResponse> call, Response<GrabDetailResponse> response) {
                     GrabDetailResponse grabDetailResponse=response.body();
                     GrabOrderDetail detail=grabDetailResponse.getMessage();
-                    showOrderDetail(detail);
+                    showOrderDetail(detail,order);
                 }
 
                 @Override
@@ -135,7 +140,7 @@ public class MyOderAdapter extends RecyclerView.Adapter<MyOderAdapter.mViewHolde
 
     }
 
-    private void showOrderDetail(GrabOrderDetail detail) {
+    private void showOrderDetail(GrabOrderDetail detail, MyOrderPojo order) {
         final DialogPlus dialog = DialogPlus.newDialog(mContext)
                 .setContentHolder(new ViewHolder(R.layout.my_order_detail))
                 .setCancelable(false)
@@ -173,8 +178,7 @@ public class MyOderAdapter extends RecyclerView.Adapter<MyOderAdapter.mViewHolde
             dialog.dismiss();
         });
         btnGrab.setOnClickListener((View v)->{
-            if (GlobalData.ORDER_SELECT.equals("receive")){
-
+            if (GlobalData.ORDER_SELECT.equals("receive")&&(order.getOrderStatus().equals("0")||order.getOrderStatus().equals("1"))){
                 Intent intent=new Intent(mContext, NavigateActivity.class);
                 intent.putExtra("startLat",detail.getStartLocationPojo().getLatitude());
                 intent.putExtra("startLng",detail.getStartLocationPojo().getLongitude());
@@ -184,14 +188,38 @@ public class MyOderAdapter extends RecyclerView.Adapter<MyOderAdapter.mViewHolde
                 intent.putExtra("nick",detail.getOrderOwnerNickName());
                 intent.putExtra("startPhone",detail.getSenderTel());
                 intent.putExtra("endPhone",detail.getReceiverTel());
-                mContext.startActivity(intent);
-            }else {
-                Intent intent=new Intent(mContext, TimelineActivty.class);
+                String detTime=calculateDelTime(detail.getReceiveTime());
+                intent.putExtra("detTime",detTime);
                 intent.putExtra("orderId",detail.getOrderId());
                 mContext.startActivity(intent);
+                dialog.dismiss();
+            }else if (!GlobalData.ORDER_SELECT.equals("receive")){
+                Intent intent=new Intent(mContext, TimelineActivty.class);
+                intent.putExtra("orderId",detail.getOrderId());
+                intent.putExtra("avatar",detail.getOrderOwnerAvatarPath());
+                mContext.startActivity(intent);
+                dialog.dismiss();
+            }else {
+                CommonUtil.showToast(mContext,"该订单已完成配");
             }
         });
     }
+
+    private String calculateDelTime(String receiveTime)  {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date=null;
+        String res=null;
+        try {
+            date=formatter.parse(receiveTime);
+            long currTime=System.currentTimeMillis();
+            long receveTime=date.getTime();
+            res= String.valueOf(receveTime-currTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+
 
     @Override
     public int getItemCount() {

@@ -40,31 +40,14 @@ import com.edu.hrbeu.helpsend.global.GlobalData;
 import com.edu.hrbeu.helpsend.utils.CommonUtil;
 import com.edu.hrbeu.helpsend.utils.ImgLoadUtil;
 import com.edu.hrbeu.helpsend.utils.StatusBarUtil;
-import com.tencent.android.tpush.XGPushConfig;
-import com.tencent.android.tpush.XGPushManager;
-import com.tencent.imsdk.TIMConnListener;
-import com.tencent.imsdk.TIMConversation;
-import com.tencent.imsdk.TIMGroupEventListener;
-import com.tencent.imsdk.TIMGroupTipsElem;
-import com.tencent.imsdk.TIMLogLevel;
-import com.tencent.imsdk.TIMManager;
-import com.tencent.imsdk.TIMMessage;
-import com.tencent.imsdk.TIMMessageListener;
-import com.tencent.imsdk.TIMRefreshListener;
-import com.tencent.imsdk.TIMSdkConfig;
-import com.tencent.imsdk.TIMUserConfig;
-import com.tencent.imsdk.TIMUserStatusListener;
-import com.tencent.mapsdk.raster.model.LatLng;
-import com.youth.banner.loader.ImageLoader;
+
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import cn.jpush.im.android.api.JMessageClient;
-import cn.jpush.im.android.api.model.UserInfo;
 import cn.jpush.im.api.BasicCallback;
 
 public class BottomTabActivity extends TabActivity implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
@@ -81,8 +64,6 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
     private NavigationView navView;
     private NavHeaderMainBinding bind;
     private final int REQUEST_SELECT_IMG = 11;
-    private UserInfo myInfo;
-    private double latitude,longitude;
     private String provider;
     private ACache mCache;
     private Context mContext;
@@ -105,6 +86,12 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
         initMyLocation();
         //  initTIM();
         clickListener();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        drawerLayout.closeDrawers();
     }
 
     private void initMyLocation() {
@@ -138,115 +125,6 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
             GlobalData.mLocation.setLongitude(String.valueOf(location.getLongitude()));
             GlobalData.mLocation.setLatitude(String.valueOf(location.getLatitude()));
         }
-
-    }
-
-    private void initTIM() {
-        TIMSdkConfig config=new TIMSdkConfig(GlobalData.TIM_SDK_APP_ID)
-                .enableCrashReport(false)
-                .enableLogPrint(true)
-                .setLogLevel(TIMLogLevel.DEBUG)
-                .setLogPath(Environment.getExternalStorageDirectory().getPath()+"/justfortest/");
-        TIMManager.getInstance().init(getApplicationContext(),config);
-
-
-        TIMUserConfig userConfig=new TIMUserConfig()
-                //设置群组资料拉取字段
-               // .setGroupSettings(initGroupSettings())
-                //设置资料关系链拉取字段
-                //.setFriendshipSettings(initFriendshipSettings())
-                //设置用户状态变更事件监听器
-                .setUserStatusListener(new TIMUserStatusListener() {
-                    @Override
-                    public void onForceOffline() {
-                        //被其他终端踢下线
-                        Log.e(TAG, "onForceOffline");
-                    }
-
-                    @Override
-                    public void onUserSigExpired() {
-                        //用户签名过期了，需要刷新userSig重新登录SDK
-                        Log.e(TAG, "onUserSigExpired");
-                    }
-                })
-                //设置连接状态事件监听器
-                .setConnectionListener(new TIMConnListener() {
-                    @Override
-                    public void onConnected() {
-                        Log.e(TAG, "onConnected");
-                    }
-
-                    @Override
-                    public void onDisconnected(int i, String s) {
-                        Log.e(TAG, "onConnected");
-                    }
-
-                    @Override
-                    public void onWifiNeedAuth(String s) {
-                        Log.e(TAG, "onConnected");
-                    }
-                })
-                //设置群组事件监听器
-                .setGroupEventListener(new TIMGroupEventListener() {
-                    @Override
-                    public void onGroupTipsEvent(TIMGroupTipsElem timGroupTipsElem) {
-                        Log.e(TAG, "onGroupTipsEvent, type: " + timGroupTipsElem.getTipsType());
-                    }
-                })
-                //设置会话刷新监听器
-                .setRefreshListener(new TIMRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        Log.e(TAG, "onRefresh");
-                    }
-
-                    @Override
-                    public void onRefreshConversation(List<TIMConversation> list) {
-                        Log.e(TAG, "onRefreshConversation, conversation size:"+list.size());
-                    }
-                });
-
-        //将用户配置与通讯管理器进行绑定
-        TIMManager.getInstance().setUserConfig(userConfig);
-
-        //设置消息监听器，收到新消息时，通过此监听器回调
-        TIMManager.getInstance().addMessageListener(new TIMMessageListener() {
-            @Override
-            public boolean onNewMessages(List<TIMMessage> list) {
-
-                //消息的内容解析请参考消息收发文档中的消息解析说明
-
-                return true;//返回true将终止回调链，不再调用下一个新消息监听器
-            }
-        });
-
-       // TIMManager.getInstance().login();
-
-    }
-
-    private void initXGPush() {
-
-         // 开启logcat输出，方便debug，发布时请关闭
-          XGPushConfig.enableDebug(this, true);
-        // 如果需要知道注册是否成功，请使用registerPush(getApplicationContext(), XGIOperateCallback)带callback版本
-        // 如果需要绑定账号，请使用registerPush(getApplicationContext(),account)版本
-        // 具体可参考详细的开发指南
-        // 传递的参数为ApplicationContext
-        Context context = getApplicationContext();
-
-        XGPushManager.registerPush(context);
-         // 2.36（不包括）之前的版本需要调用以下2行代码
-       // Intent service = new Intent(context, XGPushService.class);
-       // context.startService(service);
-
-
-         // 其它常用的API：
-         // 绑定账号（别名）注册：registerPush(context,account)或registerPush(context,account, XGIOperateCallback)，其中account为APP账号，可以为任意字符串（qq、openid或任意第三方），业务方一定要注意终端与后台保持一致。
-         // 取消绑定账号（别名）：registerPush(context,"*")，即account="*"为取消绑定，解绑后，该针对该账号的推送将失效
-         // 反注册（不再接收消息）：unregisterPush(context)
-         // 设置标签：setTag(context, tagName)
-         // 删除标签：deleteTag(context, tagName)
-
 
     }
 

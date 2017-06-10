@@ -2,12 +2,9 @@ package com.edu.hrbeu.helpsend.utils;
 
 
 import android.animation.ObjectAnimator;
-import android.graphics.Point;
-import android.os.Handler;
-import android.os.SystemClock;
+
 import android.view.View;
-import android.view.animation.BounceInterpolator;
-import android.view.animation.Interpolator;
+
 
 
 

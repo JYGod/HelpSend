@@ -11,20 +11,17 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.adapter.LoginPageAdapter;
 import com.edu.hrbeu.helpsend.cache.ACache;
 import com.edu.hrbeu.helpsend.databinding.ActivityLoginBinding;
-import com.edu.hrbeu.helpsend.global.GlobalData;
 import com.edu.hrbeu.helpsend.listener.Util;
 import com.edu.hrbeu.helpsend.pojo.UserPojo;
 import com.edu.hrbeu.helpsend.pojo.VrfCodeResponsePojo;
 import com.edu.hrbeu.helpsend.seivice.UserService;
 import com.edu.hrbeu.helpsend.utils.CommonUtil;
 import com.edu.hrbeu.helpsend.utils.ImgLoadUtil;
-import com.google.gson.Gson;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
@@ -33,7 +30,6 @@ import com.white.countdownbutton.CountDownButton;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.zip.Inflater;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,7 +39,6 @@ import static com.edu.hrbeu.helpsend.seivice.UserService.retrofit;
 
 
 public class LoginActivity extends Activity implements View.OnClickListener {
-    private Tencent mTencent;
     private Context mContext;
     private ActivityLoginBinding mBinding;
     private CountDownButton btnMessage;

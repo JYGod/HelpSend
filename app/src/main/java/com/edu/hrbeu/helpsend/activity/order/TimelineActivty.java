@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.View;
 
+import com.codemybrainsout.ratingdialog.RatingDialog;
 import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.adapter.TimeLineAdapter;
 import com.edu.hrbeu.helpsend.databinding.ActivityTimelineBinding;
@@ -17,6 +20,8 @@ import com.edu.hrbeu.helpsend.seivice.OrderService;
 import com.edu.hrbeu.helpsend.utils.CommonUtil;
 import com.edu.hrbeu.helpsend.utils.TopMenuHeader;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -32,6 +37,7 @@ public class TimelineActivty extends Activity{
     private TimeLineAdapter adapter;
     private String orderId;
     private TopMenuHeader top;
+    private String avatar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,6 +45,7 @@ public class TimelineActivty extends Activity{
         mContext=this;
         Intent intent=getIntent();
         orderId=intent.getStringExtra("orderId");
+        avatar=intent.getStringExtra("avatar");
         mBinding= DataBindingUtil.setContentView(this, R.layout.activity_timeline);
         initView();
         clickListener();
@@ -47,6 +54,10 @@ public class TimelineActivty extends Activity{
     private void clickListener() {
         top.topMenuLeft.setOnClickListener((View v)->{
             finish();
+        });
+
+        mBinding.btnEstimate.setOnClickListener((View v)->{
+
         });
     }
 

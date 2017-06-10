@@ -4,7 +4,6 @@ package com.edu.hrbeu.helpsend.utils;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
-import android.databinding.BindingAdapter;
 import android.net.Uri;
 import android.widget.ImageView;
 

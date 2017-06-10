@@ -2,7 +2,6 @@ package com.edu.hrbeu.helpsend.activity;
 
 
 import android.app.Activity;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Handler;

@@ -36,6 +36,7 @@
 
 
             <include layout="@layout/top_bar"/>
+            <include android:id="@+id/top" layout="@layout/top_countdown"/>
 
         </RelativeLayout>
         <android.support.design.widget.FloatingActionButton
