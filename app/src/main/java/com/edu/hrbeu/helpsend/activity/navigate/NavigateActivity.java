@@ -264,6 +264,7 @@ public class NavigateActivity extends MapActivity implements View.OnClickListene
                     .title("搜索中...")
                     .icon(icon)
                     .draggable(true));
+
             //  marker.showInfoWindow();
         } else {
             final LatLng latLngLocation = new LatLng(location.getLatitude(), location.getLongitude());

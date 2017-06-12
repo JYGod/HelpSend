@@ -55,6 +55,26 @@
                             android:textColor="@color/pureWhite"
                             android:textSize="17sp" />
 
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="left|center"
+                        android:orientation="horizontal">
+
+                        <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+                            android:layout_width="150dp"
+                            android:layout_height="10dp"
+                            app:rcBackgroundColor="@color/cloud"
+                            app:rcBackgroundPadding="1dp"
+                            app:rcMax="100"
+                            app:rcProgress="35"
+                            app:rcProgressColor="@color/experience"
+                            app:rcRadius="2dp"
+                            app:rcReverse="false" />
+
                         <TextView
                             android:id="@+id/tv_level"
                             android:layout_width="wrap_content"
@@ -264,6 +284,7 @@
                     android:src="@drawable/setting_left" />
 
                 <TextView
+                    android:id="@+id/nav_setting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"

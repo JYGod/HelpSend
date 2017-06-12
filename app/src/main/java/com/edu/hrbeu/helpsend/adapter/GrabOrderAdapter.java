@@ -136,11 +136,13 @@ public class GrabOrderAdapter extends RecyclerView.Adapter<GrabOrderAdapter.mVie
             mCache.put("targetLng",detail.getStartLocationPojo().getLongitude());
             mCache.put("targetLat",detail.getStartLocationPojo().getLatitude());
             CommonUtil.startActivity(mContext, PositionActivity.class);
+            dialog.dismiss();
         });
         selectEnd.setOnClickListener((View v)->{
             mCache.put("targetLng",detail.getEndLocationPojo().getLongitude());
             mCache.put("targetLat",detail.getEndLocationPojo().getLatitude());
             CommonUtil.startActivity(mContext, PositionActivity.class);
+            dialog.dismiss();
         });
         ivCancel.setOnClickListener((View v)->{
             dialog.dismiss();
@@ -168,6 +170,7 @@ public class GrabOrderAdapter extends RecyclerView.Adapter<GrabOrderAdapter.mVie
                     intent.putExtra("nick",detail.getOrderOwnerNickName());
                     intent.putExtra("avatar",detail.getOrderOwnerAvatarPath());
                     mContext.startActivity(intent);
+                    dialog.dismiss();
                 }
 
                 @Override

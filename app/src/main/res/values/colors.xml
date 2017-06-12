@@ -18,5 +18,7 @@
     <color name="colorContent">#ff333333</color>
     <!--侧边栏分割线-->
     <color name="colorNavLine">#E0E0E0</color>
+    <color name="experience">#F1C40F</color>
+    <color name="cloud">#ECF0F1</color>
 
 </resources>

@@ -2,6 +2,7 @@ package com.edu.hrbeu.helpsend.activity;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -67,12 +68,14 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
     private String provider;
     private ACache mCache;
     private Context mContext;
+    private Activity mActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mCache= ACache.get(this);
         mContext=this;
+        mActivity=this;
         requestWindowFeature(Window.FEATURE_NO_TITLE);
       //  setContentView(R.layout.activity_bottom_tab);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_bottom_tab);
@@ -178,6 +181,7 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
         bind.ivHead.setOnClickListener(this);
         bind.navOrderManage.setOnClickListener(this);
         bind.navApply.setOnClickListener(this);
+        bind.navSetting.setOnClickListener(this);
     }
 
 
@@ -263,6 +267,10 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
                 break;
             case R.id.nav_apply:
                 CommonUtil.startActivity(mContext, Step1Activity.class);
+                break;
+            case R.id.nav_setting:
+                mCache.clear();
+                CommonUtil.startActivityWithFinish(mActivity, LoginActivity.class);
                 break;
             default:
                 break;

@@ -17,6 +17,7 @@ public class GrabOrderDetail {
     private String orderOwnerNickName;
     private String senderTel;
     private String receiverTel;
+    private String commit;
 
     public String getRemark() {
         return remark;
@@ -136,5 +137,13 @@ public class GrabOrderDetail {
 
     public void setReceiverTel(String receiverTel) {
         this.receiverTel = receiverTel;
+    }
+
+    public String getCommit() {
+        return commit;
+    }
+
+    public void setCommit(String commit) {
+        this.commit = commit;
     }
 }

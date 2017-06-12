@@ -8,6 +8,7 @@ public class MyOrderPojo {
     private String goodsName;
     private String orderStatus;
     private String orderTime;
+    private String commit;
 
     public String getOrderId() {
         return orderId;
@@ -39,5 +40,13 @@ public class MyOrderPojo {
 
     public void setOrderTime(String orderTime) {
         this.orderTime = orderTime;
+    }
+
+    public String getCommit() {
+        return commit;
+    }
+
+    public void setCommit(String commit) {
+        this.commit = commit;
     }
 }

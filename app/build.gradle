@@ -126,6 +126,8 @@ dependencies {
     compile 'com.hlab.fabrevealmenu:fab-reveal-menu:1.0.2'
     compile 'com.github.vipulasri:timelineview:1.0.5'
     compile 'com.anton46:stepsview:0.0.2'
+    compile 'me.zhanghai.android.materialratingbar:library:1.0.2'
+    compile 'com.akexorcist:RoundCornerProgressBar:2.0.3'
     compile project(':lib')
     compile project(':rx')
 }

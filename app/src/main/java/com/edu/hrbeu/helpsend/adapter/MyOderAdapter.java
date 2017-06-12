@@ -196,6 +196,8 @@ public class MyOderAdapter extends RecyclerView.Adapter<MyOderAdapter.mViewHolde
             }else if (!GlobalData.ORDER_SELECT.equals("receive")){
                 Intent intent=new Intent(mContext, TimelineActivty.class);
                 intent.putExtra("orderId",detail.getOrderId());
+                intent.putExtra("status",order.getOrderStatus());
+                intent.putExtra("commit",detail.getCommit());
                 intent.putExtra("avatar",detail.getOrderOwnerAvatarPath());
                 mContext.startActivity(intent);
                 dialog.dismiss();

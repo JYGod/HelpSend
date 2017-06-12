@@ -63,7 +63,10 @@ public interface OrderService {
     Call<ResponsePojo>cancelOrder(@Query("orderId") String orderId);//撤单
 
     @GET("deliveryorder")
-    Call<ResponsePojo>deliveryOrder(@Query("orderId") String orderId);//撤单
+    Call<ResponsePojo>deliveryOrder(@Query("orderId") String orderId);//订单已送达
+
+    @GET("commitorder")
+    Call<ResponsePojo>ratingOrder(@Query("orderId") String orderId,@Query("commit") String commit);//评分
 
     /**获取实例*/
     Retrofit retrofit = new Retrofit.Builder()

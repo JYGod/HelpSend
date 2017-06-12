@@ -1,48 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
-<LinearLayout
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <include layout="@layout/top_bar"/>
-
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
+        android:layout_height="match_parent">
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:orientation="vertical"
-            android:layout_weight="0.2">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <include layout="@layout/top_bar"/>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/timeline_recycler"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="30dp" />
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="0.2">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/timeline_recycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="30dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.8"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/btn_estimate"
+                        style="@style/RbButton.Inverse.Red"
+                        android:layout_width="126dp"
+                        android:layout_height="wrap_content"
+                        android:text="评价该单"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+            </LinearLayout>
+
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.8"
-            android:gravity="center"
-            android:orientation="vertical">
+        <include android:id="@+id/rating" layout="@layout/dialog_rating"/>
+    </RelativeLayout>
 
-            <Button
-                android:id="@+id/btn_estimate"
-                style="@style/RbButton.Inverse.Red"
-                android:layout_width="126dp"
-                android:layout_height="wrap_content"
-                android:text="评价该单"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-</LinearLayout>
 </layout>
