@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.edu.hrbeu.helpsend.MyApplication;
 import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.activity.grab.PositionActivity;
 import com.edu.hrbeu.helpsend.activity.navigate.NavigateActivity;
@@ -38,7 +39,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.edu.hrbeu.helpsend.seivice.OrderService.retrofit;
 
 public class GrabOrderAdapter extends RecyclerView.Adapter<GrabOrderAdapter.mViewHolder>{
 
@@ -72,8 +72,9 @@ public class GrabOrderAdapter extends RecyclerView.Adapter<GrabOrderAdapter.mVie
         holder.tvDistance.setText(order.getDistance());
         holder.tvPrice.setText(order.getOrderPrice());
         holder.itemView.setOnClickListener((View v)->{
-            OrderService service=retrofit.create(OrderService.class);
-            Call<GrabDetailResponse>call=service.getGrabOrderDetail(order.getOrderId());
+            MyApplication myApplication = MyApplication.create(mContext);
+            OrderService orderService = myApplication.getOrderService();
+            Call<GrabDetailResponse>call=orderService.getGrabOrderDetail(order.getOrderId());
             call.enqueue(new Callback<GrabDetailResponse>() {
                 @Override
                 public void onResponse(Call<GrabDetailResponse> call, Response<GrabDetailResponse> response) {
@@ -148,29 +149,31 @@ public class GrabOrderAdapter extends RecyclerView.Adapter<GrabOrderAdapter.mVie
             dialog.dismiss();
         });
         btnGrab.setOnClickListener((View v)->{
-            OrderService service=retrofit.create(OrderService.class);
-            Call<ResponsePojo> call = service.grabOrder(detail.getOrderId(),mCache.getAsString("mId"));
+            MyApplication myApplication = MyApplication.create(mContext);
+            OrderService orderService = myApplication.getOrderService();
+            Call<ResponsePojo> call = orderService.grabOrder(detail.getOrderId(),mCache.getAsString("mId"));
             call.enqueue(new Callback<ResponsePojo>() {
                 @Override
                 public void onResponse(Call<ResponsePojo> call, Response<ResponsePojo> response) {
                     ResponsePojo grabResponse=response.body();
                     CommonUtil.showToast(mContext,grabResponse.getMessage());
                     dialog.dismiss();
-                    //跳转到导航
-                    Intent intent=new Intent(mContext, NavigateActivity.class);
-                    intent.putExtra("startLat",detail.getStartLocationPojo().getLatitude());
-                    intent.putExtra("startLng",detail.getStartLocationPojo().getLongitude());
-                    intent.putExtra("endLat",detail.getEndLocationPojo().getLatitude());
-                    intent.putExtra("endLng",detail.getEndLocationPojo().getLongitude());
-                    String detTime=calculateDelTime(detail.getReceiveTime());
-                    intent.putExtra("orderId",detail.getOrderId());
-                    intent.putExtra("detTime",detTime);
-                    intent.putExtra("startPhone",detail.getSenderTel());
-                    intent.putExtra("endPhone",detail.getReceiverTel());
-                    intent.putExtra("nick",detail.getOrderOwnerNickName());
-                    intent.putExtra("avatar",detail.getOrderOwnerAvatarPath());
-                    mContext.startActivity(intent);
-                    dialog.dismiss();
+                    if (!grabResponse.getMessage().equals("接单失败")){
+                        //跳转到导航
+                        Intent intent=new Intent(mContext, NavigateActivity.class);
+                        intent.putExtra("startLat",detail.getStartLocationPojo().getLatitude());
+                        intent.putExtra("startLng",detail.getStartLocationPojo().getLongitude());
+                        intent.putExtra("endLat",detail.getEndLocationPojo().getLatitude());
+                        intent.putExtra("endLng",detail.getEndLocationPojo().getLongitude());
+                        String detTime=calculateDelTime(detail.getReceiveTime());
+                        intent.putExtra("orderId",detail.getOrderId());
+                        intent.putExtra("detTime",detTime);
+                        intent.putExtra("startPhone",detail.getSenderTel());
+                        intent.putExtra("endPhone",detail.getReceiverTel());
+                        intent.putExtra("nick",detail.getOrderOwnerNickName());
+                        intent.putExtra("avatar",detail.getOrderOwnerAvatarPath());
+                        mContext.startActivity(intent);
+                    }
                 }
 
                 @Override

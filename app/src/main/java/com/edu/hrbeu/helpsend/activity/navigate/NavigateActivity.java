@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.edu.hrbeu.helpsend.MyApplication;
 import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.adapter.TimeLineAdapter;
 import com.edu.hrbeu.helpsend.cache.ACache;
@@ -74,7 +75,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.edu.hrbeu.helpsend.seivice.OrderService.retrofit;
 
 public class NavigateActivity extends MapActivity implements View.OnClickListener, TencentLocationListener, TencentMap.OnMarkerClickListener {
     private ActivityNavigateBinding mBinding;
@@ -98,6 +98,8 @@ public class NavigateActivity extends MapActivity implements View.OnClickListene
     private String deltTime;
     private CountDownTimerUtil timer;
     private String orderId;
+    private MyApplication myApplication;
+    private OrderService orderService;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -120,6 +122,8 @@ public class NavigateActivity extends MapActivity implements View.OnClickListene
         initView();
         uiSetting();
         clickListener();
+        myApplication = MyApplication.create(mContext);
+        orderService = myApplication.getOrderService();
         mLocationManager = TencentLocationManager.getInstance(this);
         // 设置坐标系为 gcj-02, 缺省坐标为 gcj-02, 所以通常不必进行如下调用
         mLocationManager.setCoordinateType(TencentLocationManager.COORDINATE_TYPE_GCJ02);
@@ -337,8 +341,7 @@ public class NavigateActivity extends MapActivity implements View.OnClickListene
                 builder.setMessage("已完成配送?");
                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        OrderService service = retrofit.create(OrderService.class);
-                        Call<ResponsePojo> call = service.deliveryOrder(orderId);
+                        Call<ResponsePojo> call = orderService.deliveryOrder(orderId);
                         call.enqueue(new Callback<ResponsePojo>() {
                             @Override
                             public void onResponse(Call<ResponsePojo> call, Response<ResponsePojo> response) {

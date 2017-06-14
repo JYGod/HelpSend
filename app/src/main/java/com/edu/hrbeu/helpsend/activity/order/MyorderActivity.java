@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 
+import com.edu.hrbeu.helpsend.MyApplication;
 import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.adapter.MyOderAdapter;
 import com.edu.hrbeu.helpsend.cache.ACache;
@@ -31,7 +32,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.edu.hrbeu.helpsend.seivice.OrderService.retrofit;
 
 public class MyorderActivity extends Activity implements View.OnClickListener, OnFABMenuSelectedListener, SwipeRefreshLayout.OnRefreshListener {
     private final int SEND_ORDER=0;
@@ -41,6 +41,8 @@ public class MyorderActivity extends Activity implements View.OnClickListener, O
     private ACache mCache;
     private Context mContext;
     private String mStatus="all";
+    private MyApplication myApplication;
+    private OrderService orderService;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,6 +50,8 @@ public class MyorderActivity extends Activity implements View.OnClickListener, O
         mCache= ACache.get(this);
         mContext=this;
         mBinding= DataBindingUtil.setContentView(this, R.layout.activity_myorder);
+        myApplication= MyApplication.create(mContext);
+        orderService=myApplication.getOrderService();
         initView();
         clickListener();
     }
@@ -88,8 +92,7 @@ public class MyorderActivity extends Activity implements View.OnClickListener, O
     private void queryDatas(String status) {
         mBinding.swipe.setRefreshing(true);
         if (mBinding.radioSelector.getPosition()==SEND_ORDER){
-            OrderService service=retrofit.create(OrderService.class);
-            Call<ArrayList<MyOrderPojo>> call = service.getMyPutOrders(mCache.getAsString("mId"),status);
+            Call<ArrayList<MyOrderPojo>> call = orderService.getMyPutOrders(mCache.getAsString("mId"),status);
             call.enqueue(new Callback<ArrayList<MyOrderPojo>>() {
                 @Override
                 public void onResponse(Call<ArrayList<MyOrderPojo>> call, Response<ArrayList<MyOrderPojo>> response) {
@@ -107,8 +110,7 @@ public class MyorderActivity extends Activity implements View.OnClickListener, O
                 }
             });
         }else {
-            OrderService service=retrofit.create(OrderService.class);
-            Call<ArrayList<MyOrderPojo>> call = service.getMyReceiveOrders(mCache.getAsString("mId"),status);
+            Call<ArrayList<MyOrderPojo>> call = orderService.getMyReceiveOrders(mCache.getAsString("mId"),status);
             call.enqueue(new Callback<ArrayList<MyOrderPojo>>() {
                 @Override
                 public void onResponse(Call<ArrayList<MyOrderPojo>> call, Response<ArrayList<MyOrderPojo>> response) {

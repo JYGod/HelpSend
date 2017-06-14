@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.edu.hrbeu.helpsend.MyApplication;
 import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.activity.navigate.NavigateActivity;
 import com.edu.hrbeu.helpsend.activity.order.TimelineActivty;
@@ -39,7 +40,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.edu.hrbeu.helpsend.seivice.OrderService.retrofit;
 
 
 public class MyOderAdapter extends RecyclerView.Adapter<MyOderAdapter.mViewHolder>{
@@ -72,8 +72,9 @@ public class MyOderAdapter extends RecyclerView.Adapter<MyOderAdapter.mViewHolde
             builder.setMessage("确定要撤单吗?");
             builder.setPositiveButton("确定",new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    OrderService service=retrofit.create(OrderService.class);
-                    Call<ResponsePojo> call = service.cancelOrder(order.getOrderId());
+                    MyApplication myApplication = MyApplication.create(mContext);
+                    OrderService orderService = myApplication.getOrderService();
+                    Call<ResponsePojo> call = orderService.cancelOrder(order.getOrderId());
                     call.enqueue(new Callback<ResponsePojo>() {
                         @Override
                         public void onResponse(Call<ResponsePojo> call, Response<ResponsePojo> response) {
@@ -121,8 +122,9 @@ public class MyOderAdapter extends RecyclerView.Adapter<MyOderAdapter.mViewHolde
         }
 
         holder.itemView.setOnClickListener((View v)->{
-            OrderService service=retrofit.create(OrderService.class);
-            Call<GrabDetailResponse> call=service.getGrabOrderDetail(order.getOrderId());
+            MyApplication myApplication = MyApplication.create(mContext);
+            OrderService orderService = myApplication.getOrderService();
+            Call<GrabDetailResponse> call=orderService.getGrabOrderDetail(order.getOrderId());
             call.enqueue(new Callback<GrabDetailResponse>() {
                 @Override
                 public void onResponse(Call<GrabDetailResponse> call, Response<GrabDetailResponse> response) {

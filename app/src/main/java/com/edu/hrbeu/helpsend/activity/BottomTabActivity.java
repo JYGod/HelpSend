@@ -91,6 +91,7 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
         clickListener();
     }
 
+
     @Override
     protected void onPause() {
         super.onPause();

@@ -55,7 +55,7 @@
                         android:background="@null"
                         android:checked="false"
                         android:drawableTop="@drawable/bottom_icon_message"
-                        android:text="消息"
+                        android:text="任务"
                         android:textColor="@drawable/bottom_textcoler" />
 
                 </RadioGroup>

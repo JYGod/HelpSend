@@ -43,6 +43,9 @@ public class Step1Activity extends Activity{
     private String currentPic;
     private TextView textFront,textBack;
     private ImageView ivMyPic;
+    private String frontUrl;
+    private String backUrl;
+    private String mypicUrl;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,16 +71,14 @@ public class Step1Activity extends Activity{
         Button btnFinish = (Button) view.findViewById(R.id.btn_finish);
         LinearLayout selectPic=(LinearLayout)view.findViewById(R.id.select_pic);
         selectPic.setOnClickListener((View v)->{
-            File file=new File(Environment.getExternalStorageDirectory().toString()+System.currentTimeMillis()+".png");
-            if (!file.getParentFile().exists()) { // 父文件夹不存在
-                file.getParentFile().mkdirs(); // 创建文件夹
-            }
+
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
             intent.putExtra("android.intent.extras.CAMERA_FACING", 1);
-            Uri uri = Uri.fromFile(file);
+            mypicUrl=Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+String.valueOf(System.currentTimeMillis())+".jpg";
+            Uri imageUri = Uri.fromFile(new File(mypicUrl));
             // 获取拍照后未压缩的原图片，并保存在uri路径中
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
             startActivityForResult(intent,USE_FRONT_CAMERA);
         });
         btnFinish.setOnClickListener((View v)->{
@@ -121,15 +122,19 @@ public class Step1Activity extends Activity{
     private void getImageFromCamera() {
         String state = Environment.getExternalStorageState();
         if (state.equals(Environment.MEDIA_MOUNTED)) {
-            File file=new File(Environment.getExternalStorageDirectory()+"/mypic/"+System.currentTimeMillis()+"pic.png");
-            if (!file.getParentFile().exists()) { // 父文件夹不存在
-                file.getParentFile().mkdirs(); // 创建文件夹
-            }
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-          //  Uri uri = Uri.fromFile(file);
+            Uri imageUri=null;
+            if (currentPic.equals("front")){
+                frontUrl=Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+String.valueOf(System.currentTimeMillis())+".jpg";
+                imageUri = Uri.fromFile(new File(frontUrl));
+            }else {
+                backUrl=Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+String.valueOf(System.currentTimeMillis())+".jpg";
+                imageUri = Uri.fromFile(new File(backUrl));
+            }
+         //Uri   imageUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), String.valueOf(System.currentTimeMillis()) + ".jpg"));
             // 获取拍照后未压缩的原图片，并保存在uri路径中
-            //intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
             startActivityForResult(intent, REQUEST_CODE_CAPTURE_CAMEIA);
         }
         else {
@@ -177,55 +182,21 @@ public class Step1Activity extends Activity{
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK){
             if (requestCode == REQUEST_CODE_CAPTURE_CAMEIA) {
-                Uri uri = data.getData();
-                if (uri == null) {
-                    //use bundle to get data
-                    Bundle bundle = data.getExtras();
-                    if (bundle != null) {
-                        Bitmap photo = (Bitmap) bundle.get("data"); //get bitmap
-                        uri = Uri.parse(MediaStore.Images.Media.insertImage(getContentResolver(), photo, null,null));
-                    } else {
-                        Toast.makeText(getApplicationContext(), "未知错误!", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }
-                String[] filePathColumn = { MediaStore.Images.Media.DATA };
-                Cursor cursor = getContentResolver().query(uri,
-                        filePathColumn, null, null, null);
-                cursor.moveToFirst();
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                String picturePath = cursor.getString(columnIndex);
-                File file=new File(picturePath);
+
                 if (currentPic.equals("front")){
+                    File file=new File(frontUrl);
                     GlobalData.MY_CARD_FRONT=file;
                     textFront.setText("上传成功✔️");
                     textFront.setTextColor(getResources().getColor(R.color.themeColor));
                 }else {
+                    File file=new File(backUrl);
                     GlobalData.MY_CARD_BACK=file;
                     textBack.setText("上传成功✔️");
                     textBack.setTextColor(getResources().getColor(R.color.themeColor));
                 }
 
             }else if (requestCode == USE_FRONT_CAMERA){
-                Uri uri = data.getData();
-                if (uri == null) {
-                    //use bundle to get data
-                    Bundle bundle = data.getExtras();
-                    if (bundle != null) {
-                        Bitmap photo = (Bitmap) bundle.get("data"); //get bitmap
-                        uri = Uri.parse(MediaStore.Images.Media.insertImage(getContentResolver(), photo, null,null));
-                    } else {
-                        Toast.makeText(getApplicationContext(), "未知错误!", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }
-                String[] filePathColumn = { MediaStore.Images.Media.DATA };
-                Cursor cursor = getContentResolver().query(uri,
-                        filePathColumn, null, null, null);
-                cursor.moveToFirst();
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                String picturePath = cursor.getString(columnIndex);
-                File file=new File(picturePath);
+                File file=new File(mypicUrl);
                 Glide.with(mContext).load(file)
                         .placeholder(R.drawable.my_pic)
                         .error(R.drawable.my_pic)

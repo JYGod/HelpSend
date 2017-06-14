@@ -13,6 +13,8 @@ import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -21,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.edu.hrbeu.helpsend.MyApplication;
 import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.bean.Order;
 import com.edu.hrbeu.helpsend.bean.UpdateInfo;
@@ -60,7 +63,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.edu.hrbeu.helpsend.seivice.OrderService.retrofit;
 
 public class OrderActivity extends AppCompatActivity implements View.OnClickListener, SHSwipeRefreshLayout.SHSOnRefreshListener, OnDateSetListener {
 
@@ -68,7 +70,6 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     public final int REQUEST_CONTACTS_SEND=10;
     public final int REQUEST_CONTACTS_RECEIVE=11;
     public final int REQUEST_SELECT_IMG=20;
-    private boolean isExpand=false;
     private ActivityOrderBinding mBinding;
     private Context mContext;
     private Activity mActivity;
@@ -78,6 +79,9 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     private int currentIndex=0;//选择的支付方式
     private final int[] payment_pic=new int[]{R.drawable.zhifu_small,R.drawable.weixin_small,R.drawable.pocket_small};
     private ACache mCache;
+    private Gson gson=new Gson();
+    private MyApplication myApplication;
+    private OrderService orderService;
 
 
     @Override
@@ -85,12 +89,12 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         mCache= ACache.get(this);
         mBinding= DataBindingUtil.setContentView(this,R.layout.activity_order);
-       // mBinding.expandableLayout.collapse();
         mContext=this;
         mActivity=this;
+        myApplication = MyApplication.create(mContext);
+        orderService= myApplication.getOrderService();
         initView();
         clickListener();
-        Log.e("orderOwnerId:",mCache.getAsString("mId"));
         registerMessageReceiver();
     }
 
@@ -115,19 +119,29 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 .crossFade(1000)
                 .into(mBinding.include.ivAccessory);
         CommonUtil.setLimitText( mBinding.include.tvRemark,GlobalData.MY_ORDER.getRemark());
-
-       calculatePrice();
+        calculatePrice();
+        initPayingAnim();
 
 
     }
 
+    /**
+     * 初始化支付动画
+     */
+    private void initPayingAnim() {
+        mBinding.paying.payingLoading.addBitmap(payment_pic[0]);
+        mBinding.paying.payingLoading.addBitmap(payment_pic[1]);
+        mBinding.paying.payingLoading.addBitmap(payment_pic[2]);
+        mBinding.paying.payingLoading.setShadowColor(R.color.bottomTextColoer);
+    }
+
+    /**
+     * 动态加算价格
+     */
     private void calculatePrice() {
         mBinding.tvPrice.setText("计算中...");
-        Gson gson=new Gson();
         String reqStr= gson.toJson(GlobalData.POSITION_POINTS);
-        Log.e("reqStr",reqStr);
-        OrderService service=retrofit.create(OrderService.class);
-        Call<ResponsePojo> call = service.getPrice(reqStr);
+        Call<ResponsePojo> call = orderService.getPrice(reqStr);
         call.enqueue(new Callback<ResponsePojo>() {
             @Override
             public void onResponse(Call<ResponsePojo> call, Response<ResponsePojo> response) {
@@ -137,13 +151,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 mBinding.btnPriceDetail.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        final DialogPlus dialog = DialogPlus.newDialog(mContext)
-                                .setContentHolder(new ViewHolder(R.layout.dialog_price_detail))
-                                .setExpanded(true, ViewGroup.LayoutParams.WRAP_CONTENT)
-                                .setContentHeight(ViewGroup.LayoutParams.MATCH_PARENT)
-                                .setContentWidth(ViewGroup.LayoutParams.WRAP_CONTENT)
-                                .setGravity(Gravity.BOTTOM)
-                                .create();
+                        DialogPlus dialog = CommonUtil.createDialog(mContext, R.layout.dialog_price_detail, Gravity.BOTTOM,true);
                         TextView detail=(TextView)dialog.getHolderView().findViewById(R.id.tv_price_detail);
                         detail.setText(responsePojo.getMessage());
                         dialog.show();
@@ -199,26 +207,44 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         mBinding.include.selectTime.setOnClickListener(this);
         mBinding.include.selectReceiveTime.setOnClickListener(this);
         mBinding.include.selectRemark.setOnClickListener(this);
+        mBinding.include.tvSenderPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                GlobalData.MY_ORDER.setSenderTel(mBinding.include.tvSenderPhone.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        mBinding.include.tvReceiverPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                GlobalData.MY_ORDER.setReceiverTel(mBinding.include.tvReceiverPhone.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     @Override
     public void onClick(View view) {
         Intent intent=new Intent();
         switch (view.getId()){
-            /**
-             *   case R.id.tv_personality:
-             if (isExpand){
-             mBinding.expandableLayout.collapse();
-             mBinding.tvPersonality.setText("个性化定制");
-             isExpand=false;
-             }else {
-             mBinding.expandableLayout.setVisibility(View.VISIBLE);
-             mBinding.tvPersonality.setText("取消个性化定制");
-             mBinding.expandableLayout.expand();
-             isExpand=true;
-             }
-             break;
-             */
             case R.id.item_start:
                 intent.setClass(this,LocateActivity.class);
                 GlobalData.LOCATE_DIRECTION="start";
@@ -296,11 +322,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
      * 物品选择对话框
      */
     private void initDialog() {
-        final DialogPlus dialog = DialogPlus.newDialog(this)
-                .setContentHolder(new ViewHolder(R.layout.dialog_select_goods))
-                .setCancelable(false)
-                .setExpanded(true)
-                .create();
+        DialogPlus dialog = CommonUtil.createDialog(mContext,R.layout.dialog_select_goods,Gravity.BOTTOM,false);
         dialog.show();
         ImageView cancel= (ImageView) dialog.getHolderView().findViewById(R.id.goods_dialog_cancel);
         cancel.setOnClickListener((View v)->{
@@ -340,10 +362,18 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             super.handleMessage(msg);
             if (msg.what==BUY_SUCCESS){
 
-
             }else if (msg.what==SHOW_PAYMENT_DIALOG){
-                mBinding.btnBuy.revertAnimation();
-                initPaymentDialog();
+                if (GlobalData.MY_ORDER.getStartLocation()==null||GlobalData.MY_ORDER.getEndLocation()==null
+                        ||GlobalData.MY_ORDER.getSenderTel()==null||GlobalData.MY_ORDER.getReceiverTel()==null){
+                    CommonUtil.showToast(mContext,"请完善订单信息！");
+                    mBinding.btnBuy.revertAnimation();
+                }else {
+                    if (GlobalData.MY_ORDER.getGoodsName()==null){
+                        GlobalData.MY_ORDER.setGoodsName("其他 - 其他");
+                    }
+                    mBinding.btnBuy.revertAnimation();
+                    initPaymentDialog();
+                }
             }
         }
     };
@@ -352,11 +382,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
      * 支付对话框
      */
     private void initPaymentDialog() {
-        final DialogPlus dialog = DialogPlus.newDialog(this)
-                .setContentHolder(new ViewHolder(R.layout.dialog_payment))
-                .setCancelable(false)
-                .setExpanded(true)
-                .create();
+        final DialogPlus dialog = CommonUtil.createDialog(mContext,R.layout.dialog_payment,Gravity.BOTTOM,false);
         TextView tvPrice=(TextView)dialog.findViewById(R.id.tv_price);
         tvPrice.setText(GlobalData.MY_ORDER.getOrderPrice());
         dialog.show();
@@ -377,77 +403,60 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             @Override
             protected void onNoDoubleClick(View v) {
                 dialog.dismiss();
-                Gson gson = new Gson();
                 GlobalData.MY_ORDER.setOrderOwnerId(mCache.getAsString("mId"));
                 String orderinfo = gson.toJson(GlobalData.MY_ORDER, Order.class);
-                if (GlobalData.ACCESSORY==null){
-                    File file=new File("http://mengqipoet.cn:8080/userimage/defaultavatar51.jpg");
-                    GlobalData.ACCESSORY=file;
-                }
-                RequestBody photoRequestBody = RequestBody.create(MediaType.parse("image/png"), GlobalData.ACCESSORY);
-                MultipartBody.Part photo = MultipartBody.Part.createFormData("photos", "accessory.png", photoRequestBody);
-                OrderService service = retrofit.create(OrderService.class);
-                mBinding.paying.payingLoading.addBitmap(payment_pic[0]);
-                mBinding.paying.payingLoading.addBitmap(payment_pic[1]);
-                mBinding.paying.payingLoading.addBitmap(payment_pic[2]);
-                mBinding.paying.payingLoading.setShadowColor(R.color.bottomTextColoer);
                 mBinding.paying.payingLoading.start();
                 mBinding.paying.payingLoading.setVisibility(View.VISIBLE);
-                /**
-                 *   Call<String> call = service.submitOrder(photo,RequestBody.create(null,orderinfo));
-                 call.enqueue(new Callback<String>() {
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
-                GlobalData.MY_ORDER=new Order();
-                GlobalData.ACCESSORY=null;
-                mBinding.paying.payingLoading.stop();
-                mBinding.paying.payingLoading.setVisibility(View.GONE);
-                String res = response.body();
-                Log.e("返回结果：", res);
-                mBinding.waitingDialog.waitDialog.setVisibility(View.VISIBLE);
-                mBinding.waitingDialog.content.startRippleAnimation();
-                mBinding.waitingDialog.centerImage.setOnClickListener((View v) -> {
-                cancelOrderDialog(v);
-                });
+                MultipartBody.Part photo =null;
+                if (GlobalData.ACCESSORY==null){
+                    Call<UpdateInfo> call = orderService.submitOrderWithoutAc(orderinfo);
+                    call.enqueue(new Callback<UpdateInfo>() {
+                        @Override
+                        public void onResponse(Call<UpdateInfo> call, Response<UpdateInfo> response) {
+                            GlobalData.MY_ORDER=new Order();
+                            GlobalData.ACCESSORY=null;
+                            mBinding.paying.payingLoading.stop();
+                            mBinding.paying.payingLoading.setVisibility(View.GONE);
+                            UpdateInfo updateInfo=response.body();
+                            CommonUtil.showToast(mContext,updateInfo.getMessage());
+                            GlobalData.MY_ORDER=new Order();
+                            CommonUtil.startActivity(mContext,MyorderActivity.class);
+                        }
 
-                }
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
-                mBinding.paying.payingLoading.stop();
-                mBinding.paying.payingLoading.setVisibility(View.GONE);
-                Log.e("请求失败===>","请求失败");
-                CommonUtil.showToast(mContext,"支付失败!");
-                dialog.dismiss();
-                }
-                });
-                 */
-                Call<UpdateInfo> call = service.submitOrder(photo,RequestBody.create(null,orderinfo));
-                call.enqueue(new Callback<UpdateInfo>() {
-                    @Override
-                    public void onResponse(Call<UpdateInfo> call, Response<UpdateInfo> response) {
-                        GlobalData.MY_ORDER=new Order();
-                        GlobalData.ACCESSORY=null;
-                        mBinding.paying.payingLoading.stop();
-                        mBinding.paying.payingLoading.setVisibility(View.GONE);
-                        UpdateInfo updateInfo=response.body();
-                        CommonUtil.showToast(mContext,updateInfo.getMessage());
-                        GlobalData.MY_ORDER=new Order();
-                        CommonUtil.startActivity(mContext,MyorderActivity.class);
-//                        mBinding.waitingDialog.waitDialog.setVisibility(View.VISIBLE);
-//                        mBinding.waitingDialog.content.startRippleAnimation();
-//                        mBinding.waitingDialog.content.setOnClickListener((View v)->{
-//                            cancelOrderDialog(v);
-//                        });
-                    }
+                        @Override
+                        public void onFailure(Call<UpdateInfo> call, Throwable t) {
+                            mBinding.paying.payingLoading.stop();
+                            mBinding.paying.payingLoading.setVisibility(View.GONE);
+                            CommonUtil.showToast(mContext,"支付失败!");
+                            dialog.dismiss();
+                        }
+                    });
+                }else {
+                    RequestBody photoRequestBody = RequestBody.create(MediaType.parse("image/png"), GlobalData.ACCESSORY);
+                    photo = MultipartBody.Part.createFormData("photos", "accessory.png", photoRequestBody);
+                    Call<UpdateInfo> call = orderService.submitOrder(photo,RequestBody.create(null,orderinfo));
+                    call.enqueue(new Callback<UpdateInfo>() {
+                        @Override
+                        public void onResponse(Call<UpdateInfo> call, Response<UpdateInfo> response) {
+                            GlobalData.MY_ORDER=new Order();
+                            GlobalData.ACCESSORY=null;
+                            mBinding.paying.payingLoading.stop();
+                            mBinding.paying.payingLoading.setVisibility(View.GONE);
+                            UpdateInfo updateInfo=response.body();
+                            CommonUtil.showToast(mContext,updateInfo.getMessage());
+                            GlobalData.MY_ORDER=new Order();
+                            CommonUtil.startActivity(mContext,MyorderActivity.class);
+                        }
 
-                    @Override
-                    public void onFailure(Call<UpdateInfo> call, Throwable t) {
-                        mBinding.paying.payingLoading.stop();
-                        mBinding.paying.payingLoading.setVisibility(View.GONE);
-                        CommonUtil.showToast(mContext,"支付失败!");
-                        dialog.dismiss();
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<UpdateInfo> call, Throwable t) {
+                            mBinding.paying.payingLoading.stop();
+                            mBinding.paying.payingLoading.setVisibility(View.GONE);
+                            CommonUtil.showToast(mContext,"支付失败!");
+                            dialog.dismiss();
+                        }
+                    });
+                }
 
             }
         });

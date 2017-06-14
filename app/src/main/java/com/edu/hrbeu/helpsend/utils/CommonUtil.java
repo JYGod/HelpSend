@@ -4,10 +4,15 @@ package com.edu.hrbeu.helpsend.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.view.Gravity;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.activity.LoginActivity;
+import com.orhanobut.dialogplus.DialogPlus;
+import com.orhanobut.dialogplus.ViewHolder;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -83,4 +88,15 @@ public class CommonUtil {
     }
 
 
+    public static DialogPlus createDialog(Context mContext, int res, int gravity,boolean cancelable) {
+        DialogPlus dialog = DialogPlus.newDialog(mContext)
+                .setContentHolder(new ViewHolder(res))
+                .setCancelable(cancelable)
+                .setExpanded(true, ViewGroup.LayoutParams.WRAP_CONTENT)
+                .setContentHeight(ViewGroup.LayoutParams.MATCH_PARENT)
+                .setContentWidth(ViewGroup.LayoutParams.WRAP_CONTENT)
+                .setGravity(gravity)
+                .create();
+        return dialog;
+    }
 }

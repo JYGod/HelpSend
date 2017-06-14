@@ -2,38 +2,36 @@ package com.edu.hrbeu.helpsend;
 
 
 import android.app.Application;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-
-import com.edu.hrbeu.helpsend.utils.DebugUtil;
-import com.edu.hrbeu.rx.HttpUtils;
+import android.content.Context;
+import com.edu.hrbeu.helpsend.data.OrderFactory;
+import com.edu.hrbeu.helpsend.seivice.OrderService;
 
 public class MyApplication extends Application {
 
-    private static MyApplication myApplication;
+    private OrderService orderService;
 
-    public static MyApplication getInstance() {
-        return myApplication;
+
+
+    private static MyApplication get(Context context){
+        return (MyApplication) context.getApplicationContext();
     }
 
-    @SuppressWarnings("unused")
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        myApplication = this;
-        HttpUtils.getInstance().init(this, DebugUtil.DEBUG);
-
-        initTextSize();
+    public static MyApplication create(Context context){
+        return MyApplication.get(context);
     }
 
-    /**
-     * 使其系统更改字体大小无效
-     */
-    private void initTextSize() {
-        Resources res = getResources();
-        Configuration config = new Configuration();
-        config.setToDefaults();
-        res.updateConfiguration(config, res.getDisplayMetrics());
+
+    public OrderService getOrderService(){
+        if (orderService == null){
+            orderService = OrderFactory.create();
+        }
+        return orderService;
     }
+
+    public void setOrderService(OrderService orderService){
+        this.orderService=orderService;
+    }
+
+
 
 }

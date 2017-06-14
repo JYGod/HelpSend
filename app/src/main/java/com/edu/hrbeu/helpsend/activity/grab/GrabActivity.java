@@ -10,6 +10,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 
+import com.edu.hrbeu.helpsend.MyApplication;
 import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.adapter.GrabOrderAdapter;
 import com.edu.hrbeu.helpsend.bean.GrabOrder;
@@ -27,13 +28,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.edu.hrbeu.helpsend.seivice.OrderService.retrofit;
 
 public class GrabActivity extends Activity implements SHSwipeRefreshLayout.SHSOnRefreshListener {
     private ActivityGrabBinding mBinding;
     private Context mContext;
     private GrabOrderAdapter adapter;
     private ACache mCache;
+    private MyApplication myApplication;
+    private OrderService orderService;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,6 +43,8 @@ public class GrabActivity extends Activity implements SHSwipeRefreshLayout.SHSOn
         mContext=this;
         mCache= ACache.get(this);
         mBinding= DataBindingUtil.setContentView(this,R.layout.activity_grab);
+        myApplication = MyApplication.create(mContext);
+        orderService = myApplication.getOrderService();
         initView();
         clickListener();
     }
@@ -63,11 +67,10 @@ public class GrabActivity extends Activity implements SHSwipeRefreshLayout.SHSOn
     }
 
     private void requestForListData() {
-        OrderService service=retrofit.create(OrderService.class);
         Map<String,String>map=new HashMap<>();
         map.put("longitude",mCache.getAsString("mLng"));
         map.put("latitude",mCache.getAsString("mLat"));
-        Call<GrabResponse> call=service.getGrabOrders(map);
+        Call<GrabResponse> call=orderService.getGrabOrders(map);
         call.enqueue(new Callback<GrabResponse>() {
             @Override
             public void onResponse(Call<GrabResponse> call, Response<GrabResponse> response) {

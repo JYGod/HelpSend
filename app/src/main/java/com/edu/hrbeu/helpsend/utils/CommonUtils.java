@@ -54,47 +54,6 @@ public class CommonUtils {
         return dm.widthPixels;
     }
 
-//	public static void RunOnUiThread(Runnable r) {
-//		CloudReaderApplication.getInstance().getMainLooper().post(r);
-//	}
 
-    public static Drawable getDrawable(int resid) {
-        return getResoure().getDrawable(resid);
-    }
-
-    public static int getColor(int resid) {
-        return getResoure().getColor(resid);
-    }
-
-    public static Resources getResoure() {
-        return MyApplication.getInstance().getResources();
-    }
-
-    public static String[] getStringArray(int resid) {
-        return getResoure().getStringArray(resid);
-    }
-
-    public static String getString(int resid) {
-        return getResoure().getString(resid);
-    }
-
-    public static float getDimens(int resId) {
-        return getResoure().getDimension(resId);
-    }
-
-    public static void removeSelfFromParent(View child) {
-
-        if (child != null) {
-
-            ViewParent parent = child.getParent();
-
-            if (parent instanceof ViewGroup) {
-
-                ViewGroup group = (ViewGroup) parent;
-
-                group.removeView(child);
-            }
-        }
-    }
 
 }

@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RatingBar;
 
+import com.edu.hrbeu.helpsend.MyApplication;
 import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.adapter.TimeLineAdapter;
 import com.edu.hrbeu.helpsend.bean.Order;
@@ -29,7 +30,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.edu.hrbeu.helpsend.seivice.OrderService.retrofit;
 
 
 public class TimelineActivty extends Activity{
@@ -42,18 +42,22 @@ public class TimelineActivty extends Activity{
     private String commit;
     private Activity mActivity;
     private String status;
+    private MyApplication myApplication;
+    private OrderService orderService;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContext=this;
-        mActivity=this;
-        Intent intent=getIntent();
-        commit=intent.getStringExtra("commit");
-        orderId=intent.getStringExtra("orderId");
-        avatar=intent.getStringExtra("avatar");
-        status=intent.getStringExtra("status");
-        mBinding= DataBindingUtil.setContentView(this, R.layout.activity_timeline);
+        mContext = this;
+        mActivity = this;
+        Intent intent = getIntent();
+        commit = intent.getStringExtra("commit");
+        orderId = intent.getStringExtra("orderId");
+        avatar = intent.getStringExtra("avatar");
+        status = intent.getStringExtra("status");
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_timeline);
+        myApplication = MyApplication.create(mContext);
+        orderService =myApplication.getOrderService();
         initView();
         clickListener();
     }
@@ -73,8 +77,7 @@ public class TimelineActivty extends Activity{
 
           Log.e("star", String.valueOf(mBinding.rating.ratingBar.getRating()));
             //提交
-            OrderService service = retrofit.create(OrderService.class);
-            Call<ResponsePojo> call = service.ratingOrder(orderId,String.valueOf(mBinding.rating.ratingBar.getRating()));
+            Call<ResponsePojo> call = orderService.ratingOrder(orderId,String.valueOf(mBinding.rating.ratingBar.getRating()));
             call.enqueue(new Callback<ResponsePojo>() {
                 @Override
                 public void onResponse(Call<ResponsePojo> call, Response<ResponsePojo> response) {
@@ -105,8 +108,7 @@ public class TimelineActivty extends Activity{
         ImgLoadUtil.displayCircle(mBinding.rating.ivAvatar,avatar);
         top=new TopMenuHeader(getWindow().getDecorView());
         top.topMenuTitle.setText("订单流程详情");
-        OrderService service=retrofit.create(OrderService.class);
-        Call<ArrayList<String>> call = service.getOrderProgress(orderId);
+        Call<ArrayList<String>> call = orderService.getOrderProgress(orderId);
         call.enqueue(new Callback<ArrayList<String>>() {
             @Override
             public void onResponse(Call<ArrayList<String>> call, Response<ArrayList<String>> response) {
