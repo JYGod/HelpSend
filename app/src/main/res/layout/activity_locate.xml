@@ -1,77 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-<RelativeLayout
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.edu.hrbeu.helpsend.activity.order.LocateActivity" >
 
-    <com.tencent.tencentmap.mapsdk.map.MapView
-        android:id="@+id/mapview"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
-    <RelativeLayout
+    <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:context="com.edu.hrbeu.helpsend.activity.order.LocateActivity">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/layouy_listview"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:background="@drawable/shape_locate"
-            android:gravity="left|center"
-            android:orientation="horizontal">
+        <com.tencent.tencentmap.mapsdk.map.MapView
+            android:id="@+id/mapview"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
 
-            <ImageView
-                android:id="@+id/iv_loc"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/satellite_location" />
-        </LinearLayout>
+                android:layout_above="@+id/layouy_listview"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/shape_locate"
+                android:gravity="left|center"
+                android:orientation="horizontal">
 
-        <LinearLayout
-            android:id="@+id/layouy_listview"
-            android:layout_width="match_parent"
-            android:layout_height="160dp"
-            android:layout_alignParentBottom="true"
-            android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/iv_loc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/satellite_location" />
+            </LinearLayout>
 
-            <ListView
-                android:id="@+id/lv_nearby"
+            <LinearLayout
+                android:id="@+id/layouy_listview"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/pureWhite"
-                android:visibility="gone" />
-        </LinearLayout>
-        <com.mancj.materialsearchbar.MaterialSearchBar
-            app:mt_speechMode="false"
-            app:mt_hint=""
-            app:mt_maxSuggestionsCount="5"
-            app:mt_searchIconDrawable="@null"
-            app:mt_navIconEnabled="true"
-            app:mt_navIconDrawable="@drawable/searchbar_back"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/searchBar" />
-        <View
-            android:id="@+id/v_center"
-            android:layout_width="5dp"
-            android:layout_height="5dp"
-            android:layout_centerInParent="true"/>
+                android:layout_height="160dp"
+                android:layout_alignParentBottom="true"
+                android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/iv_center_marker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/v_center"
-            android:layout_centerHorizontal="true"
-            android:scaleType="center"
-            android:src="@drawable/center_marker" />
+                <ListView
+                    android:id="@+id/lv_nearby"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/pureWhite"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <com.mancj.materialsearchbar.MaterialSearchBar
+                android:id="@+id/searchBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:mt_hint=""
+                app:mt_maxSuggestionsCount="0"
+                app:mt_navIconDrawable="@drawable/searchbar_back"
+                app:mt_navIconEnabled="true"
+                app:mt_searchIconDrawable="@null"
+                app:mt_speechMode="false" />
+
+            <View
+                android:id="@+id/v_center"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:layout_centerInParent="true" />
+
+            <ImageView
+                android:id="@+id/iv_center_marker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/v_center"
+                android:layout_centerHorizontal="true"
+                android:scaleType="center"
+                android:src="@drawable/center_marker" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_suggestion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/linearLayout"
+                android:layout_below="@+id/searchBar" />
 
 
+        </RelativeLayout>
     </RelativeLayout>
-</RelativeLayout>
 </layout>

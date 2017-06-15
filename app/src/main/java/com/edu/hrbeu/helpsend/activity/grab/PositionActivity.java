@@ -13,7 +13,6 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-
 import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.cache.ACache;
 import com.edu.hrbeu.helpsend.databinding.ActivityPositionBinding;
