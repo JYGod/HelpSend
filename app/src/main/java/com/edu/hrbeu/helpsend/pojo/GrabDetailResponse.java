@@ -7,6 +7,7 @@ import com.edu.hrbeu.helpsend.bean.GrabOrderDetail;
 public class GrabDetailResponse {
     private String status;
     private GrabOrderDetail message;
+    private String exp;
 
     public String getStatus() {
         return status;
@@ -23,5 +24,13 @@ public class GrabDetailResponse {
 
     public void setMessage(GrabOrderDetail message) {
         this.message = message;
+    }
+
+    public String getExp() {
+        return exp;
+    }
+
+    public void setExp(String exp) {
+        this.exp = exp;
     }
 }

@@ -1,17 +1,22 @@
 package com.edu.hrbeu.helpsend.activity.step;
 
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -63,6 +68,14 @@ public class Step1Activity extends Activity{
             initStep3Content();
         }
         clickListenner();
+
+        handlerUriException();
+    }
+
+    private void handlerUriException() {
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+        builder.detectFileUriExposure();
     }
 
     private void initStep3Content() {
@@ -125,6 +138,13 @@ public class Step1Activity extends Activity{
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
             Uri imageUri=null;
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                //如果没有授权，则请求授权
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CODE_CAPTURE_CAMEIA);
+            } else {
+                //有授权，直接开启摄像头
+
+            }
             if (currentPic.equals("front")){
                 frontUrl=Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+String.valueOf(System.currentTimeMillis())+".jpg";
                 imageUri = Uri.fromFile(new File(frontUrl));

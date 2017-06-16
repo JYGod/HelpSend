@@ -1,5 +1,6 @@
 package com.edu.hrbeu.helpsend.seivice;
 
+import com.edu.hrbeu.helpsend.pojo.ResponsePojo;
 import com.edu.hrbeu.helpsend.pojo.UserPojo;
 import com.edu.hrbeu.helpsend.pojo.VrfCodeResponsePojo;
 
@@ -20,13 +21,18 @@ public interface UserService {
     @GET("quicklogin")
     Call<UserPojo> quickLogin(@Query("telNumber") String telNumber);//确认快速登录
 
+    @GET("getexpbyuserid")
+    Call<ResponsePojo> getCurrentExp(@Query("userId") String userId);
 
-    /**获取实例*/
+
+    /**
+     * 获取实例
+     */
     Retrofit retrofit = new Retrofit.Builder()
             //设置OKHttpClient,如果不设置会提供一个默认的
             .client(new OkHttpClient())
             //设置baseUrl
-            .baseUrl("http://mengqipoet.cn:8080/webapi/user/")
+            .baseUrl("http://123.207.138.180:7012/webapi/user/")
             //添加Gson转换器
             .addConverterFactory(GsonConverterFactory.create())
             .build();

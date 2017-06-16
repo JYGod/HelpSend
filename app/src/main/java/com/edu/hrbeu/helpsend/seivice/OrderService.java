@@ -34,14 +34,14 @@ public interface OrderService {
    // @Headers({"Content-type:application/json", "Content-Length:59"})
    // @FormUrlEncoded
     @Multipart
-    @POST("createorder")
+    @POST("createorderwithimg")
     Call<UpdateInfo> submitOrder(@Part MultipartBody.Part file, @Part("orderinfo")RequestBody orderinfo);//提交订单+附件
    // Call<String> submitOrder(@Field("orderinfo") String orderinfo);
 
 
     @FormUrlEncoded
-    @POST("createorder")
-    Call<UpdateInfo> submitOrderWithoutAc(@Field("orderinfo")String orderinfo);//提交订单
+    @POST("createorderwithoutimg")
+    Call<UpdateInfo> submitOrderWithoutAc(@Field("orderinfo") String orderinfo);//提交订单
 
     @GET("queryselfallorder")
     Call<OrderResponse>getOwnerOrders(@Query("orderOwnerId") String orderOwnerId);//查询该用户的下单情况

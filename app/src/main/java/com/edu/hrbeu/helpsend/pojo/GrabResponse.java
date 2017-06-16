@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class GrabResponse {
     private String status;
     private ArrayList<GrabOrder> message;
+    private String exp;
 
     public String getStatus() {
         return status;
@@ -22,5 +23,13 @@ public class GrabResponse {
 
     public void setMessage(ArrayList<GrabOrder> message) {
         this.message = message;
+    }
+
+    public String getExp() {
+        return exp;
+    }
+
+    public void setExp(String exp) {
+        this.exp = exp;
     }
 }

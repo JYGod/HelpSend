@@ -237,7 +237,8 @@ public class NavigateActivity extends MapActivity implements View.OnClickListene
                 + LocationUtil.toString(mLocationManager.getCoordinateType());
 
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -499,19 +500,19 @@ public class NavigateActivity extends MapActivity implements View.OnClickListene
     };
 
     private void senMsg(String person) {
-        Uri uri=null;
-        if (person.equals("sender")){
-             uri = Uri.parse("smsto:"+startPhone);
-        }else {
-            uri = Uri.parse("smsto:"+endPhone);
+        Uri uri = null;
+        if (person.equals("sender")) {
+            uri = Uri.parse("smsto:" + startPhone);
+        } else {
+            uri = Uri.parse("smsto:" + endPhone);
         }
-        Intent intentMessage = new Intent(Intent.ACTION_VIEW,uri);
+        Intent intentMessage = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intentMessage);
     }
 
     private void call(String person) {
         if (person.equals("sender")) {
-            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+startPhone));
+            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + startPhone));
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
                 //    ActivityCompat#requestPermissions
@@ -523,8 +524,8 @@ public class NavigateActivity extends MapActivity implements View.OnClickListene
                 return;
             }
             startActivity(intent);
-        }else {
-            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+endPhone));
+        } else {
+            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + endPhone));
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
                 //    ActivityCompat#requestPermissions

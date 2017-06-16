@@ -17,6 +17,9 @@ public class UserPojo {
     private String age;
     private String remark;
     private String status;
+    private String createDate;
+    private int experience;
+    private String score;
 
     public String getUserId() {
         return userId;
@@ -128,5 +131,29 @@ public class UserPojo {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
+
+    public int getExperience() {
+        return experience;
+    }
+
+    public void setExperience(int experience) {
+        this.experience = experience;
+    }
+
+    public String getScore() {
+        return score;
+    }
+
+    public void setScore(String score) {
+        this.score = score;
     }
 }

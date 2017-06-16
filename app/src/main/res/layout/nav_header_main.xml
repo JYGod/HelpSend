@@ -65,6 +65,7 @@
                         android:orientation="horizontal">
 
                         <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+                            android:id="@+id/progress_level"
                             android:layout_width="150dp"
                             android:layout_height="10dp"
                             app:rcBackgroundColor="@color/cloud"

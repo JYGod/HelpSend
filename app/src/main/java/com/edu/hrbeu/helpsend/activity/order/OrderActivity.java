@@ -67,19 +67,19 @@ import retrofit2.Response;
 public class OrderActivity extends AppCompatActivity implements View.OnClickListener, SHSwipeRefreshLayout.SHSOnRefreshListener, OnDateSetListener {
 
     private static final int SHOW_PAYMENT_DIALOG = 5;
-    public final int REQUEST_CONTACTS_SEND=10;
-    public final int REQUEST_CONTACTS_RECEIVE=11;
-    public final int REQUEST_SELECT_IMG=20;
+    public final int REQUEST_CONTACTS_SEND = 10;
+    public final int REQUEST_CONTACTS_RECEIVE = 11;
+    public final int REQUEST_SELECT_IMG = 20;
     private ActivityOrderBinding mBinding;
     private Context mContext;
     private Activity mActivity;
     private TimePickerDialog mTimeDialog;
     private MyReceiver receiver;
-    private String timeStyle="";
-    private int currentIndex=0;//选择的支付方式
-    private final int[] payment_pic=new int[]{R.drawable.zhifu_small,R.drawable.weixin_small,R.drawable.pocket_small};
+    private String timeStyle = "";
+    private int currentIndex = 0;//选择的支付方式
+    private final int[] payment_pic = new int[]{R.drawable.zhifu_small, R.drawable.weixin_small, R.drawable.pocket_small};
     private ACache mCache;
-    private Gson gson=new Gson();
+    private Gson gson = new Gson();
     private MyApplication myApplication;
     private OrderService orderService;
 
@@ -87,12 +87,12 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mCache= ACache.get(this);
-        mBinding= DataBindingUtil.setContentView(this,R.layout.activity_order);
-        mContext=this;
-        mActivity=this;
+        mCache = ACache.get(this);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_order);
+        mContext = this;
+        mActivity = this;
         myApplication = MyApplication.create(mContext);
-        orderService= myApplication.getOrderService();
+        orderService = myApplication.getOrderService();
         initView();
         clickListener();
         registerMessageReceiver();
@@ -105,20 +105,20 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        mBinding.include.tvMyLocation.setText(GlobalData.MY_ORDER.getStartLocation()==null?
-                "":GlobalData.MY_ORDER.getStartLocation().getDescription());
-        mBinding.include.tvEndLocation.setText(GlobalData.MY_ORDER.getEndLocation()==null?
-                "":GlobalData.MY_ORDER.getEndLocation().getDescription());
-        mBinding.include.tvSenderPhone.setText(GlobalData.MY_ORDER.getSenderTel()==null?"":GlobalData.MY_ORDER.getSenderTel());
-        mBinding.include.tvReceiverPhone.setText(GlobalData.MY_ORDER.getReceiverTel()==null?"":GlobalData.MY_ORDER.getReceiverTel());
-        mBinding.include.tvGoods.setText(GlobalData.MY_ORDER.getGoodsName()==null?"":GlobalData.MY_ORDER.getGoodsName());
-        mBinding.include.tvTime.setText(GlobalData.MY_ORDER.getSendTime()==null?"":GlobalData.MY_ORDER.getSendTime());
-        mBinding.include.tvReceiveTime.setText(GlobalData.MY_ORDER.getReceiveTime()==null?"":GlobalData.MY_ORDER.getReceiveTime());
+        mBinding.include.tvMyLocation.setText(GlobalData.MY_ORDER.getStartLocation() == null ?
+                "" : GlobalData.MY_ORDER.getStartLocation().getDescription());
+        mBinding.include.tvEndLocation.setText(GlobalData.MY_ORDER.getEndLocation() == null ?
+                "" : GlobalData.MY_ORDER.getEndLocation().getDescription());
+        mBinding.include.tvSenderPhone.setText(GlobalData.MY_ORDER.getSenderTel() == null ? "" : GlobalData.MY_ORDER.getSenderTel());
+        mBinding.include.tvReceiverPhone.setText(GlobalData.MY_ORDER.getReceiverTel() == null ? "" : GlobalData.MY_ORDER.getReceiverTel());
+        mBinding.include.tvGoods.setText(GlobalData.MY_ORDER.getGoodsName() == null ? "" : GlobalData.MY_ORDER.getGoodsName());
+        mBinding.include.tvTime.setText(GlobalData.MY_ORDER.getSendTime() == null ? "" : GlobalData.MY_ORDER.getSendTime());
+        mBinding.include.tvReceiveTime.setText(GlobalData.MY_ORDER.getReceiveTime() == null ? "" : GlobalData.MY_ORDER.getReceiveTime());
         Glide.with(mContext).load(GlobalData.ACCESSORY)
                 .error(R.drawable.pic_null)
                 .crossFade(1000)
                 .into(mBinding.include.ivAccessory);
-        CommonUtil.setLimitText( mBinding.include.tvRemark,GlobalData.MY_ORDER.getRemark());
+        CommonUtil.setLimitText(mBinding.include.tvRemark, GlobalData.MY_ORDER.getRemark());
         calculatePrice();
         initPayingAnim();
 
@@ -140,19 +140,19 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
      */
     private void calculatePrice() {
         mBinding.tvPrice.setText("计算中...");
-        String reqStr= gson.toJson(GlobalData.POSITION_POINTS);
+        String reqStr = gson.toJson(GlobalData.POSITION_POINTS);
         Call<ResponsePojo> call = orderService.getPrice(reqStr);
         call.enqueue(new Callback<ResponsePojo>() {
             @Override
             public void onResponse(Call<ResponsePojo> call, Response<ResponsePojo> response) {
-                ResponsePojo responsePojo=response.body();
+                ResponsePojo responsePojo = response.body();
                 mBinding.tvPrice.setText(responsePojo.getStatus());
                 GlobalData.MY_ORDER.setOrderPrice(responsePojo.getStatus());
                 mBinding.btnPriceDetail.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        DialogPlus dialog = CommonUtil.createDialog(mContext, R.layout.dialog_price_detail, Gravity.BOTTOM,true);
-                        TextView detail=(TextView)dialog.getHolderView().findViewById(R.id.tv_price_detail);
+                        DialogPlus dialog = CommonUtil.createDialog(mContext, R.layout.dialog_price_detail, Gravity.BOTTOM, true);
+                        TextView detail = (TextView) dialog.getHolderView().findViewById(R.id.tv_price_detail);
                         detail.setText(responsePojo.getMessage());
                         dialog.show();
                     }
@@ -161,7 +161,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onFailure(Call<ResponsePojo> call, Throwable t) {
-                CommonUtil.showToast(mContext,"价格获取失败！");
+                CommonUtil.showToast(mContext, "价格获取失败！");
             }
         });
     }
@@ -173,20 +173,20 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void initView() {
-        View view=View.inflate(getApplicationContext(),R.layout.lay_logo,null);
-        View view2=View.inflate(getApplicationContext(),R.layout.lay_logo,null);
+        View view = View.inflate(getApplicationContext(), R.layout.lay_logo, null);
+        View view2 = View.inflate(getApplicationContext(), R.layout.lay_logo, null);
         mBinding.swipeRefreshLayout.setHeaderView(view);
         mBinding.swipeRefreshLayout.setFooterView(view2);
-        mBinding.include.tvMyLocation.setText(GlobalData.MY_ORDER.getStartLocation()==null?
-                "":GlobalData.MY_ORDER.getStartLocation().getDescription());
-        mBinding.include.tvEndLocation.setText(GlobalData.MY_ORDER.getEndLocation()==null?
-                "":GlobalData.MY_ORDER.getEndLocation().getDescription());
-        mBinding.include.tvSenderPhone.setText(GlobalData.MY_ORDER.getSenderTel()==null?"":GlobalData.MY_ORDER.getSenderTel());
-        mBinding.include.tvReceiverPhone.setText(GlobalData.MY_ORDER.getReceiverTel()==null?"":GlobalData.MY_ORDER.getReceiverTel());
-        mBinding.include.tvGoods.setText(GlobalData.MY_ORDER.getGoodsName()==null?"":GlobalData.MY_ORDER.getGoodsName());
-        mBinding.include.tvTime.setText(GlobalData.MY_ORDER.getSendTime()==null?"":GlobalData.MY_ORDER.getSendTime());
-        mBinding.include.tvReceiveTime.setText(GlobalData.MY_ORDER.getReceiveTime()==null?"":GlobalData.MY_ORDER.getReceiveTime());
-        CommonUtil.setLimitText( mBinding.include.tvRemark,GlobalData.MY_ORDER.getRemark());
+        mBinding.include.tvMyLocation.setText(GlobalData.MY_ORDER.getStartLocation() == null ?
+                "" : GlobalData.MY_ORDER.getStartLocation().getDescription());
+        mBinding.include.tvEndLocation.setText(GlobalData.MY_ORDER.getEndLocation() == null ?
+                "" : GlobalData.MY_ORDER.getEndLocation().getDescription());
+        mBinding.include.tvSenderPhone.setText(GlobalData.MY_ORDER.getSenderTel() == null ? "" : GlobalData.MY_ORDER.getSenderTel());
+        mBinding.include.tvReceiverPhone.setText(GlobalData.MY_ORDER.getReceiverTel() == null ? "" : GlobalData.MY_ORDER.getReceiverTel());
+        mBinding.include.tvGoods.setText(GlobalData.MY_ORDER.getGoodsName() == null ? "" : GlobalData.MY_ORDER.getGoodsName());
+        mBinding.include.tvTime.setText(GlobalData.MY_ORDER.getSendTime() == null ? "" : GlobalData.MY_ORDER.getSendTime());
+        mBinding.include.tvReceiveTime.setText(GlobalData.MY_ORDER.getReceiveTime() == null ? "" : GlobalData.MY_ORDER.getReceiveTime());
+        CommonUtil.setLimitText(mBinding.include.tvRemark, GlobalData.MY_ORDER.getRemark());
         Glide.with(mContext).load(GlobalData.ACCESSORY)
                 .error(R.drawable.pic_null)
                 .crossFade(1000)
@@ -195,7 +195,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void clickListener() {
-       // mBinding.tvPersonality.setOnClickListener(this);
+        // mBinding.tvPersonality.setOnClickListener(this);
         mBinding.include.itemStart.setOnClickListener(this);
         mBinding.include.itemEnd.setOnClickListener(this);
         mBinding.swipeRefreshLayout.setOnRefreshListener(this);
@@ -243,52 +243,52 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        Intent intent=new Intent();
-        switch (view.getId()){
+        Intent intent = new Intent();
+        switch (view.getId()) {
             case R.id.item_start:
-                intent.setClass(this,LocateActivity.class);
-                GlobalData.LOCATE_DIRECTION="start";
+                intent.setClass(this, LocateActivity.class);
+                GlobalData.LOCATE_DIRECTION = "start";
                 startActivity(intent);
                 break;
             case R.id.item_end:
-                intent.setClass(this,LocateActivity.class);
-                GlobalData.LOCATE_DIRECTION="end";
+                intent.setClass(this, LocateActivity.class);
+                GlobalData.LOCATE_DIRECTION = "end";
                 startActivity(intent);
                 break;
             case R.id.btn_buy:
                 mBinding.btnBuy.startAnimation();
                 new Handler().postDelayed(new Runnable() {
-                   @Override
-                   public void run() {
-                       mHandler.sendEmptyMessage(SHOW_PAYMENT_DIALOG);
-                   }
-               },1000);
+                    @Override
+                    public void run() {
+                        mHandler.sendEmptyMessage(SHOW_PAYMENT_DIALOG);
+                    }
+                }, 1000);
                 break;
             case R.id.btn_select_sender:
-                intent=new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                startActivityForResult(intent,REQUEST_CONTACTS_SEND);
+                intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                startActivityForResult(intent, REQUEST_CONTACTS_SEND);
                 break;
             case R.id.btn_select_receiver:
-                intent=new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                startActivityForResult(intent,REQUEST_CONTACTS_RECEIVE);
+                intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                startActivityForResult(intent, REQUEST_CONTACTS_RECEIVE);
                 break;
             case R.id.select_img:
-                intent=new Intent(Intent.ACTION_PICK,  android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent,REQUEST_SELECT_IMG);
+                intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, REQUEST_SELECT_IMG);
                 break;
             case R.id.seleclt_goods:
                 initDialog();
                 break;
             case R.id.select_time:
-                timeStyle="send";
+                timeStyle = "send";
                 initTime();
                 break;
             case R.id.select_receive_time:
-                timeStyle="receive";
+                timeStyle = "receive";
                 initTime();
                 break;
             case R.id.select_remark:
-                intent.setClass(mContext,RemarkActivity.class);
+                intent.setClass(mContext, RemarkActivity.class);
                 startActivity(intent);
                 break;
             default:
@@ -322,10 +322,10 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
      * 物品选择对话框
      */
     private void initDialog() {
-        DialogPlus dialog = CommonUtil.createDialog(mContext,R.layout.dialog_select_goods,Gravity.BOTTOM,false);
+        DialogPlus dialog = CommonUtil.createDialog(mContext, R.layout.dialog_select_goods, Gravity.BOTTOM, false);
         dialog.show();
-        ImageView cancel= (ImageView) dialog.getHolderView().findViewById(R.id.goods_dialog_cancel);
-        cancel.setOnClickListener((View v)->{
+        ImageView cancel = (ImageView) dialog.getHolderView().findViewById(R.id.goods_dialog_cancel);
+        cancel.setOnClickListener((View v) -> {
             dialog.dismiss();
         });
         SwipeSelector swipeKinds = (com.roughike.swipeselector.SwipeSelector) dialog.getHolderView().findViewById(R.id.swip_kinds);
@@ -344,9 +344,9 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 new SwipeItem(3, "5kg", "并没有超重，还在我们的配送范围内"),
                 new SwipeItem(4, "10kg", "有点重，但是我们能扛得动！"),
                 new SwipeItem(5, "其 他", "我们可能会搬不动哟~"));
-        SelectorTextView btnDialogCheck= (SelectorTextView) dialog.getHolderView().findViewById(R.id.goods_dialog_check);
-        btnDialogCheck.setOnClickListener((View v)->{
-            String description=swipeKinds.getSelectedItem().title+" - "+swipeWeight.getSelectedItem().title;
+        SelectorTextView btnDialogCheck = (SelectorTextView) dialog.getHolderView().findViewById(R.id.goods_dialog_check);
+        btnDialogCheck.setOnClickListener((View v) -> {
+            String description = swipeKinds.getSelectedItem().title + " - " + swipeWeight.getSelectedItem().title;
             GlobalData.MY_ORDER.setGoodsName(description);
             mBinding.include.tvGoods.setText(description);
             dialog.dismiss();
@@ -354,21 +354,22 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    private int BUY_SUCCESS=1;
-    Handler mHandler=new Handler(){
+    private int BUY_SUCCESS = 1;
+    Handler mHandler = new Handler() {
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if (msg.what==BUY_SUCCESS){
+            if (msg.what == BUY_SUCCESS) {
 
-            }else if (msg.what==SHOW_PAYMENT_DIALOG){
-                if (GlobalData.MY_ORDER.getStartLocation()==null||GlobalData.MY_ORDER.getEndLocation()==null
-                        ||GlobalData.MY_ORDER.getSenderTel()==null||GlobalData.MY_ORDER.getReceiverTel()==null){
-                    CommonUtil.showToast(mContext,"请完善订单信息！");
+            } else if (msg.what == SHOW_PAYMENT_DIALOG) {
+                if (GlobalData.MY_ORDER.getStartLocation() == null || GlobalData.MY_ORDER.getEndLocation() == null
+                        || GlobalData.MY_ORDER.getSenderTel() == null || GlobalData.MY_ORDER.getReceiverTel() == null
+                        || GlobalData.MY_ORDER.getReceiveTime() == null || GlobalData.MY_ORDER.getSendTime() == null) {
+                    CommonUtil.showToast(mContext, "请完善订单信息！");
                     mBinding.btnBuy.revertAnimation();
-                }else {
-                    if (GlobalData.MY_ORDER.getGoodsName()==null){
+                } else {
+                    if (GlobalData.MY_ORDER.getGoodsName() == null) {
                         GlobalData.MY_ORDER.setGoodsName("其他 - 其他");
                     }
                     mBinding.btnBuy.revertAnimation();
@@ -382,23 +383,23 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
      * 支付对话框
      */
     private void initPaymentDialog() {
-        final DialogPlus dialog = CommonUtil.createDialog(mContext,R.layout.dialog_payment,Gravity.BOTTOM,false);
-        TextView tvPrice=(TextView)dialog.findViewById(R.id.tv_price);
+        final DialogPlus dialog = CommonUtil.createDialog(mContext, R.layout.dialog_payment, Gravity.BOTTOM, false);
+        TextView tvPrice = (TextView) dialog.findViewById(R.id.tv_price);
         tvPrice.setText(GlobalData.MY_ORDER.getOrderPrice());
         dialog.show();
-        ImageView ivCancel=(ImageView)dialog.getHolderView().findViewById(R.id.iv_payment_cancel);
-        ivCancel.setOnClickListener((View v)->{
+        ImageView ivCancel = (ImageView) dialog.getHolderView().findViewById(R.id.iv_payment_cancel);
+        ivCancel.setOnClickListener((View v) -> {
             dialog.dismiss();
         });
-        RadioRealButtonGroup group= (RadioRealButtonGroup) dialog.getHolderView().findViewById(R.id.radio_group);
+        RadioRealButtonGroup group = (RadioRealButtonGroup) dialog.getHolderView().findViewById(R.id.radio_group);
         group.setOnPositionChangedListener(new RadioRealButtonGroup.OnPositionChangedListener() {
             @Override
             public void onPositionChanged(RadioRealButton button, int currentPosition, int lastPosition) {
-                currentIndex=currentPosition;
+                currentIndex = currentPosition;
             }
         });
         group.setPosition(currentIndex);
-        CircularProgressButton btnPay=(CircularProgressButton)dialog.getHolderView().findViewById(R.id.btn_pay);
+        CircularProgressButton btnPay = (CircularProgressButton) dialog.getHolderView().findViewById(R.id.btn_pay);
         btnPay.setOnClickListener(new PerfectClickListener() {
             @Override
             protected void onNoDoubleClick(View v) {
@@ -407,52 +408,53 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 String orderinfo = gson.toJson(GlobalData.MY_ORDER, Order.class);
                 mBinding.paying.payingLoading.start();
                 mBinding.paying.payingLoading.setVisibility(View.VISIBLE);
-                MultipartBody.Part photo =null;
-                if (GlobalData.ACCESSORY==null){
-                    Call<UpdateInfo> call = orderService.submitOrderWithoutAc(orderinfo);
+                MultipartBody.Part photo = null;
+                if (GlobalData.ACCESSORY == null) {
+                   Call<UpdateInfo> call = orderService.submitOrderWithoutAc(orderinfo);
+//                    Call<UpdateInfo> call = orderService.submitOrderWithoutAc(RequestBody.create(null,orderinfo));
                     call.enqueue(new Callback<UpdateInfo>() {
                         @Override
                         public void onResponse(Call<UpdateInfo> call, Response<UpdateInfo> response) {
-                            GlobalData.MY_ORDER=new Order();
-                            GlobalData.ACCESSORY=null;
+                            GlobalData.MY_ORDER = new Order();
+                            GlobalData.ACCESSORY = null;
                             mBinding.paying.payingLoading.stop();
                             mBinding.paying.payingLoading.setVisibility(View.GONE);
-                            UpdateInfo updateInfo=response.body();
-                            CommonUtil.showToast(mContext,updateInfo.getMessage());
-                            GlobalData.MY_ORDER=new Order();
-                            CommonUtil.startActivity(mContext,MyorderActivity.class);
+                            UpdateInfo updateInfo = response.body();
+                            CommonUtil.showToast(mContext, updateInfo.getMessage());
+                            GlobalData.MY_ORDER = new Order();
+                            CommonUtil.startActivity(mContext, MyorderActivity.class);
                         }
 
                         @Override
                         public void onFailure(Call<UpdateInfo> call, Throwable t) {
                             mBinding.paying.payingLoading.stop();
                             mBinding.paying.payingLoading.setVisibility(View.GONE);
-                            CommonUtil.showToast(mContext,"支付失败!");
+                            CommonUtil.showToast(mContext, "支付失败!");
                             dialog.dismiss();
                         }
                     });
-                }else {
+                } else {
                     RequestBody photoRequestBody = RequestBody.create(MediaType.parse("image/png"), GlobalData.ACCESSORY);
                     photo = MultipartBody.Part.createFormData("photos", "accessory.png", photoRequestBody);
-                    Call<UpdateInfo> call = orderService.submitOrder(photo,RequestBody.create(null,orderinfo));
+                    Call<UpdateInfo> call = orderService.submitOrder(photo, RequestBody.create(null, orderinfo));
                     call.enqueue(new Callback<UpdateInfo>() {
                         @Override
                         public void onResponse(Call<UpdateInfo> call, Response<UpdateInfo> response) {
-                            GlobalData.MY_ORDER=new Order();
-                            GlobalData.ACCESSORY=null;
+                            GlobalData.MY_ORDER = new Order();
+                            GlobalData.ACCESSORY = null;
                             mBinding.paying.payingLoading.stop();
                             mBinding.paying.payingLoading.setVisibility(View.GONE);
-                            UpdateInfo updateInfo=response.body();
-                            CommonUtil.showToast(mContext,updateInfo.getMessage());
-                            GlobalData.MY_ORDER=new Order();
-                            CommonUtil.startActivity(mContext,MyorderActivity.class);
+                            UpdateInfo updateInfo = response.body();
+                            CommonUtil.showToast(mContext, updateInfo.getMessage());
+                            GlobalData.MY_ORDER = new Order();
+                            CommonUtil.startActivity(mContext, MyorderActivity.class);
                         }
 
                         @Override
                         public void onFailure(Call<UpdateInfo> call, Throwable t) {
                             mBinding.paying.payingLoading.stop();
                             mBinding.paying.payingLoading.setVisibility(View.GONE);
-                            CommonUtil.showToast(mContext,"支付失败!");
+                            CommonUtil.showToast(mContext, "支付失败!");
                             dialog.dismiss();
                         }
                     });
@@ -464,6 +466,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
     /**
      * 取消订单  对话框
+     *
      * @param v
      */
     private void cancelOrderDialog(View v) {
@@ -502,40 +505,40 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
+        switch (requestCode) {
             case REQUEST_CONTACTS_SEND://发送方电话
-                if (resultCode==RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     Uri contactData = data.getData();
                     Cursor cursor = managedQuery(contactData, null, null, null, null);
-                    String userPhone= PhoneUtil.getPhoneNumber(cursor,mContext);
+                    String userPhone = PhoneUtil.getPhoneNumber(cursor, mContext);
                     GlobalData.MY_ORDER.setSenderTel(userPhone);
                     mBinding.include.tvSenderPhone.setText(userPhone);
                 }
                 break;
             case REQUEST_CONTACTS_RECEIVE://接收方电话
-                if (resultCode==RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     Uri contactData = data.getData();
                     Cursor cursor = managedQuery(contactData, null, null, null, null);
-                    String userPhone= PhoneUtil.getPhoneNumber(cursor,mContext);
+                    String userPhone = PhoneUtil.getPhoneNumber(cursor, mContext);
                     GlobalData.MY_ORDER.setReceiverTel(userPhone);
                     mBinding.include.tvReceiverPhone.setText(userPhone);
                 }
                 break;
             case REQUEST_SELECT_IMG://物品附件
-                if (resultCode==RESULT_OK&&data!=null){
+                if (resultCode == RESULT_OK && data != null) {
                     Uri selectedImage = data.getData();
-                    String[] filePathColumn = { MediaStore.Images.Media.DATA };
+                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
                     Cursor cursor = getContentResolver().query(selectedImage,
                             filePathColumn, null, null, null);
                     cursor.moveToFirst();
                     int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                     String picturePath = cursor.getString(columnIndex);
-                    File file=new File(picturePath);
+                    File file = new File(picturePath);
                     Glide.with(mContext).load(file)
                             .error(R.drawable.pic_null)
                             .crossFade(1000)
                             .into(mBinding.include.ivAccessory);
-                    GlobalData.ACCESSORY=file;
+                    GlobalData.ACCESSORY = file;
                 }
                 break;
         }
@@ -563,11 +566,11 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onDateSet(TimePickerDialog timePickerView, long millseconds) {
-        String time= TimeUtil.getDateToString(millseconds);
-        if (timeStyle.equals("send")){
+        String time = TimeUtil.getDateToString(millseconds);
+        if (timeStyle.equals("send")) {
             mBinding.include.tvTime.setText(time);
             GlobalData.MY_ORDER.setSendTime(time);
-        }else {
+        } else {
             mBinding.include.tvReceiveTime.setText(time);
             GlobalData.MY_ORDER.setReceiveTime(time);
         }
@@ -575,7 +578,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
 
     private void registerMessageReceiver() {
-        receiver=new MyReceiver();
+        receiver = new MyReceiver();
         IntentFilter filter = new IntentFilter();
         filter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
         filter.addAction(GlobalData.ORDER_LISTENER);

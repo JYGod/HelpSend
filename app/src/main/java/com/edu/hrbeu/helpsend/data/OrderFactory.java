@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class OrderFactory {
 
-    private final static String BASE_URL="http://mengqipoet.cn:8080/webapi/order/";
+    private final static String BASE_URL="http://123.207.138.180:7012/webapi/order/";
 
 
     public static OrderService create(){
@@ -25,7 +25,7 @@ public class OrderFactory {
                 //设置OKHttpClient,如果不设置会提供一个默认的
                 .client(client)
                 //设置baseUrl
-                .baseUrl("http://mengqipoet.cn:8080/webapi/order/")
+                .baseUrl(BASE_URL)
                 //添加Gson转换器
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

@@ -4,7 +4,7 @@ import java.text.NumberFormat;
 
 
 public class ExpToLevel {
-    public String[] expToLevel(String exp){
+    public static String[] expToLevel(String exp){
         String[] result=new String[2];
         String percent="0";
         int level=1;
@@ -29,7 +29,7 @@ public class ExpToLevel {
 
 
 
-    public int levelToExp(int level){
+    public static int levelToExp(int level){
         int total=0;
         for(int i=1;i<level;i++){
             total+=((20 * (Math.pow(i, 3) + (5 * i))) - 80);

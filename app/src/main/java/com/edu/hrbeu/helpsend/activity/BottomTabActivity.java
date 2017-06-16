@@ -38,7 +38,10 @@ import com.edu.hrbeu.helpsend.cache.ACache;
 import com.edu.hrbeu.helpsend.databinding.ActivityBottomTabBinding;
 import com.edu.hrbeu.helpsend.databinding.NavHeaderMainBinding;
 import com.edu.hrbeu.helpsend.global.GlobalData;
+import com.edu.hrbeu.helpsend.pojo.ResponsePojo;
+import com.edu.hrbeu.helpsend.seivice.UserService;
 import com.edu.hrbeu.helpsend.utils.CommonUtil;
+import com.edu.hrbeu.helpsend.utils.ExpToLevel;
 import com.edu.hrbeu.helpsend.utils.ImgLoadUtil;
 import com.edu.hrbeu.helpsend.utils.StatusBarUtil;
 
@@ -50,6 +53,11 @@ import java.util.List;
 
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.api.BasicCallback;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.edu.hrbeu.helpsend.seivice.UserService.retrofit;
 
 public class BottomTabActivity extends TabActivity implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
 
@@ -69,15 +77,16 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
     private ACache mCache;
     private Context mContext;
     private Activity mActivity;
+    private String mExp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mCache= ACache.get(this);
-        mContext=this;
-        mActivity=this;
+        mCache = ACache.get(this);
+        mContext = this;
+        mActivity = this;
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-      //  setContentView(R.layout.activity_bottom_tab);
+        //  setContentView(R.layout.activity_bottom_tab);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_bottom_tab);
         //  initXGPush();
         initStatusView();
@@ -89,6 +98,39 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
         initMyLocation();
         //  initTIM();
         clickListener();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshExp();
+    }
+
+    private void refreshExp() {
+        mExp = mCache.getAsString("mExp");
+        if (mExp == null) {
+            UserService service = retrofit.create(UserService.class);
+            Call<ResponsePojo> call = service.getCurrentExp(mCache.getAsString("mId"));
+            call.enqueue(new Callback<ResponsePojo>() {
+                @Override
+                public void onResponse(Call<ResponsePojo> call, Response<ResponsePojo> response) {
+                    ResponsePojo pojo = response.body();
+                    String[] exps = ExpToLevel.expToLevel(pojo.getExp());
+                    bind.tvLevel.setText("Lv." + exps[0]);
+                    bind.progressLevel.setProgress(Float.valueOf(exps[1]));
+                }
+
+                @Override
+                public void onFailure(Call<ResponsePojo> call, Throwable t) {
+                    bind.tvLevel.setText("Lv.未知");
+                    bind.progressLevel.setProgress(0);
+                }
+            });
+        } else {
+            String[] exps = ExpToLevel.expToLevel(mExp);
+            bind.tvLevel.setText("Lv." + exps[0]);
+            bind.progressLevel.setProgress(Float.valueOf(exps[1]));
+        }
     }
 
 
@@ -117,15 +159,15 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
             provider = LocationManager.GPS_PROVIDER;
         } else if (providerList.contains(LocationManager.NETWORK_PROVIDER)) {
             provider = LocationManager.NETWORK_PROVIDER;
-        }else {
+        } else {
             Toast.makeText(getApplicationContext(), "没有位置提供器可供使用", Toast.LENGTH_LONG).show();
         }
         Location location = locationManager.getLastKnownLocation(provider);
-        if (location==null){
+        if (location == null) {
 
-        }else {
-            mCache.put("mLat",String.valueOf(location.getLatitude()));
-            mCache.put("mLng",String.valueOf(location.getLongitude()));
+        } else {
+            mCache.put("mLat", String.valueOf(location.getLatitude()));
+            mCache.put("mLng", String.valueOf(location.getLongitude()));
             GlobalData.mLocation.setLongitude(String.valueOf(location.getLongitude()));
             GlobalData.mLocation.setLatitude(String.valueOf(location.getLatitude()));
         }
@@ -134,17 +176,18 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
 
     private void initDrawerLayout() {
         navView.inflateHeaderView(R.layout.nav_header_main);
-        View headerView=navView.getHeaderView(0);
-        bind=DataBindingUtil.bind(headerView);
+        View headerView = navView.getHeaderView(0);
+        bind = DataBindingUtil.bind(headerView);
 //        ImgLoadUtil.displayCircle(bind.ivHead,"http://img3.duitang.com/" +
 //                "uploads/item/201409/22/20140922122621_fxvj8.thumb.224_0.jpeg");
         bind.tvUsername.setText(String.valueOf(mCache.getAsString("mNickName")));
         ImgLoadUtil.displayCircle(bind.ivHead, String.valueOf(mCache.getAsString("mAvatar")));
+        refreshExp();
     }
 
     private void initStatusView() {
-        ViewGroup.LayoutParams params=mBinding.include.viewStatus.getLayoutParams();
-        params.height= StatusBarUtil.getStatusBarHeight(this);
+        ViewGroup.LayoutParams params = mBinding.include.viewStatus.getLayoutParams();
+        params.height = StatusBarUtil.getStatusBarHeight(this);
         mBinding.include.viewStatus.setLayoutParams(params);
     }
 
@@ -153,25 +196,25 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
                 mBinding.radioGrab, mBinding.radioMessage));
         Intent intent = getIntent();
         tabTag = intent.getStringExtra("tabTag");
-        if (tabTag==null){
-           radios.get(0).setChecked(true);
-        }else {
+        if (tabTag == null) {
+            radios.get(0).setChecked(true);
+        } else {
             radios.get(tags.indexOf(tabTag)).setChecked(true);
         }
-        orderIntent=new Intent(this,OrderActivity.class);
-        grabIntent=new Intent(this,GrabActivity.class);
-        messageIntent=new Intent(this,MessageActivity.class);
+        orderIntent = new Intent(this, OrderActivity.class);
+        grabIntent = new Intent(this, GrabActivity.class);
+        messageIntent = new Intent(this, MessageActivity.class);
 
-        drawerLayout=mBinding.drawerLayout;
-        navView=mBinding.navView;
+        drawerLayout = mBinding.drawerLayout;
+        navView = mBinding.navView;
     }
 
     private void setupIntent() {
-        mTabHost=getTabHost();
+        mTabHost = getTabHost();
         TabHost localTabHost = this.mTabHost;
-        localTabHost.addTab(buildTabSpec(tags.get(0),R.string.order,R.drawable.bottom_icon_order, this.orderIntent));
-        localTabHost.addTab(buildTabSpec(tags.get(1),R.string.grab,R.drawable.bottom_icon_grab, this.grabIntent));
-        localTabHost.addTab(buildTabSpec(tags.get(2),R.string.message,R.drawable.bottom_icon_message, this.messageIntent));
+        localTabHost.addTab(buildTabSpec(tags.get(0), R.string.order, R.drawable.bottom_icon_order, this.orderIntent));
+        localTabHost.addTab(buildTabSpec(tags.get(1), R.string.grab, R.drawable.bottom_icon_grab, this.grabIntent));
+        localTabHost.addTab(buildTabSpec(tags.get(2), R.string.message, R.drawable.bottom_icon_message, this.messageIntent));
     }
 
     private void clickListener() {
@@ -188,8 +231,8 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-        if (b){
-            switch (compoundButton.getId()){
+        if (b) {
+            switch (compoundButton.getId()) {
                 case R.id.radio_order:
                     mTabHost.setCurrentTabByTag("ORDER_TAB");
                     break;
@@ -224,24 +267,24 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
+        switch (requestCode) {
             case REQUEST_SELECT_IMG:
-                if (resultCode==RESULT_OK&&data!=null){
+                if (resultCode == RESULT_OK && data != null) {
                     Uri selectedImage = data.getData();
-                    String[] filePathColumn = { MediaStore.Images.Media.DATA };
+                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
                     Cursor cursor = getContentResolver().query(selectedImage,
                             filePathColumn, null, null, null);
                     cursor.moveToFirst();
                     int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                     String picturePath = cursor.getString(columnIndex);
-                    File file=new File(picturePath);
+                    File file = new File(picturePath);
                     JMessageClient.updateUserAvatar(file, new BasicCallback() {
                         @Override
                         public void gotResult(int i, String s) {
-                            if (i==0){
-                                ImgLoadUtil.displayCircle(bind.ivHead,picturePath);
-                            }else {
-                                Log.e("??????",s);
+                            if (i == 0) {
+                                ImgLoadUtil.displayCircle(bind.ivHead, picturePath);
+                            } else {
+                                Log.e("??????", s);
                             }
                         }
                     });
@@ -254,14 +297,14 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
 
     @Override
     public void onClick(View view) {
-        Intent intent=new Intent();
-        switch (view.getId()){
+        Intent intent = new Intent();
+        switch (view.getId()) {
             case R.id.iv_title_menu:
                 drawerLayout.openDrawer(GravityCompat.START);
                 break;
             case R.id.iv_head:
-                intent=new Intent(Intent.ACTION_PICK,  android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent,REQUEST_SELECT_IMG);
+                intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, REQUEST_SELECT_IMG);
                 break;
             case R.id.nav_order_manage:
                 CommonUtil.startActivity(mContext, MyorderActivity.class);
