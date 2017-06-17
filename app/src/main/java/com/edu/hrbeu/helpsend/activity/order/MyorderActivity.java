@@ -34,24 +34,24 @@ import retrofit2.Response;
 
 
 public class MyorderActivity extends Activity implements View.OnClickListener, OnFABMenuSelectedListener, SwipeRefreshLayout.OnRefreshListener {
-    private final int SEND_ORDER=0;
-    private final int GRAB_ORDER=1;
+    private final int SEND_ORDER = 0;
+    private final int GRAB_ORDER = 1;
     private ActivityMyorderBinding mBinding;
     private TopMenuHeader top;
     private ACache mCache;
     private Context mContext;
-    private String mStatus="all";
+    private String mStatus = "all";
     private MyApplication myApplication;
     private OrderService orderService;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mCache= ACache.get(this);
-        mContext=this;
-        mBinding= DataBindingUtil.setContentView(this, R.layout.activity_myorder);
-        myApplication= MyApplication.create(mContext);
-        orderService=myApplication.getOrderService();
+        mCache = ACache.get(this);
+        mContext = this;
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_myorder);
+        myApplication = MyApplication.create(mContext);
+        orderService = myApplication.getOrderService();
         initView();
         clickListener();
     }
@@ -61,13 +61,13 @@ public class MyorderActivity extends Activity implements View.OnClickListener, O
         mBinding.radioSelector.setOnClickedButtonListener(new RadioRealButtonGroup.OnClickedButtonListener() {
             @Override
             public void onClickedButton(RadioRealButton button, int position) {
-                switch (position){
+                switch (position) {
                     case SEND_ORDER:
-                        GlobalData.ORDER_SELECT="put";
+                        GlobalData.ORDER_SELECT = "put";
                         queryDatas("all");
                         break;
                     case GRAB_ORDER:
-                        GlobalData.ORDER_SELECT="receive";
+                        GlobalData.ORDER_SELECT = "receive";
                         queryDatas("all");
                         break;
                     default:
@@ -80,7 +80,7 @@ public class MyorderActivity extends Activity implements View.OnClickListener, O
 
     private void initView() {
         mBinding.radioSelector.setPosition(SEND_ORDER);
-        top=new TopMenuHeader(getWindow().getDecorView());
+        top = new TopMenuHeader(getWindow().getDecorView());
         top.topMenuTitle.setText("我的订单");
         mBinding.fabMenu.bindAncherView(mBinding.fab);
         mBinding.fabMenu.setOnFABMenuSelectedListener(this);
@@ -91,13 +91,13 @@ public class MyorderActivity extends Activity implements View.OnClickListener, O
 
     private void queryDatas(String status) {
         mBinding.swipe.setRefreshing(true);
-        if (mBinding.radioSelector.getPosition()==SEND_ORDER){
-            Call<ArrayList<MyOrderPojo>> call = orderService.getMyPutOrders(mCache.getAsString("mId"),status);
+        if (mBinding.radioSelector.getPosition() == SEND_ORDER) {
+            Call<ArrayList<MyOrderPojo>> call = orderService.getMyPutOrders(mCache.getAsString("mId"), status);
             call.enqueue(new Callback<ArrayList<MyOrderPojo>>() {
                 @Override
                 public void onResponse(Call<ArrayList<MyOrderPojo>> call, Response<ArrayList<MyOrderPojo>> response) {
-                   ArrayList<MyOrderPojo> list=response.body();
-                    MyOderAdapter adapter=new MyOderAdapter(mContext,list);
+                    ArrayList<MyOrderPojo> list = response.body();
+                    MyOderAdapter adapter = new MyOderAdapter(mContext, list);
                     mBinding.recyclerOrder.setAdapter(adapter);
                     mBinding.swipe.setRefreshing(false);
 
@@ -105,17 +105,17 @@ public class MyorderActivity extends Activity implements View.OnClickListener, O
 
                 @Override
                 public void onFailure(Call<ArrayList<MyOrderPojo>> call, Throwable t) {
-                    CommonUtil.showToast(mContext,"获取数据失败！");
+                    CommonUtil.showToast(mContext, "获取数据失败！");
                     mBinding.swipe.setRefreshing(false);
                 }
             });
-        }else {
-            Call<ArrayList<MyOrderPojo>> call = orderService.getMyReceiveOrders(mCache.getAsString("mId"),status);
+        } else {
+            Call<ArrayList<MyOrderPojo>> call = orderService.getMyReceiveOrders(mCache.getAsString("mId"), status);
             call.enqueue(new Callback<ArrayList<MyOrderPojo>>() {
                 @Override
                 public void onResponse(Call<ArrayList<MyOrderPojo>> call, Response<ArrayList<MyOrderPojo>> response) {
-                    ArrayList<MyOrderPojo> list=response.body();
-                    MyOderAdapter adapter=new MyOderAdapter(mContext,list);
+                    ArrayList<MyOrderPojo> list = response.body();
+                    MyOderAdapter adapter = new MyOderAdapter(mContext, list);
                     mBinding.recyclerOrder.setAdapter(adapter);
                     mBinding.swipe.setRefreshing(false);
 
@@ -123,7 +123,7 @@ public class MyorderActivity extends Activity implements View.OnClickListener, O
 
                 @Override
                 public void onFailure(Call<ArrayList<MyOrderPojo>> call, Throwable t) {
-                    CommonUtil.showToast(mContext,"获取数据失败！");
+                    CommonUtil.showToast(mContext, "获取数据失败！");
                     mBinding.swipe.setRefreshing(false);
                 }
             });
@@ -132,7 +132,7 @@ public class MyorderActivity extends Activity implements View.OnClickListener, O
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.top_menu_left:
                 finish();
                 break;
@@ -144,22 +144,22 @@ public class MyorderActivity extends Activity implements View.OnClickListener, O
     @Override
     public void onMenuItemSelected(View view) {
         int id = (int) view.getTag();
-        switch (id){
+        switch (id) {
             case R.id.item_0:
-                Log.e("click0","click0!!!");
-                mStatus="0";
+                Log.e("click0", "click0!!!");
+                mStatus = "0";
                 queryDatas(mStatus);
                 break;
             case R.id.item_1:
-                mStatus="-1";
+                mStatus = "-1";
                 queryDatas(mStatus);
                 break;
             case R.id.item_2:
-                mStatus="2";
+                mStatus = "2";
                 queryDatas(mStatus);
                 break;
             case R.id.item_3:
-                mStatus="all";
+                mStatus = "all";
                 queryDatas(mStatus);
                 break;
         }

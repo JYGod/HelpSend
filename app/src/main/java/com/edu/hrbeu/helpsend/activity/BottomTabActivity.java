@@ -78,6 +78,7 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
     private Context mContext;
     private Activity mActivity;
     private String mExp;
+    private String mRole;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +105,20 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
     protected void onResume() {
         super.onResume();
         refreshExp();
+        refreshRole();
+    }
+
+    private void refreshRole() {
+        mRole = mCache.getAsString("mRole");
+        if (mRole == null) {
+
+        } else {
+
+            bind.ivIndentify.setImageDrawable(getResources().getDrawable(R.drawable.identification));
+
+            bind.ivIndentify.setImageDrawable(getResources().getDrawable(R.drawable.unidentificate));
+        }
+
     }
 
     private void refreshExp() {
@@ -307,7 +322,23 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
                 startActivityForResult(intent, REQUEST_SELECT_IMG);
                 break;
             case R.id.nav_order_manage:
-                CommonUtil.startActivity(mContext, MyorderActivity.class);
+                UserService service = retrofit.create(UserService.class);
+                Call<ResponsePojo> call = service.getState(mCache.getAsString("mId"));
+                call.enqueue(new Callback<ResponsePojo>() {
+                    @Override
+                    public void onResponse(Call<ResponsePojo> call, Response<ResponsePojo> response) {
+
+                        ResponsePojo pojo = response.body();
+
+
+                        CommonUtil.startActivity(mContext, MyorderActivity.class);
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponsePojo> call, Throwable t) {
+                        CommonUtil.showToast(mContext, "网络错误！");
+                    }
+                });
                 break;
             case R.id.nav_apply:
                 CommonUtil.startActivity(mContext, Step1Activity.class);

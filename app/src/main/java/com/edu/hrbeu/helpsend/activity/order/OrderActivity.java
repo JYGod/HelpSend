@@ -31,6 +31,7 @@ import com.edu.hrbeu.helpsend.cache.ACache;
 import com.edu.hrbeu.helpsend.databinding.ActivityOrderBinding;
 import com.edu.hrbeu.helpsend.global.GlobalData;
 import com.edu.hrbeu.helpsend.http.PhoneUtil;
+import com.edu.hrbeu.helpsend.pojo.PositionPojo;
 import com.edu.hrbeu.helpsend.pojo.ResponsePojo;
 import com.edu.hrbeu.helpsend.receiver.LocalBroadcastManager;
 import com.edu.hrbeu.helpsend.receiver.MyReceiver;
@@ -422,6 +423,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                             UpdateInfo updateInfo = response.body();
                             CommonUtil.showToast(mContext, updateInfo.getMessage());
                             GlobalData.MY_ORDER = new Order();
+                            GlobalData.POSITION_POINTS = new PositionPojo(new Order.Location(),new Order.Location());
                             CommonUtil.startActivity(mContext, MyorderActivity.class);
                         }
 
@@ -447,6 +449,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                             UpdateInfo updateInfo = response.body();
                             CommonUtil.showToast(mContext, updateInfo.getMessage());
                             GlobalData.MY_ORDER = new Order();
+                            GlobalData.POSITION_POINTS = new PositionPojo(new Order.Location(),new Order.Location());
                             CommonUtil.startActivity(mContext, MyorderActivity.class);
                         }
 

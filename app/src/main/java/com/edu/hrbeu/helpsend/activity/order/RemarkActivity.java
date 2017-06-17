@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.databinding.ActivityRemarkBinding;
@@ -17,21 +18,23 @@ public class RemarkActivity extends Activity implements View.OnClickListener {
     private ActivityRemarkBinding mBinding;
     private Context mContext;
     private TopMenuHeader top;
-    private String etRemark="";
+    private String etRemark = "";
+    private Activity mActivity;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContext=this;
-        mBinding= DataBindingUtil.setContentView(this, R.layout.activity_remark);
+        mContext = this;
+        mActivity = this;
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_remark);
         initView();
         clickListener();
     }
 
     private void initView() {
-        top=new TopMenuHeader(getWindow().getDecorView());
+        top = new TopMenuHeader(getWindow().getDecorView());
         top.topMenuTitle.setText("备注");
-        mBinding.etRemark.setText(GlobalData.MY_ORDER.getRemark()==null?"":GlobalData.MY_ORDER.getRemark());
+        mBinding.etRemark.setText(GlobalData.MY_ORDER.getRemark() == null ? "" : GlobalData.MY_ORDER.getRemark());
     }
 
     private void clickListener() {
@@ -41,17 +44,19 @@ public class RemarkActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.btn_remark_sure:
-                etRemark=mBinding.etRemark.getText().toString();
-                if (etRemark.equals("")){
-                   CommonUtil.showToast(mContext,"请填写备注信息~");
-                }else {
+                etRemark = mBinding.etRemark.getText().toString();
+                if (etRemark.equals("")) {
+                    CommonUtil.showToast(mContext, "请填写备注信息~");
+                } else {
                     GlobalData.MY_ORDER.setRemark(etRemark);
+                    CommonUtil.packUpSoftKeyboard(mActivity);
                     finish();
                 }
                 break;
             case R.id.top_menu_left:
+                CommonUtil.packUpSoftKeyboard(mActivity);
                 finish();
                 break;
         }

@@ -100,6 +100,7 @@ public class NavigateActivity extends MapActivity implements View.OnClickListene
     private String orderId;
     private MyApplication myApplication;
     private OrderService orderService;
+    private RecyclerView recycle;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -157,6 +158,9 @@ public class NavigateActivity extends MapActivity implements View.OnClickListene
         uiSettings.setScaleViewPosition(UiSettings.SCALEVIEW_POSITION_RIGHT_BOTTOM);
         //启用缩放手势(更多的手势控制请参考开发手册)
         uiSettings.setZoomGesturesEnabled(true);
+
+        uiSettings.setScaleControlsEnabled(true);
+
     }
 
     private void clickListener() {
@@ -194,19 +198,45 @@ public class NavigateActivity extends MapActivity implements View.OnClickListene
                 .draggable(true));
 
         tencentMap.setOnMarkerClickListener(this);
-        routeDialog = DialogPlus.newDialog(mContext)
-                .setContentHolder(new ViewHolder(R.layout.recycler_routes))
-                .setCancelable(true)
-                .setExpanded(true, ViewGroup.LayoutParams.WRAP_CONTENT)
-                .setContentHeight(ViewGroup.LayoutParams.MATCH_PARENT)
-                .setContentWidth(ViewGroup.LayoutParams.WRAP_CONTENT)
-                .setGravity(Gravity.BOTTOM)
-                .create();
+        routeDialog = CommonUtil.createDialog(mContext, R.layout.recycler_routes, Gravity.BOTTOM, true);
         View holder = routeDialog.getHolderView();
         ImageView imgAvatar = (ImageView) holder.findViewById(R.id.iv_avatar);
         TextView tvNick = (TextView) holder.findViewById(R.id.tv_name);
         ImgLoadUtil.displayCircle(imgAvatar, avatar);
         tvNick.setText(nick);
+
+        View routeHolder = routeDialog.getHolderView();
+        recycle = (RecyclerView) routeHolder.findViewById(R.id.route_list);
+        ImageView phone1 = (ImageView) routeHolder.findViewById(R.id.img_phone1);
+        ImageView phone2 = (ImageView) routeHolder.findViewById(R.id.img_phone2);
+        ImageView msg1 = (ImageView) routeHolder.findViewById(R.id.img_message1);
+        ImageView msg2 = (ImageView) routeHolder.findViewById(R.id.img_message2);
+        phone1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                call("sender");
+            }
+        });
+
+        phone2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                call("receiver");
+            }
+        });
+
+        msg1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                senMsg("sender");
+            }
+        });
+        msg2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                senMsg("receiver");
+            }
+        });
 
     }
 
@@ -439,42 +469,11 @@ public class NavigateActivity extends MapActivity implements View.OnClickListene
                         color(0xff0066cc).
                         width(10f));
 
-                View holder = routeDialog.getHolderView();
-                RecyclerView recycle = (RecyclerView) holder.findViewById(R.id.route_list);
-                ImageView phone1 = (ImageView) holder.findViewById(R.id.img_phone1);
-                ImageView phone2 = (ImageView) holder.findViewById(R.id.img_phone2);
-                ImageView msg1 = (ImageView) holder.findViewById(R.id.img_message1);
-                ImageView msg2 = (ImageView) holder.findViewById(R.id.img_message2);
+
                 recycle.setItemAnimator(new DefaultItemAnimator());
                 recycle.setLayoutManager(new LinearLayoutManager(mContext));
                 recycle.setHasFixedSize(true);
 
-                phone1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        call("sender");
-                    }
-                });
-
-                phone2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        call("receiver");
-                    }
-                });
-
-                msg1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        senMsg("sender");
-                    }
-                });
-                msg2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        senMsg("receiver");
-                    }
-                });
 
                 ArrayList<String> routes = new ArrayList<>();
                 for (RoutePlanningObject.Step step : obj.result.routes.get(0).steps) {

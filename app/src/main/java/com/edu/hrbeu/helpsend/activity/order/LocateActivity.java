@@ -2,6 +2,7 @@ package com.edu.hrbeu.helpsend.activity.order;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
@@ -15,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -79,12 +81,14 @@ public class LocateActivity extends MapActivity implements TencentLocationListen
     private LatLng latLngLocation;
     private LocatePoiAdapter adapter;
     private ACache mCache;
+    private Activity mActivity;
 
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_locate);
         mContext = this;
+        mActivity = this;
         mCache = ACache.get(this);
         initMap();
         Log.e("initMap", "======initMap======");
@@ -106,6 +110,7 @@ public class LocateActivity extends MapActivity implements TencentLocationListen
         uiSettings.setScaleViewPosition(UiSettings.SCALEVIEW_POSITION_RIGHT_BOTTOM);
         //启用缩放手势(更多的手势控制请参考开发手册)
         uiSettings.setZoomGesturesEnabled(true);
+
     }
 
     private void initMap() {
@@ -210,6 +215,7 @@ public class LocateActivity extends MapActivity implements TencentLocationListen
                 }
             });
             Log.e("center", "经度：" + tencentMap.getMapCenter().getLatitude() + "维度：" + tencentMap.getMapCenter().getLongitude());
+            mBinding.ivLoc.setOnClickListener(this);
         } else {
             Log.e("reason", reason);
         }
@@ -279,8 +285,6 @@ public class LocateActivity extends MapActivity implements TencentLocationListen
                     .draggable(true));
             marker.showInfoWindow();
         }
-
-        mBinding.ivLoc.setOnClickListener(this);
     }
 
     private void stopLocation() {
@@ -339,7 +343,12 @@ public class LocateActivity extends MapActivity implements TencentLocationListen
                     mBinding.recyclerSuggestion.setVisibility(View.GONE);
                     return;
                 }
-                SuggestionAdapter adapter = new SuggestionAdapter(mContext, datas);
+                SuggestionAdapter adapter = null;
+                if (GlobalData.LOCATE_DIRECTION.equals("start")) {
+                    adapter = new SuggestionAdapter(mContext, datas, 0, mActivity);
+                } else {
+                    adapter = new SuggestionAdapter(mContext, datas, 1, mActivity);
+                }
                 mBinding.recyclerSuggestion.setAdapter(adapter);
                 mBinding.recyclerSuggestion.setVisibility(View.VISIBLE);
 
@@ -359,6 +368,7 @@ public class LocateActivity extends MapActivity implements TencentLocationListen
     public void onButtonClicked(int buttonCode) {
         switch (buttonCode) {
             case MaterialSearchBar.BUTTON_NAVIGATION:
+                CommonUtil.packUpSoftKeyboard(mActivity);
                 finish();
                 break;
             case MaterialSearchBar.VIEW_INVISIBLE:

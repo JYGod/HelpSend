@@ -4,6 +4,7 @@ package com.edu.hrbeu.helpsend.bean;
 public class GrabOrderDetail {
     private String remark;
     private String orderOwnerAvatarPath;
+    private String orderReceiverAvatarPath;
     private String orderOwnerGender;
     private String orderId;
     private Order.Location startLocationPojo;
@@ -145,5 +146,13 @@ public class GrabOrderDetail {
 
     public void setCommit(String commit) {
         this.commit = commit;
+    }
+
+    public String getOrderReceiverAvatarPath() {
+        return orderReceiverAvatarPath;
+    }
+
+    public void setOrderReceiverAvatarPath(String orderReceiverAvatarPath) {
+        this.orderReceiverAvatarPath = orderReceiverAvatarPath;
     }
 }

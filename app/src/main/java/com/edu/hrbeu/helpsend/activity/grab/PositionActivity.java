@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+
 import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.cache.ACache;
 import com.edu.hrbeu.helpsend.databinding.ActivityPositionBinding;
@@ -51,19 +52,19 @@ public class PositionActivity extends MapActivity implements TencentLocationList
     private LocationOverlay mLocationOverlay;
     private Bitmap bmpMarker;
     private ACache mCache;
-    private String mLng,mLat;
+    private String mLng, mLat;
     private LatLng target;
 
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        mBinding= DataBindingUtil.setContentView(this, R.layout.activity_position);
-        mContext=this;
-        mCache= ACache.get(this);
-        mLng=mCache.getAsString("targetLng");
-        mLat=mCache.getAsString("targetLat");
-        Log.e("传递经纬度：","经度:"+mLng+"-----纬度:"+mLat);
-        target=new LatLng(Double.parseDouble(mLat),Double.parseDouble(mLng));
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_position);
+        mContext = this;
+        mCache = ACache.get(this);
+        mLng = mCache.getAsString("targetLng");
+        mLat = mCache.getAsString("targetLat");
+        Log.e("传递经纬度：", "经度:" + mLng + "-----纬度:" + mLat);
+        target = new LatLng(Double.parseDouble(mLat), Double.parseDouble(mLng));
         initView();
         uiSetting();
         clickListener();
@@ -99,13 +100,13 @@ public class PositionActivity extends MapActivity implements TencentLocationList
     }
 
     private void initView() {
-        top=new TopMenuHeader(getWindow().getDecorView());
+        top = new TopMenuHeader(getWindow().getDecorView());
         top.topMenuTitle.setText("详细位置信息");
-        tencentMap=mBinding.mapview.getMap();
+        tencentMap = mBinding.mapview.getMap();
         tencentMap.setZoom(20);
         bmpMarker = BitmapFactory.decodeResource(getResources(), R.drawable.my_position);
         mLocationOverlay = new LocationOverlay(bmpMarker);
-        BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(DrawableUtil.zoomDrawable(getResources().getDrawable(R.drawable.map_locate),90,90));
+        BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(DrawableUtil.zoomDrawable(getResources().getDrawable(R.drawable.map_locate), 90, 90));
         marker = tencentMap.addMarker(new MarkerOptions()
                 .position(target)
                 .title("目标点")
@@ -147,26 +148,26 @@ public class PositionActivity extends MapActivity implements TencentLocationList
             provider = LocationManager.GPS_PROVIDER;
         } else if (providerList.contains(LocationManager.NETWORK_PROVIDER)) {
             provider = LocationManager.NETWORK_PROVIDER;
-        }else {
+        } else {
             Toast.makeText(getApplicationContext(), "没有位置提供器可供使用", Toast.LENGTH_LONG).show();
         }
         Location location = locationManager.getLastKnownLocation(provider);
-        if (location==null){
-            LatLng mLocation=new LatLng(Double.parseDouble(mCache.getAsString("mLat")),Double.parseDouble(mCache.getAsString("mLng")));
+        if (location == null) {
+            LatLng mLocation = new LatLng(Double.parseDouble(mCache.getAsString("mLat")), Double.parseDouble(mCache.getAsString("mLng")));
             //设置地图中心点
             tencentMap.setCenter(mLocation);
-            BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(DrawableUtil.zoomDrawable(getResources().getDrawable(R.drawable.my_position),60,60));
+            BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(DrawableUtil.zoomDrawable(getResources().getDrawable(R.drawable.my_position), 60, 60));
             marker = tencentMap.addMarker(new MarkerOptions()
                     .position(mLocation)
                     .title("搜索中...")
                     .icon(icon)
                     .draggable(true));
             marker.showInfoWindow();
-        }else {
+        } else {
             final LatLng latLngLocation = new LatLng(location.getLatitude(), location.getLongitude());
             //设置地图中心点
             tencentMap.setCenter(latLngLocation);
-            BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(DrawableUtil.zoomDrawable(getResources().getDrawable(R.drawable.my_position),60,60));
+            BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(DrawableUtil.zoomDrawable(getResources().getDrawable(R.drawable.my_position), 60, 60));
             marker = tencentMap.addMarker(new MarkerOptions()
                     .position(latLngLocation)
                     .title("搜索中...")
@@ -202,10 +203,11 @@ public class PositionActivity extends MapActivity implements TencentLocationList
             latLngLocation = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
             marker.setPosition(latLngLocation);
             marker.setTitle(mLocation.getName());
-          //  marker.showInfoWindow();
+            //  marker.showInfoWindow();
             mBinding.mapview.invalidate();
         }
     }
+
     private static GeoPoint of(TencentLocation location) {
         GeoPoint ge = new GeoPoint((int) (location.getLatitude() * 1E6),
                 (int) (location.getLongitude() * 1E6));
@@ -219,7 +221,7 @@ public class PositionActivity extends MapActivity implements TencentLocationList
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.iv_loc:
                 tencentMap.setCenter(latLngLocation);
                 break;

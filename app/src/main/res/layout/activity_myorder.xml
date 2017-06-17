@@ -111,7 +111,7 @@
         app:menuTitleTextColor="@color/pureWhite"
         app:overlayBackground="@null"
         app:showOverlay="true"
-        app:showTitle="true" />
+        app:showTitle="true"/>
 
 </android.support.design.widget.CoordinatorLayout>
 

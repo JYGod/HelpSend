@@ -200,7 +200,7 @@ public class MyOderAdapter extends RecyclerView.Adapter<MyOderAdapter.mViewHolde
                 intent.putExtra("orderId",detail.getOrderId());
                 intent.putExtra("status",order.getOrderStatus());
                 intent.putExtra("commit",detail.getCommit());
-                intent.putExtra("avatar",detail.getOrderOwnerAvatarPath());
+                intent.putExtra("avatar",detail.getOrderReceiverAvatarPath());
                 mContext.startActivity(intent);
                 dialog.dismiss();
             }else {

@@ -262,7 +262,8 @@
         <activity android:name="com.edu.hrbeu.helpsend.activity.order.OrderActivity"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
         <activity android:name="com.edu.hrbeu.helpsend.activity.grab.GrabActivity" />
-        <activity android:name="com.edu.hrbeu.helpsend.activity.order.LocateActivity" />
+        <activity android:name="com.edu.hrbeu.helpsend.activity.order.LocateActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
         <activity android:name="com.edu.hrbeu.helpsend.activity.MessageActivity" />
         <activity android:name=".activity.order.RemarkActivity" />
         <activity android:name=".activity.grab.PositionActivity" />

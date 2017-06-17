@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
 
 
@@ -175,6 +176,13 @@
                     android:text="申请帮带员"
                     android:textColor="@color/colorContent"
                     android:textSize="@dimen/menu_left_text_size" />
+
+                <ImageView
+                    android:id="@+id/iv_indentify"
+                    android:layout_width="50dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="20dp"
+                    app:srcCompat="@drawable/unidentificate" />
 
             </LinearLayout>
             <View
