@@ -26,11 +26,14 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.edu.hrbeu.helpsend.R;
+import com.edu.hrbeu.helpsend.cache.ACache;
 import com.edu.hrbeu.helpsend.databinding.ActivityStep1Binding;
 import com.edu.hrbeu.helpsend.global.GlobalData;
 import com.edu.hrbeu.helpsend.utils.CommonUtil;
+import com.edu.hrbeu.helpsend.utils.ImgLoadUtil;
 import com.edu.hrbeu.helpsend.utils.TopMenuHeader;
 import com.xw.repo.XEditText;
+import com.youth.banner.loader.ImageLoader;
 
 import java.io.File;
 
@@ -51,22 +54,31 @@ public class Step1Activity extends Activity {
     private String frontUrl;
     private String backUrl;
     private String mypicUrl;
+    private String IDENTIFY_STATE;
+    private ACache mCache;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
+        mCache = ACache.get(this);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_step1);
         Intent intent = getIntent();
         STEP_INDEX = intent.getStringExtra("step");
+        IDENTIFY_STATE = intent.getStringExtra("identifyState");
         initView();
-        if (STEP_INDEX == null || STEP_INDEX.equals("0")) {
-            initStep1Content();
-        } else if (STEP_INDEX.equals("1")) {
-            initStep2Content();
-        } else if (STEP_INDEX.equals("2")) {
-            initStep3Content();
-        } else if (STEP_INDEX.equals("3")) {
+        if (IDENTIFY_STATE == null || IDENTIFY_STATE.equals("-1")) {
+            if (STEP_INDEX == null || STEP_INDEX.equals("0")) {
+                initStep1Content();
+            } else if (STEP_INDEX.equals("1")) {
+                initStep2Content();
+            } else if (STEP_INDEX.equals("2")) {
+                initStep3Content();
+            } else if (STEP_INDEX.equals("3")) {
+                initStrp4Content();
+            }
+        } else {
+            STEP_INDEX = "3";
             initStrp4Content();
         }
         clickListenner();
@@ -87,7 +99,11 @@ public class Step1Activity extends Activity {
     }
 
     private void initStrp4Content() {
-        View view = View.inflate(mContext, R.layout.step4,null);
+        View view = View.inflate(mContext, R.layout.step4, null);
+        ImageView ivAvatar = (ImageView) view.findViewById(R.id.iv_avatar);
+        TextView tvName = (TextView) view.findViewById(R.id.tv_name);
+        ImgLoadUtil.displayCircle(ivAvatar, mCache.getAsString("mAvatar"));
+        tvName.setText(mCache.getAsString("mNickName"));
     }
 
 

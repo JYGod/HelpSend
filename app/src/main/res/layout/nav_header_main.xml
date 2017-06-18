@@ -182,7 +182,7 @@
                     android:layout_width="50dp"
                     android:layout_height="20dp"
                     android:layout_marginLeft="20dp"
-                    app:srcCompat="@drawable/unidentificate" />
+                    android:src="@drawable/unidentificate" />
 
             </LinearLayout>
             <View
@@ -277,7 +277,7 @@
 
 
             <LinearLayout
-                android:id="@+id/ll_nav_exit"
+                android:id="@+id/nav_setting"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@drawable/ripple_one_item_bg"
@@ -293,11 +293,10 @@
                     android:src="@drawable/setting_left" />
 
                 <TextView
-                    android:id="@+id/nav_setting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
-                    android:text="设置"
+                    android:text="退出登录"
                     android:textColor="@color/colorContent"
                     android:textSize="@dimen/menu_left_text_size" />
 

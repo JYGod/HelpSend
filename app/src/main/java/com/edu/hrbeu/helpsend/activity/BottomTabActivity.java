@@ -39,6 +39,7 @@ import com.edu.hrbeu.helpsend.databinding.ActivityBottomTabBinding;
 import com.edu.hrbeu.helpsend.databinding.NavHeaderMainBinding;
 import com.edu.hrbeu.helpsend.global.GlobalData;
 import com.edu.hrbeu.helpsend.pojo.ResponsePojo;
+import com.edu.hrbeu.helpsend.seivice.IdentifyService;
 import com.edu.hrbeu.helpsend.seivice.UserService;
 import com.edu.hrbeu.helpsend.utils.CommonUtil;
 import com.edu.hrbeu.helpsend.utils.ExpToLevel;
@@ -78,6 +79,7 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
     private Context mContext;
     private Activity mActivity;
     private String mExp;
+    private String mIdentify;
     private String mRole;
 
     @Override
@@ -105,22 +107,66 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
     protected void onResume() {
         super.onResume();
         refreshExp();
-        refreshRole();
+        refreshIdentify();
     }
 
-    private void refreshRole() {
+    private void refreshIdentify() {
         mRole = mCache.getAsString("mRole");
-        if (mRole == null) {
-
-        } else {
-
+        if (mRole.equals("1")) {
             bind.ivIndentify.setImageDrawable(getResources().getDrawable(R.drawable.identification));
+            return;
+        }
+        mIdentify = mCache.getAsString("mIdentify");
+        if (mIdentify == null || mIdentify.equals("0")) {
+            IdentifyService service = retrofit.create(IdentifyService.class);
+            Call<ResponsePojo> call = service.getUserIdentifyState(mCache.getAsString("mId"));
+            call.enqueue(new Callback<ResponsePojo>() {
+                @Override
+                public void onResponse(Call<ResponsePojo> call, Response<ResponsePojo> response) {
+                    ResponsePojo pojo = response.body();
+                    mIdentify = pojo.getStatus();
+                    if (mIdentify.equals("0") || mIdentify.equals("-1")) {
+                        mCache.put("mRole", "0");
+                    } else if (mIdentify.equals("1")) {
+                        mCache.put("mRole", "1");
+                    }
+                    mCache.put("mIdentify", mIdentify);
+                }
 
-            bind.ivIndentify.setImageDrawable(getResources().getDrawable(R.drawable.unidentificate));
+                @Override
+                public void onFailure(Call<ResponsePojo> call, Throwable t) {
+
+                }
+            });
+        } else {
+            setIdentify();
         }
 
     }
 
+    /**
+     * 设置认证标签
+     */
+    private void setIdentify() {
+        switch (Integer.parseInt(mIdentify)) {
+            case -1://未认证
+                bind.ivIndentify.setImageDrawable(getResources().getDrawable(R.drawable.unidentificate));
+                break;
+            case 0://认证中
+                bind.ivIndentify.setImageDrawable(getResources().getDrawable(R.drawable.unidentificate));
+                break;
+            case 1://已经认证
+                bind.ivIndentify.setImageDrawable(getResources().getDrawable(R.drawable.identification));
+                break;
+            default:
+                break;
+
+        }
+    }
+
+    /**
+     * 刷新经验显示
+     */
     private void refreshExp() {
         mExp = mCache.getAsString("mExp");
         if (mExp == null) {
@@ -322,25 +368,11 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
                 startActivityForResult(intent, REQUEST_SELECT_IMG);
                 break;
             case R.id.nav_order_manage:
-                UserService service = retrofit.create(UserService.class);
-                Call<ResponsePojo> call = service.getState(mCache.getAsString("mId"));
-                call.enqueue(new Callback<ResponsePojo>() {
-                    @Override
-                    public void onResponse(Call<ResponsePojo> call, Response<ResponsePojo> response) {
-
-                        ResponsePojo pojo = response.body();
-
-
-                        CommonUtil.startActivity(mContext, MyorderActivity.class);
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponsePojo> call, Throwable t) {
-                        CommonUtil.showToast(mContext, "网络错误！");
-                    }
-                });
+                CommonUtil.startActivity(mContext, MyorderActivity.class);
                 break;
             case R.id.nav_apply:
+                intent.setClass(mContext, Step1Activity.class);
+                intent.putExtra("identifyState", mIdentify);
                 CommonUtil.startActivity(mContext, Step1Activity.class);
                 break;
             case R.id.nav_setting:

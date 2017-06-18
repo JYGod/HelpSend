@@ -97,6 +97,7 @@ public class MyorderActivity extends Activity implements View.OnClickListener, O
                 @Override
                 public void onResponse(Call<ArrayList<MyOrderPojo>> call, Response<ArrayList<MyOrderPojo>> response) {
                     ArrayList<MyOrderPojo> list = response.body();
+                    Log.e("size", String.valueOf(list.size()));
                     MyOderAdapter adapter = new MyOderAdapter(mContext, list);
                     mBinding.recyclerOrder.setAdapter(adapter);
                     mBinding.swipe.setRefreshing(false);

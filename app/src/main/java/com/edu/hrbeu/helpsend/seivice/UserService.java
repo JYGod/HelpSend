@@ -24,8 +24,8 @@ public interface UserService {
     @GET("getexpbyuserid")
     Call<ResponsePojo> getCurrentExp(@Query("userId") String userId);
 
-    @GET("selectState")
-    Call<ResponsePojo> getState(@Query("userId") String userId);
+    @GET("getrolebyuserid")
+    Call<ResponsePojo> getUserRole(@Query("userId") String userId);
 
     /**
      * 获取实例

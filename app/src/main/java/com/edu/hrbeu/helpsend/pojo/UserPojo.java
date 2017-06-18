@@ -7,7 +7,7 @@ public class UserPojo {
     private String nickName;
     private String gender;
     private String telNumber;
-    private String role;//普通用户或配送员
+    private String role;//普通用户或配送员  0--->平民   1---->帮带员
     private String password;
     private String avatarPath;
     private String email;

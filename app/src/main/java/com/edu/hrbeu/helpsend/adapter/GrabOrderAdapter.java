@@ -93,14 +93,7 @@ public class GrabOrderAdapter extends RecyclerView.Adapter<GrabOrderAdapter.mVie
 
     private void showOrderDetail(GrabOrderDetail detail) {
         mCache = ACache.get(mContext);
-        final DialogPlus dialog = DialogPlus.newDialog(mContext)
-                .setContentHolder(new ViewHolder(R.layout.grab_order_detail))
-                .setCancelable(false)
-                .setExpanded(true, ViewGroup.LayoutParams.WRAP_CONTENT)
-                .setContentHeight(ViewGroup.LayoutParams.MATCH_PARENT)
-                .setContentWidth(ViewGroup.LayoutParams.WRAP_CONTENT)
-                .setGravity(Gravity.CENTER)
-                .create();
+        DialogPlus dialog = CommonUtil.createDialog(mContext, R.layout.grab_order_detail, Gravity.CENTER, false);
         View holder = dialog.getHolderView();
         ImageView ivCancel = (ImageView) holder.findViewById(R.id.detail_cancel);
         TextView tvNickName = (TextView) holder.findViewById(R.id.detail_name);
@@ -151,6 +144,8 @@ public class GrabOrderAdapter extends RecyclerView.Adapter<GrabOrderAdapter.mVie
         btnGrab.setOnClickListener((View v) -> {
             if (mCache.getAsString("mId").equals(detail.getOrderOwnerId())) {
                 CommonUtil.showToast(mContext, "这是您自己的订单！");
+            } else if (mCache.getAsString("mRole").equals("0")) {
+                CommonUtil.showToast(mContext, "请先申请成为帮带员哦~");
             } else {
                 MyApplication myApplication = MyApplication.create(mContext);
                 OrderService orderService = myApplication.getOrderService();
