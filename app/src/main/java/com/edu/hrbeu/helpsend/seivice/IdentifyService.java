@@ -4,6 +4,7 @@ package com.edu.hrbeu.helpsend.seivice;
 import com.edu.hrbeu.helpsend.pojo.ResponsePojo;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
@@ -24,17 +25,21 @@ public interface IdentifyService {
     Call<ResponsePojo> getUserIdentifyState(@Query("userId") String userId);
 
     @Multipart
-    @POST("createOrderWithImgURL")
-    Call<ResponsePojo> submitIdentifyInfo(@PartMap Map<String, RequestBody> params,
-                                          @Part("name") RequestBody name, @Part("identify") RequestBody identify);
+    @POST("getidentifyinfo")
+    Call<ResponsePojo> submitIdentifyInfo(@PartMap Map<String, RequestBody> params, @Part("textInfo") RequestBody textInfo);
 
+
+    OkHttpClient client = new OkHttpClient.Builder().
+            connectTimeout(120, TimeUnit.SECONDS).
+            readTimeout(120, TimeUnit.SECONDS).
+            writeTimeout(120, TimeUnit.SECONDS).build();
 
     /**
      * 获取实例
      */
     Retrofit retrofit = new Retrofit.Builder()
             //设置OKHttpClient,如果不设置会提供一个默认的
-            .client(new OkHttpClient())
+            .client(client)
             //设置baseUrl
             .baseUrl("http://123.207.138.180:7012/webapi/identify/")
             //添加Gson转换器

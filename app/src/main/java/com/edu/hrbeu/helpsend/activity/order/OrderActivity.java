@@ -411,8 +411,8 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 mBinding.paying.payingLoading.setVisibility(View.VISIBLE);
                 MultipartBody.Part photo = null;
                 if (GlobalData.ACCESSORY == null) {
-                   Call<UpdateInfo> call = orderService.submitOrderWithoutAc(orderinfo);
-//                    Call<UpdateInfo> call = orderService.submitOrderWithoutAc(RequestBody.create(null,orderinfo));
+
+                    Call<UpdateInfo> call = orderService.submitOrderWithoutAc(orderinfo);
                     call.enqueue(new Callback<UpdateInfo>() {
                         @Override
                         public void onResponse(Call<UpdateInfo> call, Response<UpdateInfo> response) {
@@ -423,7 +423,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                             UpdateInfo updateInfo = response.body();
                             CommonUtil.showToast(mContext, updateInfo.getMessage());
                             GlobalData.MY_ORDER = new Order();
-                            GlobalData.POSITION_POINTS = new PositionPojo(new Order.Location(),new Order.Location());
+                            GlobalData.POSITION_POINTS = new PositionPojo(new Order.Location(), new Order.Location());
                             CommonUtil.startActivity(mContext, MyorderActivity.class);
                         }
 
@@ -449,7 +449,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                             UpdateInfo updateInfo = response.body();
                             CommonUtil.showToast(mContext, updateInfo.getMessage());
                             GlobalData.MY_ORDER = new Order();
-                            GlobalData.POSITION_POINTS = new PositionPojo(new Order.Location(),new Order.Location());
+                            GlobalData.POSITION_POINTS = new PositionPojo(new Order.Location(), new Order.Location());
                             CommonUtil.startActivity(mContext, MyorderActivity.class);
                         }
 

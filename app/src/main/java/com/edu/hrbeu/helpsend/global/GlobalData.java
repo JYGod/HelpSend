@@ -32,6 +32,7 @@ public class GlobalData {
     public static File MY_CARD_FRONT;
     public static File MY_CARD_BACK;
     public static File MY_SELFIE;
+    public static String IDENTIFY_INFO;
 
     public static PositionPojo POSITION_POINTS=new PositionPojo(new Order.Location(),new Order.Location());
 }

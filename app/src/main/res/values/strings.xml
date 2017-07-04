@@ -3,4 +3,15 @@
     <string name="order">下单</string>
     <string name="grab">抢单</string>
     <string name="message">任务</string>
+
+
+
+
+
+    <string name="update_pwd">修改密码</string>
+    <string name="about_helpsend">关于帮帮带</string>
+    <string name="feedback">意见反馈</string>
+    <string name="agreement">服务协议</string>
+    <string name="clear_cache">清除缓存</string>
+
 </resources>

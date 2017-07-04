@@ -29,16 +29,30 @@ import com.edu.hrbeu.helpsend.R;
 import com.edu.hrbeu.helpsend.cache.ACache;
 import com.edu.hrbeu.helpsend.databinding.ActivityStep1Binding;
 import com.edu.hrbeu.helpsend.global.GlobalData;
+import com.edu.hrbeu.helpsend.pojo.IdentifyInfo;
+import com.edu.hrbeu.helpsend.pojo.ResponsePojo;
+import com.edu.hrbeu.helpsend.seivice.IdentifyService;
 import com.edu.hrbeu.helpsend.utils.CommonUtil;
 import com.edu.hrbeu.helpsend.utils.ImgLoadUtil;
 import com.edu.hrbeu.helpsend.utils.TopMenuHeader;
+import com.google.gson.Gson;
 import com.xw.repo.XEditText;
 import com.youth.banner.loader.ImageLoader;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.edu.hrbeu.helpsend.seivice.IdentifyService.retrofit;
 
 
-public class Step1Activity extends Activity {
+public class Step1Activity extends Activity implements View.OnClickListener {
 
     private static final int USE_FRONT_CAMERA = 2;
     //   private static String SAVE_PATH=Environment.getExternalStorageDirectory().getPath();
@@ -104,6 +118,7 @@ public class Step1Activity extends Activity {
         TextView tvName = (TextView) view.findViewById(R.id.tv_name);
         ImgLoadUtil.displayCircle(ivAvatar, mCache.getAsString("mAvatar"));
         tvName.setText(mCache.getAsString("mNickName"));
+        mBinding.include.addView(view);
     }
 
 
@@ -117,8 +132,10 @@ public class Step1Activity extends Activity {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
             intent.putExtra("android.intent.extras.CAMERA_FACING", 1);
-            mypicUrl = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + String.valueOf(System.currentTimeMillis()) + ".jpg";
-            Uri imageUri = Uri.fromFile(new File(mypicUrl));
+            mypicUrl = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + String.valueOf(System.currentTimeMillis()) + ".png";
+            File file = new File(mypicUrl);
+            Uri imageUri = Uri.fromFile(file);
+            GlobalData.MY_SELFIE = file;
             // 获取拍照后未压缩的原图片，并保存在uri路径中
             intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
             startActivityForResult(intent, USE_FRONT_CAMERA);
@@ -126,11 +143,32 @@ public class Step1Activity extends Activity {
         btnFinish.setOnClickListener((View v) -> {
             if (GlobalData.MY_SELFIE != null) {
                 //提交
+                IdentifyService service = retrofit.create(IdentifyService.class);
+                RequestBody photoFront = RequestBody.create(MediaType.parse("image/png"), GlobalData.MY_CARD_FRONT);
+                RequestBody photoBack = RequestBody.create(MediaType.parse("image/png"), GlobalData.MY_CARD_BACK);
+                RequestBody myPhoto = RequestBody.create(MediaType.parse("image/png"), GlobalData.MY_SELFIE);
+                Map<String, RequestBody> map = new HashMap<String, RequestBody>();
+                map.put("idcardFace\"; filename="+System.currentTimeMillis()+".png", photoFront);
+                map.put("idcardBack\"; filename="+System.currentTimeMillis()+".png", photoBack);
+                map.put("realHead\"; filename ="+System.currentTimeMillis()+".png", myPhoto);
+                Call<ResponsePojo> call = service.submitIdentifyInfo(map, RequestBody.create(null,GlobalData.IDENTIFY_INFO));
+                call.enqueue(new Callback<ResponsePojo>() {
+                    @Override
+                    public void onResponse(Call<ResponsePojo> call, Response<ResponsePojo> response) {
+                        ResponsePojo pojo = response.body();
+                        CommonUtil.showToast(mContext, pojo.getMessage());
+                        Intent intent = new Intent(mContext, Step1Activity.class);
+                        intent.putExtra("step", "3");
+                        startActivity(intent);
+                        finish();
+                    }
 
-                Intent intent = new Intent(mContext, Step1Activity.class);
-                intent.putExtra("step", "3");
-                startActivity(intent);
-                finish();
+                    @Override
+                    public void onFailure(Call<ResponsePojo> call, Throwable t) {
+                        CommonUtil.showToast(mContext,"上传失败！");
+                    }
+                });
+
             }
         });
 
@@ -179,12 +217,17 @@ public class Step1Activity extends Activity {
                 //有授权，直接开启摄像头
 
             }
+            File file = null;
             if (currentPic.equals("front")) {
-                frontUrl = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + String.valueOf(System.currentTimeMillis()) + ".jpg";
-                imageUri = Uri.fromFile(new File(frontUrl));
+                frontUrl = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + String.valueOf(System.currentTimeMillis()) + ".png";
+                file = new File(frontUrl);
+                imageUri = Uri.fromFile(file);
+                GlobalData.MY_CARD_FRONT = file;
             } else {
-                backUrl = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + String.valueOf(System.currentTimeMillis()) + ".jpg";
-                imageUri = Uri.fromFile(new File(backUrl));
+                backUrl = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + String.valueOf(System.currentTimeMillis()) + ".png";
+                file = new File(backUrl);
+                imageUri = Uri.fromFile(file);
+                GlobalData.MY_CARD_BACK = file;
             }
             //Uri   imageUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), String.valueOf(System.currentTimeMillis()) + ".jpg"));
             // 获取拍照后未压缩的原图片，并保存在uri路径中
@@ -203,11 +246,17 @@ public class Step1Activity extends Activity {
 
         btnNext.setOnClickListener((View v) -> {
             if (!etName.getText().toString().trim().equals("") && !etCard.getText().toString().trim().equals("")) {
+
+                Gson gson = new Gson();
+                IdentifyInfo info = new IdentifyInfo();
+                info.setUserId(mCache.getAsString("mId"));
+                info.setName(etName.getText().toString().trim());
+                info.setIdCard(etCard.getText().toString().trim());
+                GlobalData.IDENTIFY_INFO = gson.toJson(info);
                 Intent intent = new Intent(mContext, Step1Activity.class);
                 intent.putExtra("step", "1");
                 startActivity(intent);
                 finish();
-            } else {
                 CommonUtil.showToast(mContext, "请补充信息！");
             }
         });
@@ -215,7 +264,7 @@ public class Step1Activity extends Activity {
     }
 
     private void clickListenner() {
-
+        top.topMenuLeft.setOnClickListener(this);
     }
 
 
@@ -253,5 +302,14 @@ public class Step1Activity extends Activity {
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
         builder.detectFileUriExposure();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.top_menu_left:
+                finish();
+                break;
+        }
     }
 }

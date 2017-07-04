@@ -272,6 +272,7 @@
         <activity android:name=".activity.order.TimelineActivty" />
         <activity android:name=".activity.navigate.NavigateActivity" />
         <activity android:name=".activity.step.Step1Activity" />
+        <activity android:name=".activity.SettingActivity" />
     </application>
 
 </manifest>

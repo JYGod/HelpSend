@@ -118,7 +118,7 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
         }
         mIdentify = mCache.getAsString("mIdentify");
         if (mIdentify == null || mIdentify.equals("0")) {
-            IdentifyService service = retrofit.create(IdentifyService.class);
+            IdentifyService service = IdentifyService.retrofit.create(IdentifyService.class);
             Call<ResponsePojo> call = service.getUserIdentifyState(mCache.getAsString("mId"));
             call.enqueue(new Callback<ResponsePojo>() {
                 @Override
@@ -371,13 +371,16 @@ public class BottomTabActivity extends TabActivity implements CompoundButton.OnC
                 CommonUtil.startActivity(mContext, MyorderActivity.class);
                 break;
             case R.id.nav_apply:
+
                 intent.setClass(mContext, Step1Activity.class);
                 intent.putExtra("identifyState", mIdentify);
-                CommonUtil.startActivity(mContext, Step1Activity.class);
+                if (mRole.equals("1")) {
+                    intent.putExtra("step", "3");
+                }
+                startActivity(intent);
                 break;
             case R.id.nav_setting:
-                mCache.clear();
-                CommonUtil.startActivityWithFinish(mActivity, LoginActivity.class);
+                CommonUtil.startActivity(mContext,SettingActivity.class);
                 break;
             default:
                 break;

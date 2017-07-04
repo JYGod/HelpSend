@@ -227,7 +227,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         mCache.put("mGender",userPojo.getGender());
         mCache.put("mRole",userPojo.getRole());
         mCache.put("mExp",String.valueOf(userPojo.getExperience()));
-        mCache.put("mRole",userPojo.getRole());
     }
 }
 

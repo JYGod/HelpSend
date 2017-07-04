@@ -76,6 +76,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
+
 public class NavigateActivity extends MapActivity implements View.OnClickListener, TencentLocationListener, TencentMap.OnMarkerClickListener {
     private ActivityNavigateBinding mBinding;
     private Context mContext;

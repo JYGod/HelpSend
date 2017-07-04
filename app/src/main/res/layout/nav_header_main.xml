@@ -296,7 +296,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
-                    android:text="退出登录"
+                    android:text="设  置"
                     android:textColor="@color/colorContent"
                     android:textSize="@dimen/menu_left_text_size" />
 

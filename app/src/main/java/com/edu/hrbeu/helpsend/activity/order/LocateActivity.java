@@ -158,8 +158,7 @@ public class LocateActivity extends MapActivity implements TencentLocationListen
             mapCenter = tencentMap.getMapCenter();
             String str = String.valueOf(mapCenter.getLatitude()) + "," + String.valueOf(mapCenter.getLongitude());
             com.tencent.lbssearch.object.Location loc = LocationUtil.str2Coordinate(this, str);
-            Geo2AddressParam geo2AddressParam = new Geo2AddressParam().
-                    location(loc).get_poi(true);
+            Geo2AddressParam geo2AddressParam = new Geo2AddressParam().location(loc).get_poi(true);
             TencentSearch tencentSearch = new TencentSearch(this);
             tencentSearch.geo2address(geo2AddressParam, new HttpResponseListener() {
                 @Override
