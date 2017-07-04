@@ -25,6 +25,7 @@ import com.edu.hrbeu.helpsend.bean.GrabOrderDetail;
 import com.edu.hrbeu.helpsend.pojo.ResponsePojo;
 import com.edu.hrbeu.helpsend.seivice.OrderService;
 import com.edu.hrbeu.helpsend.utils.CommonUtil;
+import com.edu.hrbeu.helpsend.utils.ExpToLevel;
 import com.edu.hrbeu.helpsend.utils.ImgLoadUtil;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.ViewHolder;
@@ -106,6 +107,7 @@ public class GrabOrderAdapter extends RecyclerView.Adapter<GrabOrderAdapter.mVie
         TextView tvSend = (TextView) holder.findViewById(R.id.detail_send);
         TextView tvReceice = (TextView) holder.findViewById(R.id.detail_receive);
         ImageView ivImg = (ImageView) holder.findViewById(R.id.detail_img);
+        TextView tvLevel = (TextView) holder.findViewById(R.id.tv_level);
         LinearLayout selectStart = (LinearLayout) holder.findViewById(R.id.select_start);
         LinearLayout selectEnd = (LinearLayout) holder.findViewById(R.id.select_end);
         tvNickName.setText(detail.getOrderOwnerNickName());
@@ -118,6 +120,9 @@ public class GrabOrderAdapter extends RecyclerView.Adapter<GrabOrderAdapter.mVie
         tvWeight.setText(detail.getGoodsWeight());
         tvSend.setText(detail.getSendTime());
         tvReceice.setText(detail.getReceiveTime());
+        String mExp = mCache.getAsString("mExp");
+        String[] exps = ExpToLevel.expToLevel(mExp);
+        tvLevel.setText("Lv." + exps[0]);
         ImgLoadUtil.displayCircle(ivAvatar, detail.getOrderOwnerAvatarPath());
         Glide.with(mContext)
                 .load(detail.getImagePath())
