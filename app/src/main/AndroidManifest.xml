@@ -272,7 +272,8 @@
         <activity android:name=".activity.order.TimelineActivty" />
         <activity android:name=".activity.navigate.NavigateActivity" />
         <activity android:name=".activity.step.Step1Activity" />
-        <activity android:name=".activity.SettingActivity" />
+        <activity android:name=".activity.setting.SettingActivity" />
+        <activity android:name=".activity.setting.UpdatePwdActivity" />
     </application>
 
 </manifest>

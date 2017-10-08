@@ -91,7 +91,6 @@ public class MyOderAdapter extends RecyclerView.Adapter<MyOderAdapter.mViewHolde
                         }
                     });
 
-
                 }
             });
             builder.setNegativeButton("取消",

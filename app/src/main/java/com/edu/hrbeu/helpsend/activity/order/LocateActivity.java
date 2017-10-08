@@ -14,6 +14,8 @@ import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -100,6 +102,22 @@ public class LocateActivity extends MapActivity implements TencentLocationListen
 
         mBinding.recyclerSuggestion.setLayoutManager(new LinearLayoutManager(this));
         mBinding.searchBar.setOnSearchActionListener(this);
+        mBinding.searchBar.addTextChangeListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                changeSearchbarText();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     private void uiSetting() {
@@ -314,6 +332,10 @@ public class LocateActivity extends MapActivity implements TencentLocationListen
 
     @Override
     public void onSearchConfirmed(CharSequence text) {
+        changeSearchbarText();
+    }
+
+    private void changeSearchbarText() {
         String searchContent = mBinding.searchBar.getText().toString();
         if (searchContent.trim().length() == 0) {
             mBinding.recyclerSuggestion.setVisibility(View.GONE);
@@ -359,7 +381,6 @@ public class LocateActivity extends MapActivity implements TencentLocationListen
                 CommonUtil.showToast(mContext, s);
             }
         });
-
     }
 
 
@@ -375,6 +396,8 @@ public class LocateActivity extends MapActivity implements TencentLocationListen
                 break;
             case MaterialSearchBar.VIEW_VISIBLE:
                 mBinding.recyclerSuggestion.setVisibility(View.GONE);
+                break;
+            default:
                 break;
         }
 

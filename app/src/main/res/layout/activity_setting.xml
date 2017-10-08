@@ -16,6 +16,7 @@
             <LinearLayout style="@style/wrap_layout">
 
                 <LinearLayout
+                    android:id="@+id/select_update_pwd"
                     style="@style/top_layout"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/setting_height"

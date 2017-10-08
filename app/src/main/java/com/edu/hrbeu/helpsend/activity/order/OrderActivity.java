@@ -155,7 +155,10 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                         DialogPlus dialog = CommonUtil.createDialog(mContext, R.layout.dialog_price_detail, Gravity.BOTTOM, true);
                         TextView detail = (TextView) dialog.getHolderView().findViewById(R.id.tv_price_detail);
                         detail.setText(responsePojo.getMessage());
-                        dialog.show();
+                        if (!responsePojo.getMessage().trim().equals("")) {
+                            dialog.show();
+                        }
+
                     }
                 });
             }
